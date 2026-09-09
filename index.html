@@ -1,327 +1,573 @@
 <!DOCTYPE html>
 <html lang="my">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aung POS</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aung POS</title>
 
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
-    }
+<style>
+*{box-sizing:border-box;font-family:Arial,sans-serif}
+body{margin:0;background:#f3f4f6;color:#111827}
+header{background:#111827;color:white;padding:18px;text-align:center}
+.container{max-width:1000px;margin:auto;padding:15px}
 
-    body {
-      background: #f4f6f8;
-      color: #222;
-    }
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:15px}
+.card{background:white;padding:18px;border-radius:12px;box-shadow:0 2px 8px #ddd}
+.card small{color:#6b7280}
+.card strong{display:block;font-size:22px;margin-top:8px}
 
-    header {
-      background: #111827;
-      color: white;
-      padding: 18px;
-      text-align: center;
-    }
+.box{background:white;padding:18px;border-radius:12px;margin-bottom:15px}
+h2{margin-top:0}
 
-    header h1 {
-      font-size: 24px;
-    }
+input{
+width:100%;
+padding:12px;
+margin:6px 0;
+border:1px solid #d1d5db;
+border-radius:8px
+}
 
-    header p {
-      margin-top: 5px;
-      color: #d1d5db;
-      font-size: 14px;
-    }
+button{
+border:0;
+padding:10px 14px;
+border-radius:8px;
+background:#2563eb;
+color:white;
+cursor:pointer;
+margin:3px
+}
 
-    .container {
-      max-width: 1000px;
-      margin: auto;
-      padding: 20px;
-    }
+button.delete{background:#dc2626}
+button.stock{background:#16a34a}
 
-    .dashboard {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 15px;
-      margin-bottom: 20px;
-    }
+.product{
+display:flex;
+justify-content:space-between;
+align-items:center;
+border:1px solid #e5e7eb;
+padding:12px;
+border-radius:10px;
+margin:8px 0
+}
 
-    .card {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+.low{color:#dc2626;font-weight:bold}
 
-    .card h3 {
-      font-size: 14px;
-      color: #6b7280;
-      margin-bottom: 10px;
-    }
+.cart-item{
+display:flex;
+justify-content:space-between;
+padding:10px 0;
+border-bottom:1px solid #eee
+}
 
-    .card strong {
-      font-size: 22px;
-    }
+.total{
+font-size:22px;
+font-weight:bold;
+text-align:right;
+margin-top:15px
+}
 
-    .pos {
-      background: white;
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    }
+.checkout{
+width:100%;
+background:#16a34a;
+font-size:18px;
+padding:14px
+}
 
-    .pos h2 {
-      margin-bottom: 15px;
-    }
-
-    .product {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 15px;
-      border: 1px solid #e5e7eb;
-      border-radius: 10px;
-      margin-bottom: 10px;
-    }
-
-    .product-name {
-      font-weight: bold;
-    }
-
-    .product-price {
-      color: #2563eb;
-      margin-top: 5px;
-    }
-
-    button {
-      border: none;
-      background: #2563eb;
-      color: white;
-      padding: 10px 16px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
-    button:hover {
-      opacity: 0.9;
-    }
-
-    .cart {
-      margin-top: 20px;
-      border-top: 1px solid #ddd;
-      padding-top: 20px;
-    }
-
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-    }
-
-    .total {
-      font-size: 22px;
-      font-weight: bold;
-      margin-top: 15px;
-      text-align: right;
-    }
-
-    .checkout {
-      width: 100%;
-      margin-top: 15px;
-      background: #16a34a;
-      font-size: 18px;
-      padding: 14px;
-    }
-
-    @media (max-width: 700px) {
-      .dashboard {
-        grid-template-columns: 1fr;
-      }
-
-      .container {
-        padding: 12px;
-      }
-    }
-  </style>
+@media(max-width:700px){
+.cards{grid-template-columns:1fr}
+.product{display:block}
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <h1>🛒 Aung POS</h1>
-  <p>Sales & Stock Management</p>
+<h1>🛒 Aung POS</h1>
+<p>Sales & Stock Management</p>
 </header>
 
 <div class="container">
 
-  <div class="dashboard">
+<div class="cards">
 
-    <div class="card">
-      <h3>ယနေ့ရောင်းအား</h3>
-      <strong id="todaySales">0 Ks</strong>
-    </div>
+<div class="card">
+<small>ယနေ့ရောင်းအား</small>
+<strong id="todaySales">0 Ks</strong>
+</div>
 
-    <div class="card">
-      <h3>အော်ဒါအရေအတွက်</h3>
-      <strong id="orderCount">0</strong>
-    </div>
+<div class="card">
+<small>အော်ဒါ</small>
+<strong id="orderCount">0</strong>
+</div>
 
-    <div class="card">
-      <h3>Cart Total</h3>
-      <strong id="cartTotal">0 Ks</strong>
-    </div>
-
-  </div>
-
-  <div class="pos">
-
-    <h2>🛍️ Products</h2>
-
-    <div class="product">
-      <div>
-        <div class="product-name">Coca Cola</div>
-        <div class="product-price">2,000 Ks</div>
-      </div>
-      <button onclick="addToCart('Coca Cola', 2000)">
-        Add
-      </button>
-    </div>
-
-    <div class="product">
-      <div>
-        <div class="product-name">Pepsi</div>
-        <div class="product-price">2,000 Ks</div>
-      </div>
-      <button onclick="addToCart('Pepsi', 2000)">
-        Add
-      </button>
-    </div>
-
-    <div class="product">
-      <div>
-        <div class="product-name">Mineral Water</div>
-        <div class="product-price">1,000 Ks</div>
-      </div>
-      <button onclick="addToCart('Mineral Water', 1000)">
-        Add
-      </button>
-    </div>
-
-    <div class="cart">
-
-      <h2>🛒 Cart</h2>
-
-      <div id="cartItems">
-        Cart is empty
-      </div>
-
-      <div class="total">
-        Total: <span id="total">0</span> Ks
-      </div>
-
-      <button class="checkout" onclick="checkout()">
-        💵 Checkout
-      </button>
-
-    </div>
-
-  </div>
+<div class="card">
+<small>Stock Items</small>
+<strong id="stockCount">0</strong>
+</div>
 
 </div>
 
+
+<!-- ADD PRODUCT -->
+
+<div class="box">
+
+<h2>➕ Product အသစ်ထည့်ရန်</h2>
+
+<input id="productName" placeholder="Product Name">
+
+<input id="productPrice"
+type="number"
+placeholder="Selling Price">
+
+<input id="productStock"
+type="number"
+placeholder="Stock Quantity">
+
+<button onclick="addProduct()">
+➕ Add Product
+</button>
+
+</div>
+
+
+<!-- PRODUCTS -->
+
+<div class="box">
+
+<h2>📦 Product & Stock</h2>
+
+<div id="products"></div>
+
+</div>
+
+
+<!-- CART -->
+
+<div class="box">
+
+<h2>🛒 Cart</h2>
+
+<div id="cart">
+Cart is empty
+</div>
+
+<div class="total">
+Total: <span id="total">0</span> Ks
+</div>
+
+<button class="checkout" onclick="checkout()">
+💵 Checkout
+</button>
+
+</div>
+
+</div>
+
+
 <script>
 
-  let cart = [];
-  let todaySales = 0;
-  let orderCount = 0;
+let products =
+JSON.parse(localStorage.getItem("aungProducts")) || [
 
-  function addToCart(name, price) {
+{
+name:"Coca Cola",
+price:2000,
+stock:20
+},
 
-    cart.push({
-      name: name,
-      price: price
-    });
+{
+name:"Pepsi",
+price:2000,
+stock:20
+},
 
-    updateCart();
-  }
+{
+name:"Mineral Water",
+price:1000,
+stock:30
+}
 
-  function updateCart() {
+];
 
-    const cartItems = document.getElementById("cartItems");
+let cart=[];
 
-    if (cart.length === 0) {
-      cartItems.innerHTML = "Cart is empty";
-      document.getElementById("total").innerText = "0";
-      document.getElementById("cartTotal").innerText = "0 Ks";
-      return;
-    }
+let todaySales =
+Number(localStorage.getItem("todaySales")) || 0;
 
-    let html = "";
-    let total = 0;
+let orderCount =
+Number(localStorage.getItem("orderCount")) || 0;
 
-    cart.forEach((item, index) => {
 
-      total += item.price;
+function saveData(){
 
-      html += `
-        <div class="cart-item">
-          <span>${item.name}</span>
-          <span>
-            ${item.price.toLocaleString()} Ks
-            <button onclick="removeItem(${index})">
-              X
-            </button>
-          </span>
-        </div>
-      `;
-    });
+localStorage.setItem(
+"aungProducts",
+JSON.stringify(products)
+);
 
-    cartItems.innerHTML = html;
+localStorage.setItem(
+"todaySales",
+todaySales
+);
 
-    document.getElementById("total").innerText =
-      total.toLocaleString();
+localStorage.setItem(
+"orderCount",
+orderCount
+);
 
-    document.getElementById("cartTotal").innerText =
-      total.toLocaleString() + " Ks";
-  }
+}
 
-  function removeItem(index) {
 
-    cart.splice(index, 1);
+function addProduct(){
 
-    updateCart();
-  }
+let name=
+document.getElementById("productName").value.trim();
 
-  function checkout() {
+let price=
+Number(document.getElementById("productPrice").value);
 
-    if (cart.length === 0) {
-      alert("Cart ထဲမှာ Product မရှိသေးပါ။");
-      return;
-    }
+let stock=
+Number(document.getElementById("productStock").value);
 
-    let total = cart.reduce(
-      (sum, item) => sum + item.price,
-      0
-    );
 
-    todaySales += total;
-    orderCount++;
+if(!name || price<=0 || stock<0){
 
-    document.getElementById("todaySales").innerText =
-      todaySales.toLocaleString() + " Ks";
+alert("Product Name, Price နဲ့ Stock ကို မှန်ကန်စွာထည့်ပါ။");
 
-    document.getElementById("orderCount").innerText =
-      orderCount;
+return;
 
-    cart = [];
+}
 
-    updateCart();
 
-    alert("✅ Sale Complete!");
-  }
+products.push({
+name:name,
+price:price,
+stock:stock
+});
+
+
+saveData();
+
+document.getElementById("productName").value="";
+document.getElementById("productPrice").value="";
+document.getElementById("productStock").value="";
+
+renderProducts();
+
+alert("✅ Product ထည့်ပြီးပါပြီ");
+
+}
+
+
+function renderProducts(){
+
+let box=
+document.getElementById("products");
+
+box.innerHTML="";
+
+
+products.forEach((product,index)=>{
+
+let lowStock =
+product.stock <= 5;
+
+
+box.innerHTML += `
+
+<div class="product">
+
+<div>
+
+<strong>${product.name}</strong>
+
+<br>
+
+${product.price.toLocaleString()} Ks
+
+<br>
+
+<span class="${lowStock ? 'low':''}">
+
+Stock: ${product.stock}
+
+${lowStock ? ' ⚠️ Low Stock':''}
+
+</span>
+
+</div>
+
+
+<div>
+
+<button onclick="addToCart(${index})">
+
+🛒 Add
+
+</button>
+
+<button class="stock"
+onclick="addStock(${index})">
+
++ Stock
+
+</button>
+
+<button class="delete"
+onclick="deleteProduct(${index})">
+
+🗑️
+
+</button>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+document.getElementById("stockCount").innerText=
+products.length;
+
+}
+
+
+function addStock(index){
+
+let qty=
+Number(prompt("Stock ဘယ်နှစ်ခု ထည့်မလဲ?"));
+
+
+if(!qty || qty<=0)return;
+
+
+products[index].stock += qty;
+
+saveData();
+
+renderProducts();
+
+}
+
+
+function deleteProduct(index){
+
+if(confirm(
+products[index].name +
+" ကို ဖျက်မှာသေချာပါသလား?"
+)){
+
+products.splice(index,1);
+
+saveData();
+
+renderProducts();
+
+}
+
+}
+
+
+function addToCart(index){
+
+let product=products[index];
+
+
+if(product.stock<=0){
+
+alert("❌ Stock မရှိတော့ပါ");
+
+return;
+
+}
+
+
+let existing=
+cart.find(item=>item.index===index);
+
+
+if(existing){
+
+if(existing.qty < product.stock){
+
+existing.qty++;
+
+}else{
+
+alert("Stock ထက်ပိုပြီး မရောင်းနိုင်ပါ");
+
+return;
+
+}
+
+}else{
+
+cart.push({
+index:index,
+qty:1
+});
+
+}
+
+
+renderCart();
+
+}
+
+
+function removeCart(index){
+
+cart.splice(index,1);
+
+renderCart();
+
+}
+
+
+function renderCart(){
+
+let box=document.getElementById("cart");
+
+
+if(cart.length===0){
+
+box.innerHTML="Cart is empty";
+
+document.getElementById("total").innerText="0";
+
+return;
+
+}
+
+
+let total=0;
+
+box.innerHTML="";
+
+
+cart.forEach((item,i)=>{
+
+let product=products[item.index];
+
+let subtotal=
+product.price * item.qty;
+
+total+=subtotal;
+
+
+box.innerHTML += `
+
+<div class="cart-item">
+
+<span>
+
+${product.name}
+
+<br>
+
+${item.qty} ×
+${product.price.toLocaleString()} Ks
+
+</span>
+
+<span>
+
+${subtotal.toLocaleString()} Ks
+
+<button
+class="delete"
+onclick="removeCart(${i})">
+
+X
+
+</button>
+
+</span>
+
+</div>
+
+`;
+
+});
+
+
+document.getElementById("total").innerText=
+total.toLocaleString();
+
+}
+
+
+function checkout(){
+
+if(cart.length===0){
+
+alert("Cart ထဲမှာ Product မရှိသေးပါ");
+
+return;
+
+}
+
+
+let total=0;
+
+
+cart.forEach(item=>{
+
+let product=products[item.index];
+
+product.stock -= item.qty;
+
+total += product.price * item.qty;
+
+});
+
+
+todaySales += total;
+
+orderCount++;
+
+cart=[];
+
+saveData();
+
+renderProducts();
+
+renderCart();
+
+updateDashboard();
+
+alert(
+"✅ Sale Complete!\n\nTotal: "
++
+total.toLocaleString()
++
+" Ks"
+);
+
+}
+
+
+function updateDashboard(){
+
+document.getElementById("todaySales").innerText=
+todaySales.toLocaleString()+" Ks";
+
+document.getElementById("orderCount").innerText=
+orderCount;
+
+}
+
+
+renderProducts();
+
+renderCart();
+
+updateDashboard();
 
 </script>
 
