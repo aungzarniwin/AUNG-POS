@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aung POS</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: #f4f6f8;
+      color: #222;
+    }
+
+    header {
+      background: #111827;
+      color: white;
+      padding: 18px;
+      text-align: center;
+    }
+
+    header h1 {
+      font-size: 24px;
+    }
+
+    header p {
+      margin-top: 5px;
+      color: #d1d5db;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    .dashboard {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-bottom: 20px;
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .card h3 {
+      font-size: 14px;
+      color: #6b7280;
+      margin-bottom: 10px;
+    }
+
+    .card strong {
+      font-size: 22px;
+    }
+
+    .pos {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .pos h2 {
+      margin-bottom: 15px;
+    }
+
+    .product {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid #e5e7eb;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+
+    .product-name {
+      font-weight: bold;
+    }
+
+    .product-price {
+      color: #2563eb;
+      margin-top: 5px;
+    }
+
+    button {
+      border: none;
+      background: #2563eb;
+      color: white;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .cart {
+      margin-top: 20px;
+      border-top: 1px solid #ddd;
+      padding-top: 20px;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+    }
+
+    .total {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 15px;
+      text-align: right;
+    }
+
+    .checkout {
+      width: 100%;
+      margin-top: 15px;
+      background: #16a34a;
+      font-size: 18px;
+      padding: 14px;
+    }
+
+    @media (max-width: 700px) {
+      .dashboard {
+        grid-template-columns: 1fr;
+      }
+
+      .container {
+        padding: 12px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>🛒 Aung POS</h1>
+  <p>Sales & Stock Management</p>
+</header>
+
+<div class="container">
+
+  <div class="dashboard">
+
+    <div class="card">
+      <h3>ယနေ့ရောင်းအား</h3>
+      <strong id="todaySales">0 Ks</strong>
+    </div>
+
+    <div class="card">
+      <h3>အော်ဒါအရေအတွက်</h3>
+      <strong id="orderCount">0</strong>
+    </div>
+
+    <div class="card">
+      <h3>Cart Total</h3>
+      <strong id="cartTotal">0 Ks</strong>
+    </div>
+
+  </div>
+
+  <div class="pos">
+
+    <h2>🛍️ Products</h2>
+
+    <div class="product">
+      <div>
+        <div class="product-name">Coca Cola</div>
+        <div class="product-price">2,000 Ks</div>
+      </div>
+      <button onclick="addToCart('Coca Cola', 2000)">
+        Add
+      </button>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-name">Pepsi</div>
+        <div class="product-price">2,000 Ks</div>
+      </div>
+      <button onclick="addToCart('Pepsi', 2000)">
+        Add
+      </button>
+    </div>
+
+    <div class="product">
+      <div>
+        <div class="product-name">Mineral Water</div>
+        <div class="product-price">1,000 Ks</div>
+      </div>
+      <button onclick="addToCart('Mineral Water', 1000)">
+        Add
+      </button>
+    </div>
+
+    <div class="cart">
+
+      <h2>🛒 Cart</h2>
+
+      <div id="cartItems">
+        Cart is empty
+      </div>
+
+      <div class="total">
+        Total: <span id="total">0</span> Ks
+      </div>
+
+      <button class="checkout" onclick="checkout()">
+        💵 Checkout
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+
+  let cart = [];
+  let todaySales = 0;
+  let orderCount = 0;
+
+  function addToCart(name, price) {
+
+    cart.push({
+      name: name,
+      price: price
+    });
+
+    updateCart();
+  }
+
+  function updateCart() {
+
+    const cartItems = document.getElementById("cartItems");
+
+    if (cart.length === 0) {
+      cartItems.innerHTML = "Cart is empty";
+      document.getElementById("total").innerText = "0";
+      document.getElementById("cartTotal").innerText = "0 Ks";
+      return;
+    }
+
+    let html = "";
+    let total = 0;
+
+    cart.forEach((item, index) => {
+
+      total += item.price;
+
+      html += `
+        <div class="cart-item">
+          <span>${item.name}</span>
+          <span>
+            ${item.price.toLocaleString()} Ks
+            <button onclick="removeItem(${index})">
+              X
+            </button>
+          </span>
+        </div>
+      `;
+    });
+
+    cartItems.innerHTML = html;
+
+    document.getElementById("total").innerText =
+      total.toLocaleString();
+
+    document.getElementById("cartTotal").innerText =
+      total.toLocaleString() + " Ks";
+  }
+
+  function removeItem(index) {
+
+    cart.splice(index, 1);
+
+    updateCart();
+  }
+
+  function checkout() {
+
+    if (cart.length === 0) {
+      alert("Cart ထဲမှာ Product မရှိသေးပါ။");
+      return;
+    }
+
+    let total = cart.reduce(
+      (sum, item) => sum + item.price,
+      0
+    );
+
+    todaySales += total;
+    orderCount++;
+
+    document.getElementById("todaySales").innerText =
+      todaySales.toLocaleString() + " Ks";
+
+    document.getElementById("orderCount").innerText =
+      orderCount;
+
+    cart = [];
+
+    updateCart();
+
+    alert("✅ Sale Complete!");
+  }
+
+</script>
+
+</body>
+</html>
