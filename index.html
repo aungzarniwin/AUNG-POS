@@ -7,75 +7,167 @@
 
 <style>
 *{box-sizing:border-box;font-family:Arial,sans-serif}
-body{margin:0;background:#f3f4f6;color:#111827}
-header{background:#111827;color:white;padding:18px;text-align:center}
-.container{max-width:1000px;margin:auto;padding:15px}
 
-.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:15px}
-.card{background:white;padding:18px;border-radius:12px;box-shadow:0 2px 8px #ddd}
-.card small{color:#6b7280}
-.card strong{display:block;font-size:22px;margin-top:8px}
+body{
+ margin:0;
+ background:#f3f4f6;
+ color:#111827
+}
 
-.box{background:white;padding:18px;border-radius:12px;margin-bottom:15px}
-h2{margin-top:0}
+header{
+ background:#111827;
+ color:white;
+ padding:18px;
+ text-align:center
+}
 
-input{
-width:100%;
-padding:12px;
-margin:6px 0;
-border:1px solid #d1d5db;
-border-radius:8px
+.container{
+ max-width:1000px;
+ margin:auto;
+ padding:15px
+}
+
+.cards{
+ display:grid;
+ grid-template-columns:repeat(4,1fr);
+ gap:12px;
+ margin-bottom:15px
+}
+
+.card{
+ background:white;
+ padding:18px;
+ border-radius:12px;
+ box-shadow:0 2px 8px #ddd
+}
+
+.card small{
+ color:#6b7280
+}
+
+.card strong{
+ display:block;
+ font-size:20px;
+ margin-top:8px
+}
+
+.box{
+ background:white;
+ padding:18px;
+ border-radius:12px;
+ margin-bottom:15px;
+ box-shadow:0 2px 8px #ddd
+}
+
+h2{
+ margin-top:0
+}
+
+input,select{
+ width:100%;
+ padding:12px;
+ margin:6px 0;
+ border:1px solid #d1d5db;
+ border-radius:8px
 }
 
 button{
-border:0;
-padding:10px 14px;
-border-radius:8px;
-background:#2563eb;
-color:white;
-cursor:pointer;
-margin:3px
+ border:0;
+ padding:10px 14px;
+ border-radius:8px;
+ background:#2563eb;
+ color:white;
+ cursor:pointer;
+ margin:3px
 }
 
-button.delete{background:#dc2626}
-button.stock{background:#16a34a}
+button.green{
+ background:#16a34a
+}
+
+button.red{
+ background:#dc2626
+}
+
+button.gray{
+ background:#6b7280
+}
 
 .product{
-display:flex;
-justify-content:space-between;
-align-items:center;
-border:1px solid #e5e7eb;
-padding:12px;
-border-radius:10px;
-margin:8px 0
+ display:flex;
+ justify-content:space-between;
+ align-items:center;
+ border:1px solid #e5e7eb;
+ padding:12px;
+ border-radius:10px;
+ margin:8px 0
 }
 
-.low{color:#dc2626;font-weight:bold}
+.low{
+ color:#dc2626;
+ font-weight:bold
+}
 
 .cart-item{
-display:flex;
-justify-content:space-between;
-padding:10px 0;
-border-bottom:1px solid #eee
+ display:flex;
+ justify-content:space-between;
+ padding:10px 0;
+ border-bottom:1px solid #eee
 }
 
 .total{
-font-size:22px;
-font-weight:bold;
-text-align:right;
-margin-top:15px
+ font-size:22px;
+ font-weight:bold;
+ text-align:right;
+ margin-top:15px
 }
 
 .checkout{
-width:100%;
-background:#16a34a;
-font-size:18px;
-padding:14px
+ width:100%;
+ background:#16a34a;
+ font-size:18px;
+ padding:14px
+}
+
+.customer{
+ border:1px solid #e5e7eb;
+ padding:12px;
+ border-radius:10px;
+ margin:8px 0
+}
+
+.balance{
+ color:#dc2626;
+ font-weight:bold
+}
+
+#receipt{
+ display:none;
+ background:white;
+ padding:20px;
+ max-width:400px;
+ margin:20px auto;
+ border:1px solid #ddd
+}
+
+.receipt-center{
+ text-align:center
+}
+
+.receipt-line{
+ display:flex;
+ justify-content:space-between;
+ margin:8px 0
 }
 
 @media(max-width:700px){
-.cards{grid-template-columns:1fr}
-.product{display:block}
+ .cards{
+  grid-template-columns:repeat(2,1fr)
+ }
+
+ .product{
+  display:block
+ }
 }
 </style>
 </head>
@@ -88,6 +180,8 @@ padding:14px
 </header>
 
 <div class="container">
+
+<!-- DASHBOARD -->
 
 <div class="cards">
 
@@ -102,41 +196,47 @@ padding:14px
 </div>
 
 <div class="card">
-<small>Stock Items</small>
+<small>Products</small>
 <strong id="stockCount">0</strong>
 </div>
 
+<div class="card">
+<small>Outstanding</small>
+<strong id="outstanding">0 Ks</strong>
 </div>
-
-
-<!-- ADD PRODUCT -->
-
-<div class="box">
-
-<h2>➕ Product အသစ်ထည့်ရန်</h2>
-
-<input id="productName" placeholder="Product Name">
-
-<input id="productPrice"
-type="number"
-placeholder="Selling Price">
-
-<input id="productStock"
-type="number"
-placeholder="Stock Quantity">
-
-<button onclick="addProduct()">
-➕ Add Product
-</button>
 
 </div>
 
 
-<!-- PRODUCTS -->
+<!-- CUSTOMER -->
 
 <div class="box">
 
-<h2>📦 Product & Stock</h2>
+<h2>👤 Customer</h2>
+
+<input
+id="customerName"
+placeholder="Customer Name">
+
+<input
+id="customerPhone"
+placeholder="Phone Number">
+
+<select id="paymentType">
+
+<option value="cash">💵 Cash Sale</option>
+<option value="credit">📝 Credit Sale</option>
+
+</select>
+
+</div>
+
+
+<!-- PRODUCT -->
+
+<div class="box">
+
+<h2>📦 Products</h2>
 
 <div id="products"></div>
 
@@ -157,9 +257,61 @@ Cart is empty
 Total: <span id="total">0</span> Ks
 </div>
 
-<button class="checkout" onclick="checkout()">
-💵 Checkout
+<input
+id="paidAmount"
+type="number"
+placeholder="Paid Amount">
+
+<button
+class="checkout"
+onclick="checkout()">
+
+💵 Complete Sale
+
 </button>
+
+</div>
+
+
+<!-- CUSTOMER LIST -->
+
+<div class="box">
+
+<h2>👥 Customer Accounts</h2>
+
+<div id="customers"></div>
+
+</div>
+
+
+<!-- RECEIPT -->
+
+<div id="receipt">
+
+<div class="receipt-center">
+
+<h2>Aung POS</h2>
+<p>Sales & Stock Management</p>
+
+<hr>
+
+<div id="receiptContent"></div>
+
+<hr>
+
+<h3 id="receiptTotal"></h3>
+
+<p id="receiptPayment"></p>
+
+<button
+class="green"
+onclick="window.print()">
+
+🖨️ Print Receipt
+
+</button>
+
+</div>
 
 </div>
 
@@ -172,32 +324,39 @@ let products =
 JSON.parse(localStorage.getItem("aungProducts")) || [
 
 {
-name:"Coca Cola",
-price:2000,
-stock:20
+ name:"Coca Cola",
+ price:2000,
+ stock:20
 },
 
 {
-name:"Pepsi",
-price:2000,
-stock:20
+ name:"Pepsi",
+ price:2000,
+ stock:20
 },
 
 {
-name:"Mineral Water",
-price:1000,
-stock:30
+ name:"Mineral Water",
+ price:1000,
+ stock:30
 }
 
 ];
 
-let cart=[];
 
-let todaySales =
+let customers =
+JSON.parse(localStorage.getItem("aungCustomers")) || [];
+
+
+let sales =
 Number(localStorage.getItem("todaySales")) || 0;
 
-let orderCount =
+
+let orders =
 Number(localStorage.getItem("orderCount")) || 0;
+
+
+let cart=[];
 
 
 function saveData(){
@@ -208,55 +367,19 @@ JSON.stringify(products)
 );
 
 localStorage.setItem(
+"aungCustomers",
+JSON.stringify(customers)
+);
+
+localStorage.setItem(
 "todaySales",
-todaySales
+sales
 );
 
 localStorage.setItem(
 "orderCount",
-orderCount
+orders
 );
-
-}
-
-
-function addProduct(){
-
-let name=
-document.getElementById("productName").value.trim();
-
-let price=
-Number(document.getElementById("productPrice").value);
-
-let stock=
-Number(document.getElementById("productStock").value);
-
-
-if(!name || price<=0 || stock<0){
-
-alert("Product Name, Price နဲ့ Stock ကို မှန်ကန်စွာထည့်ပါ။");
-
-return;
-
-}
-
-
-products.push({
-name:name,
-price:price,
-stock:stock
-});
-
-
-saveData();
-
-document.getElementById("productName").value="";
-document.getElementById("productPrice").value="";
-document.getElementById("productStock").value="";
-
-renderProducts();
-
-alert("✅ Product ထည့်ပြီးပါပြီ");
 
 }
 
@@ -271,11 +394,9 @@ box.innerHTML="";
 
 products.forEach((product,index)=>{
 
-let lowStock =
-product.stock <= 5;
+let low=product.stock<=5;
 
-
-box.innerHTML += `
+box.innerHTML+=`
 
 <div class="product">
 
@@ -289,36 +410,30 @@ ${product.price.toLocaleString()} Ks
 
 <br>
 
-<span class="${lowStock ? 'low':''}">
+<span class="${low?'low':''}">
 
 Stock: ${product.stock}
 
-${lowStock ? ' ⚠️ Low Stock':''}
+${low?' ⚠️ Low Stock':''}
 
 </span>
 
 </div>
 
-
 <div>
 
-<button onclick="addToCart(${index})">
+<button
+onclick="addToCart(${index})">
 
 🛒 Add
 
 </button>
 
-<button class="stock"
+<button
+class="green"
 onclick="addStock(${index})">
 
 + Stock
-
-</button>
-
-<button class="delete"
-onclick="deleteProduct(${index})">
-
-🗑️
 
 </button>
 
@@ -340,35 +455,15 @@ products.length;
 function addStock(index){
 
 let qty=
-Number(prompt("Stock ဘယ်နှစ်ခု ထည့်မလဲ?"));
-
+Number(prompt("Stock ဘယ်နှစ်ခုထည့်မလဲ?"));
 
 if(!qty || qty<=0)return;
 
-
-products[index].stock += qty;
-
-saveData();
-
-renderProducts();
-
-}
-
-
-function deleteProduct(index){
-
-if(confirm(
-products[index].name +
-" ကို ဖျက်မှာသေချာပါသလား?"
-)){
-
-products.splice(index,1);
+products[index].stock+=qty;
 
 saveData();
 
 renderProducts();
-
-}
 
 }
 
@@ -376,7 +471,6 @@ renderProducts();
 function addToCart(index){
 
 let product=products[index];
-
 
 if(product.stock<=0){
 
@@ -388,22 +482,20 @@ return;
 
 
 let existing=
-cart.find(item=>item.index===index);
+cart.find(x=>x.index===index);
 
 
 if(existing){
 
-if(existing.qty < product.stock){
+if(existing.qty>=product.stock){
 
-existing.qty++;
-
-}else{
-
-alert("Stock ထက်ပိုပြီး မရောင်းနိုင်ပါ");
+alert("❌ Stock ထက်ပိုပြီး မရောင်းနိုင်ပါ");
 
 return;
 
 }
+
+existing.qty++;
 
 }else{
 
@@ -413,7 +505,6 @@ qty:1
 });
 
 }
-
 
 renderCart();
 
@@ -431,7 +522,8 @@ renderCart();
 
 function renderCart(){
 
-let box=document.getElementById("cart");
+let box=
+document.getElementById("cart");
 
 
 if(cart.length===0){
@@ -455,12 +547,12 @@ cart.forEach((item,i)=>{
 let product=products[item.index];
 
 let subtotal=
-product.price * item.qty;
+product.price*item.qty;
 
 total+=subtotal;
 
 
-box.innerHTML += `
+box.innerHTML+=`
 
 <div class="cart-item">
 
@@ -480,7 +572,7 @@ ${product.price.toLocaleString()} Ks
 ${subtotal.toLocaleString()} Ks
 
 <button
-class="delete"
+class="red"
 onclick="removeCart(${i})">
 
 X
@@ -506,48 +598,313 @@ function checkout(){
 
 if(cart.length===0){
 
-alert("Cart ထဲမှာ Product မရှိသေးပါ");
+alert("❌ Cart ထဲမှာ Product မရှိသေးပါ");
 
 return;
 
 }
 
 
-let total=0;
+let name=
+document.getElementById("customerName").value.trim();
+
+
+let phone=
+document.getElementById("customerPhone").value.trim();
+
+
+let payment=
+document.getElementById("paymentType").value;
+
+
+let total=
+cart.reduce(
+(sum,item)=>
+sum+
+products[item.index].price*item.qty,
+0
+);
+
+
+let paid=
+Number(
+document.getElementById("paidAmount").value
+);
+
+
+if(payment==="cash"){
+
+if(paid<total){
+
+alert(
+"❌ Paid Amount မလုံလောက်ပါ\n\n"+
+"Total: "+
+total.toLocaleString()+
+" Ks"
+);
+
+return;
+
+}
+
+}else{
+
+if(!name){
+
+alert("Credit Sale အတွက် Customer Name ထည့်ပါ");
+
+return;
+
+}
+
+}
+
+
+let balance=
+payment==="credit"
+?
+total-paid
+:
+paid-total;
+
+
+if(balance<0)balance=0;
 
 
 cart.forEach(item=>{
 
-let product=products[item.index];
-
-product.stock -= item.qty;
-
-total += product.price * item.qty;
+products[item.index].stock-=item.qty;
 
 });
 
 
-todaySales += total;
+sales+=total;
 
-orderCount++;
+orders++;
+
+
+/* CUSTOMER ACCOUNT */
+
+if(payment==="credit"){
+
+let existing=
+customers.find(
+c=>c.phone===phone && phone!==""
+);
+
+
+if(existing){
+
+existing.balance+=balance;
+
+}else{
+
+customers.push({
+
+name:name,
+phone:phone,
+balance:balance
+
+});
+
+}
+
+}
+
+
+saveData();
+
+showReceipt(
+name,
+phone,
+total,
+paid,
+balance,
+payment
+);
+
 
 cart=[];
 
-saveData();
+document.getElementById("customerName").value="";
+document.getElementById("customerPhone").value="";
+document.getElementById("paidAmount").value="";
+
 
 renderProducts();
 
 renderCart();
 
+renderCustomers();
+
 updateDashboard();
 
-alert(
-"✅ Sale Complete!\n\nTotal: "
-+
-total.toLocaleString()
-+
+}
+
+
+function showReceipt(
+name,
+phone,
+total,
+paid,
+balance,
+payment
+){
+
+let content=
+document.getElementById("receiptContent");
+
+content.innerHTML=`
+
+<div class="receipt-line">
+
+<span>Customer</span>
+<span>${name||"Walk-in Customer"}</span>
+
+</div>
+
+<div class="receipt-line">
+
+<span>Phone</span>
+<span>${phone||"-"}</span>
+
+</div>
+
+<div class="receipt-line">
+
+<span>Payment</span>
+<span>
+${payment==="cash"?"Cash":"Credit"}
+</span>
+
+</div>
+
+<div class="receipt-line">
+
+<span>Paid</span>
+<span>${paid.toLocaleString()} Ks</span>
+
+</div>
+
+<div class="receipt-line">
+
+<span>Balance</span>
+<span>${balance.toLocaleString()} Ks</span>
+
+</div>
+
+`;
+
+document.getElementById("receiptTotal").innerText=
+"Total: "+
+total.toLocaleString()+
+" Ks";
+
+
+document.getElementById("receiptPayment").innerText=
+"Thank You!";
+
+
+document.getElementById("receipt").style.display=
+"block";
+
+
+document.getElementById("receipt")
+.scrollIntoView({
+behavior:"smooth"
+});
+
+}
+
+
+function renderCustomers(){
+
+let box=
+document.getElementById("customers");
+
+box.innerHTML="";
+
+
+if(customers.length===0){
+
+box.innerHTML="Customer account မရှိသေးပါ";
+
+return;
+
+}
+
+
+customers.forEach((customer,index)=>{
+
+box.innerHTML+=`
+
+<div class="customer">
+
+<strong>${customer.name}</strong>
+
+<br>
+
+📞 ${customer.phone||"-"}
+
+<br>
+
+<span class="balance">
+
+Outstanding:
+${customer.balance.toLocaleString()} Ks
+
+</span>
+
+<br>
+
+<button
+class="green"
+onclick="payment(${index})">
+
+💵 Receive Payment
+
+</button>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+function payment(index){
+
+let amount=
+Number(
+prompt(
+"Customer ပေးချေငွေထည့်ပါ\n\n"+
+"Outstanding: "+
+customers[index].balance.toLocaleString()+
 " Ks"
+)
 );
+
+
+if(!amount || amount<=0)return;
+
+
+customers[index].balance-=amount;
+
+
+if(customers[index].balance<0)
+customers[index].balance=0;
+
+
+saveData();
+
+renderCustomers();
+
+updateDashboard();
+
+
+alert("✅ Payment မှတ်တမ်းတင်ပြီးပါပြီ");
 
 }
 
@@ -555,10 +912,22 @@ total.toLocaleString()
 function updateDashboard(){
 
 document.getElementById("todaySales").innerText=
-todaySales.toLocaleString()+" Ks";
+sales.toLocaleString()+" Ks";
+
 
 document.getElementById("orderCount").innerText=
-orderCount;
+orders;
+
+
+let totalOutstanding=
+customers.reduce(
+(sum,c)=>sum+c.balance,
+0
+);
+
+
+document.getElementById("outstanding").innerText=
+totalOutstanding.toLocaleString()+" Ks";
 
 }
 
@@ -566,6 +935,8 @@ orderCount;
 renderProducts();
 
 renderCart();
+
+renderCustomers();
 
 updateDashboard();
 
