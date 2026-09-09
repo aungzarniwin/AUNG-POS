@@ -22,7 +22,7 @@ header{
 }
 
 .container{
- max-width:1000px;
+ max-width:1100px;
  margin:auto;
  padding:15px
 }
@@ -81,17 +81,10 @@ button{
  margin:3px
 }
 
-button.green{
- background:#16a34a
-}
-
-button.red{
- background:#dc2626
-}
-
-button.gray{
- background:#6b7280
-}
+.green{background:#16a34a}
+.red{background:#dc2626}
+.gray{background:#6b7280}
+.orange{background:#ea580c}
 
 .product{
  display:flex;
@@ -108,10 +101,11 @@ button.gray{
  font-weight:bold
 }
 
-.cart-item{
+.cart-item,
+.history-item{
  display:flex;
  justify-content:space-between;
- padding:10px 0;
+ padding:12px 0;
  border-bottom:1px solid #eee
 }
 
@@ -141,6 +135,23 @@ button.gray{
  font-weight:bold
 }
 
+.report-row{
+ display:flex;
+ justify-content:space-between;
+ padding:10px 0;
+ border-bottom:1px solid #eee
+}
+
+.profit{
+ color:#16a34a;
+ font-weight:bold
+}
+
+.expense{
+ color:#dc2626;
+ font-weight:bold
+}
+
 #receipt{
  display:none;
  background:white;
@@ -150,9 +161,7 @@ button.gray{
  border:1px solid #ddd
 }
 
-.receipt-center{
- text-align:center
-}
+.receipt-center{text-align:center}
 
 .receipt-line{
  display:flex;
@@ -160,14 +169,39 @@ button.gray{
  margin:8px 0
 }
 
-@media(max-width:700px){
- .cards{
-  grid-template-columns:repeat(2,1fr)
- }
+.nav{
+ display:flex;
+ gap:6px;
+ overflow:auto;
+ margin-bottom:15px
+}
 
- .product{
-  display:block
- }
+.nav button{
+ white-space:nowrap
+}
+
+.section{
+ display:none
+}
+
+.section.active{
+ display:block
+}
+
+@media(max-width:700px){
+
+.cards{
+ grid-template-columns:repeat(2,1fr)
+}
+
+.product{
+ display:block
+}
+
+.report-row{
+ font-size:14px
+}
+
 }
 </style>
 </head>
@@ -181,7 +215,36 @@ button.gray{
 
 <div class="container">
 
+<!-- NAVIGATION -->
+
+<div class="nav">
+
+<button onclick="showSection('dashboard')">
+🏠 Dashboard
+</button>
+
+<button onclick="showSection('pos')">
+🛒 POS
+</button>
+
+<button onclick="showSection('productsSection')">
+📦 Products
+</button>
+
+<button onclick="showSection('customersSection')">
+👥 Customers
+</button>
+
+<button onclick="showSection('reports')">
+📊 Reports
+</button>
+
+</div>
+
+
 <!-- DASHBOARD -->
+
+<div id="dashboard" class="section active">
 
 <div class="cards">
 
@@ -191,59 +254,88 @@ button.gray{
 </div>
 
 <div class="card">
+<small>ယနေ့အမြတ်</small>
+<strong id="todayProfit">0 Ks</strong>
+</div>
+
+<div class="card">
+<small>ယနေ့ကုန်ကျစရိတ်</small>
+<strong id="todayExpense">0 Ks</strong>
+</div>
+
+<div class="card">
 <small>အော်ဒါ</small>
 <strong id="orderCount">0</strong>
 </div>
 
-<div class="card">
-<small>Products</small>
-<strong id="stockCount">0</strong>
 </div>
 
-<div class="card">
-<small>Outstanding</small>
-<strong id="outstanding">0 Ks</strong>
+<div class="box">
+
+<h2>📊 Today Summary</h2>
+
+<div class="report-row">
+<span>Sales</span>
+<strong id="dashSales">0 Ks</strong>
+</div>
+
+<div class="report-row">
+<span>Gross Profit</span>
+<strong class="profit" id="dashProfit">0 Ks</strong>
+</div>
+
+<div class="report-row">
+<span>Expense</span>
+<strong class="expense" id="dashExpense">0 Ks</strong>
+</div>
+
+<div class="report-row">
+<span>Net Profit</span>
+<strong id="dashNetProfit">0 Ks</strong>
 </div>
 
 </div>
 
+</div>
 
-<!-- CUSTOMER -->
+
+<!-- POS -->
+
+<div id="pos" class="section">
 
 <div class="box">
 
 <h2>👤 Customer</h2>
 
-<input
-id="customerName"
+<input id="customerName"
 placeholder="Customer Name">
 
-<input
-id="customerPhone"
+<input id="customerPhone"
 placeholder="Phone Number">
 
 <select id="paymentType">
 
-<option value="cash">💵 Cash Sale</option>
-<option value="credit">📝 Credit Sale</option>
+<option value="cash">
+💵 Cash Sale
+</option>
+
+<option value="credit">
+📝 Credit Sale
+</option>
 
 </select>
 
 </div>
 
 
-<!-- PRODUCT -->
-
 <div class="box">
 
-<h2>📦 Products</h2>
+<h2>🛍️ Products</h2>
 
-<div id="products"></div>
+<div id="productsPOS"></div>
 
 </div>
 
-
-<!-- CART -->
 
 <div class="box">
 
@@ -254,16 +346,15 @@ Cart is empty
 </div>
 
 <div class="total">
-Total: <span id="total">0</span> Ks
+Total:
+<span id="total">0</span> Ks
 </div>
 
-<input
-id="paidAmount"
+<input id="paidAmount"
 type="number"
 placeholder="Paid Amount">
 
-<button
-class="checkout"
+<button class="checkout"
 onclick="checkout()">
 
 💵 Complete Sale
@@ -272,14 +363,142 @@ onclick="checkout()">
 
 </div>
 
+</div>
 
-<!-- CUSTOMER LIST -->
+
+<!-- PRODUCTS -->
+
+<div id="productsSection" class="section">
+
+<div class="box">
+
+<h2>➕ Product အသစ်ထည့်ရန်</h2>
+
+<input id="productName"
+placeholder="Product Name">
+
+<input id="costPrice"
+type="number"
+placeholder="Cost Price">
+
+<input id="sellingPrice"
+type="number"
+placeholder="Selling Price">
+
+<input id="productStock"
+type="number"
+placeholder="Stock Quantity">
+
+<button onclick="addProduct()">
+➕ Add Product
+</button>
+
+</div>
+
+
+<div class="box">
+
+<h2>📦 Product & Stock</h2>
+
+<div id="productsList"></div>
+
+</div>
+
+</div>
+
+
+<!-- CUSTOMERS -->
+
+<div id="customersSection" class="section">
 
 <div class="box">
 
 <h2>👥 Customer Accounts</h2>
 
 <div id="customers"></div>
+
+</div>
+
+</div>
+
+
+<!-- REPORTS -->
+
+<div id="reports" class="section">
+
+<div class="box">
+
+<h2>📊 Sales Report</h2>
+
+<div class="report-row">
+<span>Total Sales</span>
+<strong id="reportSales">0 Ks</strong>
+</div>
+
+<div class="report-row">
+<span>Gross Profit</span>
+<strong class="profit" id="reportProfit">0 Ks</strong>
+</div>
+
+<div class="report-row">
+<span>Total Expense</span>
+<strong class="expense" id="reportExpense">0 Ks</strong>
+</div>
+
+<div class="report-row">
+<span>Net Profit</span>
+<strong id="reportNetProfit">0 Ks</strong>
+</div>
+
+<div class="report-row">
+<span>Total Orders</span>
+<strong id="reportOrders">0</strong>
+</div>
+
+<button
+class="green"
+onclick="exportCSV()">
+
+📥 Export Sales CSV
+
+</button>
+
+</div>
+
+
+<!-- EXPENSE -->
+
+<div class="box">
+
+<h2>💸 Add Expense</h2>
+
+<input id="expenseName"
+placeholder="Expense Name">
+
+<input id="expenseAmount"
+type="number"
+placeholder="Amount">
+
+<button
+class="orange"
+onclick="addExpense()">
+
+➕ Add Expense
+
+</button>
+
+</div>
+
+
+<!-- SALES HISTORY -->
+
+<div class="box">
+
+<h2>🧾 Sales History</h2>
+
+<div id="salesHistory"></div>
+
+</div>
 
 </div>
 
@@ -291,6 +510,7 @@ onclick="checkout()">
 <div class="receipt-center">
 
 <h2>Aung POS</h2>
+
 <p>Sales & Stock Management</p>
 
 <hr>
@@ -325,18 +545,21 @@ JSON.parse(localStorage.getItem("aungProducts")) || [
 
 {
  name:"Coca Cola",
+ cost:1500,
  price:2000,
  stock:20
 },
 
 {
  name:"Pepsi",
+ cost:1500,
  price:2000,
  stock:20
 },
 
 {
  name:"Mineral Water",
+ cost:600,
  price:1000,
  stock:30
 }
@@ -348,12 +571,12 @@ let customers =
 JSON.parse(localStorage.getItem("aungCustomers")) || [];
 
 
-let sales =
-Number(localStorage.getItem("todaySales")) || 0;
+let salesHistory =
+JSON.parse(localStorage.getItem("aungSalesHistory")) || [];
 
 
-let orders =
-Number(localStorage.getItem("orderCount")) || 0;
+let expenses =
+JSON.parse(localStorage.getItem("aungExpenses")) || [];
 
 
 let cart=[];
@@ -372,50 +595,147 @@ JSON.stringify(customers)
 );
 
 localStorage.setItem(
-"todaySales",
-sales
+"aungSalesHistory",
+JSON.stringify(salesHistory)
 );
 
 localStorage.setItem(
-"orderCount",
-orders
+"aungExpenses",
+JSON.stringify(expenses)
 );
+
+}
+
+
+function today(){
+
+return new Date().toISOString().split("T")[0];
+
+}
+
+
+function showSection(id){
+
+document
+.querySelectorAll(".section")
+.forEach(x=>x.classList.remove("active"));
+
+document
+.getElementById(id)
+.classList.add("active");
+
+}
+
+
+function addProduct(){
+
+let name=
+document.getElementById("productName")
+.value.trim();
+
+let cost=
+Number(
+document.getElementById("costPrice").value
+);
+
+let price=
+Number(
+document.getElementById("sellingPrice").value
+);
+
+let stock=
+Number(
+document.getElementById("productStock").value
+);
+
+
+if(
+!name ||
+cost<=0 ||
+price<=0 ||
+stock<0
+){
+
+alert(
+"Product Name, Cost, Selling Price နဲ့ Stock ကို မှန်ကန်စွာထည့်ပါ။"
+);
+
+return;
+
+}
+
+
+products.push({
+
+name:name,
+cost:cost,
+price:price,
+stock:stock
+
+});
+
+
+saveData();
+
+document.getElementById("productName").value="";
+document.getElementById("costPrice").value="";
+document.getElementById("sellingPrice").value="";
+document.getElementById("productStock").value="";
+
+renderAll();
+
+alert("✅ Product ထည့်ပြီးပါပြီ");
 
 }
 
 
 function renderProducts(){
 
-let box=
-document.getElementById("products");
+let list=
+document.getElementById("productsList");
 
-box.innerHTML="";
+let pos=
+document.getElementById("productsPOS");
+
+list.innerHTML="";
+pos.innerHTML="";
 
 
-products.forEach((product,index)=>{
+products.forEach((p,i)=>{
 
-let low=product.stock<=5;
+let low=p.stock<=5;
 
-box.innerHTML+=`
+
+list.innerHTML+=`
 
 <div class="product">
 
 <div>
 
-<strong>${product.name}</strong>
+<strong>${p.name}</strong>
 
 <br>
 
-${product.price.toLocaleString()} Ks
+Cost:
+${p.cost.toLocaleString()} Ks
+
+<br>
+
+Sell:
+${p.price.toLocaleString()} Ks
+
+<br>
+
+Profit:
+<span class="profit">
+${(p.price-p.cost).toLocaleString()} Ks
+</span>
 
 <br>
 
 <span class="${low?'low':''}">
-
-Stock: ${product.stock}
-
+Stock: ${p.stock}
 ${low?' ⚠️ Low Stock':''}
-
 </span>
 
 </div>
@@ -423,17 +743,18 @@ ${low?' ⚠️ Low Stock':''}
 <div>
 
 <button
-onclick="addToCart(${index})">
+onclick="addStock(${i})"
+class="green">
 
-🛒 Add
++ Stock
 
 </button>
 
 <button
-class="green"
-onclick="addStock(${index})">
+onclick="deleteProduct(${i})"
+class="red">
 
-+ Stock
+🗑️ Delete
 
 </button>
 
@@ -443,11 +764,37 @@ onclick="addStock(${index})">
 
 `;
 
+
+pos.innerHTML+=`
+
+<div class="product">
+
+<div>
+
+<strong>${p.name}</strong>
+
+<br>
+
+${p.price.toLocaleString()} Ks
+
+<br>
+
+Stock: ${p.stock}
+
+</div>
+
+<button
+onclick="addToCart(${i})">
+
+🛒 Add
+
+</button>
+
+</div>
+
+`;
+
 });
-
-
-document.getElementById("stockCount").innerText=
-products.length;
 
 }
 
@@ -455,7 +802,9 @@ products.length;
 function addStock(index){
 
 let qty=
-Number(prompt("Stock ဘယ်နှစ်ခုထည့်မလဲ?"));
+Number(
+prompt("Stock ဘယ်နှစ်ခုထည့်မလဲ?")
+);
 
 if(!qty || qty<=0)return;
 
@@ -463,16 +812,36 @@ products[index].stock+=qty;
 
 saveData();
 
-renderProducts();
+renderAll();
+
+}
+
+
+function deleteProduct(index){
+
+if(
+confirm(
+products[index].name+
+" ကို ဖျက်မှာသေချာပါသလား?"
+)
+){
+
+products.splice(index,1);
+
+saveData();
+
+renderAll();
+
+}
 
 }
 
 
 function addToCart(index){
 
-let product=products[index];
+let p=products[index];
 
-if(product.stock<=0){
+if(p.stock<=0){
 
 alert("❌ Stock မရှိတော့ပါ");
 
@@ -481,30 +850,33 @@ return;
 }
 
 
-let existing=
+let item=
 cart.find(x=>x.index===index);
 
 
-if(existing){
+if(item){
 
-if(existing.qty>=product.stock){
+if(item.qty>=p.stock){
 
-alert("❌ Stock ထက်ပိုပြီး မရောင်းနိုင်ပါ");
+alert("❌ Stock မလုံလောက်ပါ");
 
 return;
 
 }
 
-existing.qty++;
+item.qty++;
 
 }else{
 
 cart.push({
+
 index:index,
 qty:1
+
 });
 
 }
+
 
 renderCart();
 
@@ -544,10 +916,10 @@ box.innerHTML="";
 
 cart.forEach((item,i)=>{
 
-let product=products[item.index];
+let p=products[item.index];
 
 let subtotal=
-product.price*item.qty;
+p.price*item.qty;
 
 total+=subtotal;
 
@@ -558,12 +930,12 @@ box.innerHTML+=`
 
 <span>
 
-${product.name}
+${p.name}
 
 <br>
 
 ${item.qty} ×
-${product.price.toLocaleString()} Ks
+${p.price.toLocaleString()} Ks
 
 </span>
 
@@ -588,7 +960,8 @@ X
 });
 
 
-document.getElementById("total").innerText=
+document.getElementById("total")
+.innerText=
 total.toLocaleString();
 
 }
@@ -598,7 +971,7 @@ function checkout(){
 
 if(cart.length===0){
 
-alert("❌ Cart ထဲမှာ Product မရှိသေးပါ");
+alert("Cart ထဲမှာ Product မရှိသေးပါ");
 
 return;
 
@@ -606,25 +979,16 @@ return;
 
 
 let name=
-document.getElementById("customerName").value.trim();
-
+document.getElementById("customerName")
+.value.trim();
 
 let phone=
-document.getElementById("customerPhone").value.trim();
-
+document.getElementById("customerPhone")
+.value.trim();
 
 let payment=
-document.getElementById("paymentType").value;
-
-
-let total=
-cart.reduce(
-(sum,item)=>
-sum+
-products[item.index].price*item.qty,
-0
-);
-
+document.getElementById("paymentType")
+.value;
 
 let paid=
 Number(
@@ -632,12 +996,26 @@ document.getElementById("paidAmount").value
 );
 
 
-if(payment==="cash"){
+let total=0;
+let profit=0;
 
-if(paid<total){
+
+cart.forEach(item=>{
+
+let p=products[item.index];
+
+total += p.price*item.qty;
+
+profit +=
+(p.price-p.cost)*item.qty;
+
+});
+
+
+if(payment==="cash" && paid<total){
 
 alert(
-"❌ Paid Amount မလုံလောက်ပါ\n\n"+
+"Paid Amount မလုံလောက်ပါ\n\n"+
 "Total: "+
 total.toLocaleString()+
 " Ks"
@@ -647,15 +1025,14 @@ return;
 
 }
 
-}else{
 
-if(!name){
+if(payment==="credit" && !name){
 
-alert("Credit Sale အတွက် Customer Name ထည့်ပါ");
+alert(
+"Credit Sale အတွက် Customer Name ထည့်ပါ"
+);
 
 return;
-
-}
 
 }
 
@@ -665,11 +1042,13 @@ payment==="credit"
 ?
 total-paid
 :
-paid-total;
+0;
 
 
 if(balance<0)balance=0;
 
+
+/* STOCK */
 
 cart.forEach(item=>{
 
@@ -678,24 +1057,19 @@ products[item.index].stock-=item.qty;
 });
 
 
-sales+=total;
-
-orders++;
-
-
-/* CUSTOMER ACCOUNT */
+/* CUSTOMER */
 
 if(payment==="credit"){
 
-let existing=
+let customer=
 customers.find(
 c=>c.phone===phone && phone!==""
 );
 
 
-if(existing){
+if(customer){
 
-existing.balance+=balance;
+customer.balance+=balance;
 
 }else{
 
@@ -712,16 +1086,39 @@ balance:balance
 }
 
 
+/* SALE RECORD */
+
+let sale={
+
+id:Date.now(),
+
+date:today(),
+
+time:new Date().toLocaleTimeString(),
+
+customer:name||"Walk-in Customer",
+
+phone:phone||"",
+
+payment:payment,
+
+total:total,
+
+profit:profit,
+
+paid:paid,
+
+balance:balance
+
+};
+
+
+salesHistory.push(sale);
+
 saveData();
 
-showReceipt(
-name,
-phone,
-total,
-paid,
-balance,
-payment
-);
+
+showReceipt(sale);
 
 
 cart=[];
@@ -731,88 +1128,121 @@ document.getElementById("customerPhone").value="";
 document.getElementById("paidAmount").value="";
 
 
-renderProducts();
-
-renderCart();
-
-renderCustomers();
-
-updateDashboard();
+renderAll();
 
 }
 
 
-function showReceipt(
-name,
-phone,
-total,
-paid,
-balance,
-payment
-){
+function showReceipt(sale){
 
 let content=
 document.getElementById("receiptContent");
 
+
 content.innerHTML=`
 
 <div class="receipt-line">
-
 <span>Customer</span>
-<span>${name||"Walk-in Customer"}</span>
-
+<span>${sale.customer}</span>
 </div>
 
 <div class="receipt-line">
-
 <span>Phone</span>
-<span>${phone||"-"}</span>
-
+<span>${sale.phone||"-"}</span>
 </div>
 
 <div class="receipt-line">
-
 <span>Payment</span>
 <span>
-${payment==="cash"?"Cash":"Credit"}
+${sale.payment==="cash"?"Cash":"Credit"}
 </span>
-
 </div>
 
 <div class="receipt-line">
-
 <span>Paid</span>
-<span>${paid.toLocaleString()} Ks</span>
-
+<span>
+${sale.paid.toLocaleString()} Ks
+</span>
 </div>
 
 <div class="receipt-line">
-
 <span>Balance</span>
-<span>${balance.toLocaleString()} Ks</span>
-
+<span>
+${sale.balance.toLocaleString()} Ks
+</span>
 </div>
 
 `;
 
-document.getElementById("receiptTotal").innerText=
+
+document.getElementById("receiptTotal")
+.innerText=
 "Total: "+
-total.toLocaleString()+
+sale.total.toLocaleString()+
 " Ks";
 
 
-document.getElementById("receiptPayment").innerText=
+document.getElementById("receiptPayment")
+.innerText=
 "Thank You!";
 
 
-document.getElementById("receipt").style.display=
-"block";
+document.getElementById("receipt")
+.style.display="block";
 
 
 document.getElementById("receipt")
 .scrollIntoView({
 behavior:"smooth"
 });
+
+}
+
+
+function addExpense(){
+
+let name=
+document.getElementById("expenseName")
+.value.trim();
+
+let amount=
+Number(
+document.getElementById("expenseAmount").value
+);
+
+
+if(!name || amount<=0){
+
+alert(
+"Expense Name နဲ့ Amount ထည့်ပါ"
+);
+
+return;
+
+}
+
+
+expenses.push({
+
+id:Date.now(),
+
+date:today(),
+
+name:name,
+
+amount:amount
+
+});
+
+
+saveData();
+
+document.getElementById("expenseName").value="";
+document.getElementById("expenseAmount").value="";
+
+renderAll();
+
+alert("✅ Expense ထည့်ပြီးပါပြီ");
 
 }
 
@@ -827,31 +1257,32 @@ box.innerHTML="";
 
 if(customers.length===0){
 
-box.innerHTML="Customer account မရှိသေးပါ";
+box.innerHTML=
+"Customer မရှိသေးပါ";
 
 return;
 
 }
 
 
-customers.forEach((customer,index)=>{
+customers.forEach((c,i)=>{
 
 box.innerHTML+=`
 
 <div class="customer">
 
-<strong>${customer.name}</strong>
+<strong>${c.name}</strong>
 
 <br>
 
-📞 ${customer.phone||"-"}
+📞 ${c.phone||"-"}
 
 <br>
 
 <span class="balance">
 
 Outstanding:
-${customer.balance.toLocaleString()} Ks
+${c.balance.toLocaleString()} Ks
 
 </span>
 
@@ -859,7 +1290,7 @@ ${customer.balance.toLocaleString()} Ks
 
 <button
 class="green"
-onclick="payment(${index})">
+onclick="receivePayment(${i})">
 
 💵 Receive Payment
 
@@ -874,14 +1305,15 @@ onclick="payment(${index})">
 }
 
 
-function payment(index){
+function receivePayment(index){
 
 let amount=
 Number(
 prompt(
-"Customer ပေးချေငွေထည့်ပါ\n\n"+
+"ပေးချေငွေထည့်ပါ\n\n"+
 "Outstanding: "+
-customers[index].balance.toLocaleString()+
+customers[index]
+.balance.toLocaleString()+
 " Ks"
 )
 );
@@ -899,38 +1331,269 @@ customers[index].balance=0;
 
 saveData();
 
-renderCustomers();
+renderAll();
 
-updateDashboard();
-
-
-alert("✅ Payment မှတ်တမ်းတင်ပြီးပါပြီ");
+alert(
+"✅ Payment မှတ်တမ်းတင်ပြီးပါပြီ"
+);
 
 }
 
 
-function updateDashboard(){
+function getTodaySales(){
 
-document.getElementById("todaySales").innerText=
-sales.toLocaleString()+" Ks";
+return salesHistory.filter(
+s=>s.date===today()
+);
+
+}
 
 
-document.getElementById("orderCount").innerText=
-orders;
+function getTodayExpenses(){
+
+return expenses.filter(
+e=>e.date===today()
+);
+
+}
 
 
-let totalOutstanding=
-customers.reduce(
-(sum,c)=>sum+c.balance,
+function renderReports(){
+
+let sales=getTodaySales();
+
+let ex=getTodayExpenses();
+
+
+let totalSales=
+sales.reduce(
+(a,s)=>a+s.total,
 0
 );
 
 
-document.getElementById("outstanding").innerText=
-totalOutstanding.toLocaleString()+" Ks";
+let profit=
+sales.reduce(
+(a,s)=>a+s.profit,
+0
+);
+
+
+let expense=
+ex.reduce(
+(a,e)=>a+e.amount,
+0
+);
+
+
+let netProfit=
+profit-expense;
+
+
+document.getElementById("todaySales")
+.innerText=
+totalSales.toLocaleString()+" Ks";
+
+
+document.getElementById("todayProfit")
+.innerText=
+profit.toLocaleString()+" Ks";
+
+
+document.getElementById("todayExpense")
+.innerText=
+expense.toLocaleString()+" Ks";
+
+
+document.getElementById("orderCount")
+.innerText=
+sales.length;
+
+
+document.getElementById("dashSales")
+.innerText=
+totalSales.toLocaleString()+" Ks";
+
+
+document.getElementById("dashProfit")
+.innerText=
+profit.toLocaleString()+" Ks";
+
+
+document.getElementById("dashExpense")
+.innerText=
+expense.toLocaleString()+" Ks";
+
+
+document.getElementById("dashNetProfit")
+.innerText=
+netProfit.toLocaleString()+" Ks";
+
+
+document.getElementById("reportSales")
+.innerText=
+totalSales.toLocaleString()+" Ks";
+
+
+document.getElementById("reportProfit")
+.innerText=
+profit.toLocaleString()+" Ks";
+
+
+document.getElementById("reportExpense")
+.innerText=
+expense.toLocaleString()+" Ks";
+
+
+document.getElementById("reportNetProfit")
+.innerText=
+netProfit.toLocaleString()+" Ks";
+
+
+document.getElementById("reportOrders")
+.innerText=
+sales.length;
+
+
+renderHistory();
 
 }
 
+
+function renderHistory(){
+
+let box=
+document.getElementById("salesHistory");
+
+box.innerHTML="";
+
+
+if(salesHistory.length===0){
+
+box.innerHTML=
+"Sales History မရှိသေးပါ";
+
+return;
+
+}
+
+
+let list=
+[...salesHistory]
+.reverse();
+
+
+list.forEach(s=>{
+
+box.innerHTML+=`
+
+<div class="history-item">
+
+<div>
+
+<strong>
+${s.customer}
+</strong>
+
+<br>
+
+${s.date}
+${s.time}
+
+<br>
+
+${s.payment==="cash"
+?"💵 Cash"
+:"📝 Credit"}
+
+</div>
+
+<div>
+
+<strong>
+${s.total.toLocaleString()} Ks
+</strong>
+
+<br>
+
+<span class="profit">
+
+Profit:
+${s.profit.toLocaleString()} Ks
+
+</span>
+
+</div>
+
+</div>
+
+`;
+
+});
+
+}
+
+
+function exportCSV(){
+
+if(salesHistory.length===0){
+
+alert("Export လုပ်ရန် Sales မရှိသေးပါ");
+
+return;
+
+}
+
+
+let csv=
+"Date,Time,Customer,Phone,Payment,Total,Profit,Paid,Balance\n";
+
+
+salesHistory.forEach(s=>{
+
+csv+=
+[
+s.date,
+s.time,
+`"${s.customer}"`,
+`"${s.phone}"`,
+s.payment,
+s.total,
+s.profit,
+s.paid,
+s.balance
+].join(",")+"\n";
+
+});
+
+
+let blob=
+new Blob(
+["\ufeff"+csv],
+{type:"text/csv;charset=utf-8;"}
+);
+
+
+let url=
+URL.createObjectURL(blob);
+
+
+let a=
+document.createElement("a");
+
+a.href=url;
+
+a.download=
+"aung-pos-sales.csv";
+
+a.click();
+
+URL.revokeObjectURL(url);
+
+}
+
+
+function renderAll(){
 
 renderProducts();
 
@@ -938,7 +1601,12 @@ renderCart();
 
 renderCustomers();
 
-updateDashboard();
+renderReports();
+
+}
+
+
+renderAll();
 
 </script>
 
