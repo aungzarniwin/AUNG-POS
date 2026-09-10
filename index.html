@@ -16,73 +16,51 @@
 
   <main class="container">
 
-    <h1>Dashboard</h1>
-    <p class="subtitle">Welcome to Aung POS Professional</p>
+  <h1>Sales</h1>
+  <p class="subtitle">Create a new sale</p>
 
-    <section class="cards">
+  <section class="sales-box">
 
-      <div class="card">
-        <span>💰</span>
-        <h3>Today's Sales</h3>
-        <strong>0 Ks</strong>
-      </div>
+    <div class="input-group">
+      <label>Product Name</label>
+      <input type="text" id="productName" placeholder="Enter product name">
+    </div>
 
-      <div class="card">
-        <span>📦</span>
-        <h3>Total Products</h3>
-        <strong>0</strong>
-      </div>
+    <div class="input-group">
+      <label>Price (Ks)</label>
+      <input type="number" id="productPrice" placeholder="0">
+    </div>
 
-      <div class="card">
-        <span>📈</span>
-        <h3>Today's Profit</h3>
-        <strong>0 Ks</strong>
-      </div>
+    <div class="input-group">
+      <label>Quantity</label>
+      <input type="number" id="productQty" value="1" min="1">
+    </div>
 
-      <div class="card">
-        <span>👥</span>
-        <h3>Customers</h3>
-        <strong>0</strong>
-      </div>
+    <button class="add-btn" onclick="addToCart()">
+      ➕ Add to Cart
+    </button>
 
-    </section>
+  </section>
 
-    <section class="menu">
+  <section class="cart-box">
 
-      <button onclick="showMessage('Sales')">
-        🛒 Sales
-      </button>
+    <h2>🛒 Cart</h2>
 
-      <button onclick="showMessage('Products')">
-        📦 Products
-      </button>
+    <div id="cartItems">
+      <p>No products added yet.</p>
+    </div>
 
-      <button onclick="showMessage('Inventory')">
-        📊 Inventory
-      </button>
+    <div class="total">
+      Total: <strong id="totalAmount">0 Ks</strong>
+    </div>
 
-      <button onclick="showMessage('Customers')">
-        👥 Customers
-      </button>
+    <button class="checkout-btn" onclick="checkout()">
+      💰 Checkout
+    </button>
 
-      <button onclick="showMessage('Reports')">
-        📈 Reports
-      </button>
+  </section>
 
-      <button onclick="showMessage('Settings')">
-        ⚙️ Settings
-      </button>
-
-    </section>
-
-    <section class="plan">
-      <h2>Current Plan</h2>
-      <p>FREE VERSION</p>
-      <button onclick="upgradePro()">Upgrade to PRO 🚀</button>
-    </section>
-
-  </main>
-
+</main>
   <script src="app.js"></script>
 
 </body>
