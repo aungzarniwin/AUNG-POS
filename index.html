@@ -3,20 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Aung POS</title>
 
   <style>
+    * {
+      box-sizing: border-box;
+    }
+
     body {
+      margin: 0;
       font-family: Arial, sans-serif;
       background: #f4f6f8;
-      margin: 0;
-      padding: 20px;
     }
 
     .container {
       max-width: 700px;
       margin: auto;
+      padding: 25px;
     }
 
     h1 {
@@ -27,43 +30,48 @@
       background: white;
       padding: 20px;
       margin-top: 20px;
-      border-radius: 12px;
+      border-radius: 15px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     }
 
     input {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       margin: 8px 0;
-      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 8px;
       font-size: 16px;
     }
 
     button {
-      padding: 12px 20px;
+      width: 100%;
+      padding: 14px;
+      margin-top: 10px;
       border: none;
       border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
       font-size: 16px;
+      cursor: pointer;
     }
 
     .add {
-      width: 100%;
+      background: #111827;
+      color: white;
     }
 
     .checkout {
-      width: 100%;
+      background: #16a34a;
+      color: white;
     }
 
-    .item {
-      padding: 12px 0;
+    .cart-item {
+      padding: 15px 0;
       border-bottom: 1px solid #ddd;
     }
 
     .total {
+      margin-top: 20px;
       font-size: 22px;
       font-weight: bold;
-      margin-top: 20px;
     }
   </style>
 </head>
@@ -76,7 +84,7 @@
 
   <div class="box">
 
-    <h2>Add Sale</h2>
+    <h2>Sales</h2>
 
     <input
       type="text"
@@ -98,7 +106,10 @@
       min="1"
     >
 
-    <button class="add" onclick="addToCart()">
+    <button
+      type="button"
+      class="add"
+      id="addButton">
       ➕ Add to Cart
     </button>
 
@@ -109,14 +120,18 @@
     <h2>🛒 Cart</h2>
 
     <div id="cartItems">
-      No products yet.
+      No products added yet.
     </div>
 
     <div class="total">
-      Total: <span id="totalAmount">0 Ks</span>
+      Total:
+      <span id="totalAmount">0 Ks</span>
     </div>
 
-    <button class="checkout" onclick="checkout()">
+    <button
+      type="button"
+      class="checkout"
+      id="checkoutButton">
       💰 Checkout
     </button>
 
@@ -126,147 +141,153 @@
 
 <script>
 
-let cart = [];
+  let cart = [];
 
-function addToCart() {
+  const addButton = document.getElementById("addButton");
 
-  const name =
-    document.getElementById("productName").value.trim();
+  addButton.addEventListener("click", function () {
 
-  const price =
-    Number(document.getElementById("productPrice").value);
+    const name =
+      document.getElementById("productName").value.trim();
 
-  const qty =
-    Number(document.getElementById("productQty").value);
+    const price =
+      Number(document.getElementById("productPrice").value);
 
-  if (name === "") {
-    alert("Product name ထည့်ပါ");
-    return;
-  }
+    const qty =
+      Number(document.getElementById("productQty").value);
 
-  if (price <= 0) {
-    alert("Price ထည့်ပါ");
-    return;
-  }
+    if (name === "") {
+      alert("Product Name ထည့်ပါ");
+      return;
+    }
 
-  if (qty <= 0) {
-    alert("Quantity ထည့်ပါ");
-    return;
-  }
+    if (price <= 0) {
+      alert("Price ထည့်ပါ");
+      return;
+    }
 
-  cart.push({
-    name: name,
-    price: price,
-    qty: qty
+    if (qty <= 0) {
+      alert("Quantity ထည့်ပါ");
+      return;
+    }
+
+    cart.push({
+      name: name,
+      price: price,
+      qty: qty
+    });
+
+    document.getElementById("productName").value = "";
+    document.getElementById("productPrice").value = "";
+    document.getElementById("productQty").value = 1;
+
+    showCart();
   });
 
-  document.getElementById("productName").value = "";
-  document.getElementById("productPrice").value = "";
-  document.getElementById("productQty").value = 1;
 
-  showCart();
-}
+  function showCart() {
 
+    const cartItems =
+      document.getElementById("cartItems");
 
-function showCart() {
+    const totalAmount =
+      document.getElementById("totalAmount");
 
-  const cartItems =
-    document.getElementById("cartItems");
+    let total = 0;
 
-  const totalAmount =
-    document.getElementById("totalAmount");
+    if (cart.length === 0) {
 
-  if (cart.length === 0) {
+      cartItems.innerHTML =
+        "No products added yet.";
 
-    cartItems.innerHTML =
-      "No products yet.";
+      totalAmount.innerText =
+        "0 Ks";
+
+      return;
+    }
+
+    let html = "";
+
+    cart.forEach(function(item, index) {
+
+      const subtotal =
+        item.price * item.qty;
+
+      total += subtotal;
+
+      html += `
+        <div class="cart-item">
+
+          <strong>${item.name}</strong>
+
+          <br>
+
+          ${item.qty} ×
+          ${item.price.toLocaleString()} Ks
+
+          <br>
+
+          <strong>
+            ${subtotal.toLocaleString()} Ks
+          </strong>
+
+          <br>
+
+          <button
+            type="button"
+            onclick="removeItem(${index})">
+            ❌ Remove
+          </button>
+
+        </div>
+      `;
+    });
+
+    cartItems.innerHTML = html;
 
     totalAmount.innerText =
-      "0 Ks";
-
-    return;
+      total.toLocaleString() + " Ks";
   }
 
-  let total = 0;
-  let html = "";
 
-  cart.forEach(function(item, index) {
+  function removeItem(index) {
 
-    const subtotal =
-      item.price * item.qty;
+    cart.splice(index, 1);
 
-    total += subtotal;
-
-    html += `
-      <div class="item">
-
-        <strong>${item.name}</strong>
-
-        <br>
-
-        ${item.qty} ×
-        ${item.price.toLocaleString()} Ks
-
-        <br>
-
-        <strong>
-          ${subtotal.toLocaleString()} Ks
-        </strong>
-
-        <br>
-
-        <button onclick="removeItem(${index})">
-          ❌ Remove
-        </button>
-
-      </div>
-    `;
-  });
-
-  cartItems.innerHTML = html;
-
-  totalAmount.innerText =
-    total.toLocaleString() + " Ks";
-}
-
-
-function removeItem(index) {
-
-  cart.splice(index, 1);
-
-  showCart();
-}
-
-
-function checkout() {
-
-  if (cart.length === 0) {
-
-    alert("Cart ထဲမှာ ပစ္စည်းမရှိသေးပါ");
-
-    return;
+    showCart();
   }
 
-  let total = 0;
 
-  cart.forEach(function(item) {
+  document.getElementById("checkoutButton")
+    .addEventListener("click", function () {
 
-    total +=
-      item.price * item.qty;
+      if (cart.length === 0) {
 
-  });
+        alert("Cart ထဲမှာ ပစ္စည်းမရှိသေးပါ");
 
-  alert(
-    "✅ SALE COMPLETED\n\n" +
-    "Total: " +
-    total.toLocaleString() +
-    " Ks"
-  );
+        return;
+      }
 
-  cart = [];
+      let total = 0;
 
-  showCart();
-}
+      cart.forEach(function(item) {
+
+        total += item.price * item.qty;
+
+      });
+
+      alert(
+        "✅ SALE COMPLETED\n\n" +
+        "Total: " +
+        total.toLocaleString() +
+        " Ks"
+      );
+
+      cart = [];
+
+      showCart();
+
+    });
 
 </script>
 
