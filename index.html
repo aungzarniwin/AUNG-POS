@@ -603,109 +603,79 @@
   }
 
 
-  /* =========================
-     CHECKOUT
-  ========================= */
+ /* =========================
+   CHECKOUT
+========================= */
 
-  document
-    .getElementById("checkoutButton")
-    .addEventListener("click", function() {
+document
+  .getElementById("checkoutButton")
+  .addEventListener("click", function () {
 
+    if (cart.length === 0) {
+      alert("Cart ထဲမှာ ပစ္စည်းမရှိသေးပါ");
+      return;
+    }
 
-      if (cart.length === 0) {
+    let total = 0;
 
-        alert(
-          "Cart ထဲမှာ ပစ္စည်းမရှိသေးပါ"
-        );
+    // Stock စစ်မယ်
+    for (let item of cart) {
 
+      const product = products.find(function (p) {
+        return p.name === item.name;
+      });
+
+      if (!product) {
+        alert(item.name + " Product မတွေ့ပါ");
         return;
       }
 
-
-      let total = 0;
-
-
-      /* Check stock again */
-
-      for (let item of cart) {
-
-        const product =
-          products[item.productIndex];
-
-
-        if (!product) {
-
-          alert(
-            "Product မတွေ့တော့ပါ"
-          );
-
-          return;
-        }
-
-
-        if (item.qty > product.stock) {
-
-          alert(
-            "❌ " +
-            product.name +
-            " Stock မလုံလောက်ပါ"
-          );
-
-          return;
-        }
-
+      if (item.qty > product.stock) {
+        alert(
+          "❌ Stock မလုံလောက်ပါ\n\n" +
+          item.name +
+          "\nAvailable Stock: " +
+          product.stock
+        );
+        return;
       }
+    }
 
+    // Stock လျော့မယ်
+    cart.forEach(function (item) {
 
-      /* Reduce Stock */
-
-      cart.forEach(function(item) {
-
-        const product =
-          products[item.productIndex];
-
-
-        product.stock -= item.qty;
-
-
-        total +=
-          item.price * item.qty;
-
+      const product = products.find(function (p) {
+        return p.name === item.name;
       });
 
+      product.stock =
+        Number(product.stock) - Number(item.qty);
 
-      /* Save New Stock */
+      total +=
+        Number(item.price) * Number(item.qty);
+    });
 
-      saveProducts();
+    // Stock အသစ်ကို သိမ်းမယ်
+    localStorage.setItem(
+      "aungPOSProducts",
+      JSON.stringify(products)
+    );
 
+    alert(
+      "✅ SALE COMPLETED\n\n" +
+      "Total: " +
+      total.toLocaleString() +
+      " Ks"
+    );
 
-      alert(
+    // Cart ရှင်းမယ်
+    cart = [];
 
-        "✅ SALE COMPLETED\n\n" +
+    showCart();
+    showProducts();
+    updateProductSelect();
 
-        "Total: " +
-
-        total.toLocaleString() +
-
-        " Ks"
-
-      );
-
-
-      /* Clear Cart */
-
-      cart = [];
-
-
-      showCart();
-
-      showProducts();
-
-      updateProductSelect();
-
-  });
-
-
+});
   /* =========================
      START APP
   ========================= */
