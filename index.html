@@ -682,11 +682,27 @@ document
         Number(item.price) * Number(item.qty);
     });
 
-    // Stock အသစ်ကို သိမ်းမယ်
-    localStorage.setItem(
-      "aungPOSProducts",
-      JSON.stringify(products)
-    );
+// Sale Record သိမ်းမယ်
+cart.forEach(function (item) {
+
+  sales.push({
+    date: new Date().toLocaleDateString(),
+    name: item.name,
+    qty: Number(item.qty),
+    price: Number(item.price),
+    cost: Number(item.cost),
+    total: Number(item.price) * Number(item.qty),
+    profit:
+      (Number(item.price) - Number(item.cost)) *
+      Number(item.qty)
+  });
+
+});
+
+localStorage.setItem(
+  "aungPOSSales",
+  JSON.stringify(sales)
+);
 
     alert(
       "✅ SALE COMPLETED\n\n" +
