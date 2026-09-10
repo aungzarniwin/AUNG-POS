@@ -290,6 +290,52 @@
     });
 
 </script>
+<div class="box">
 
+  <h2>📦 Product & Stock Management</h2>
+
+  <input
+    type="text"
+    id="newProductName"
+    placeholder="Product Name"
+  >
+
+  <input
+    type="number"
+    id="costPrice"
+    placeholder="Cost Price (Ks)"
+  >
+
+  <input
+    type="number"
+    id="sellingPrice"
+    placeholder="Selling Price (Ks)"
+  >
+
+  <input
+    type="number"
+    id="stockQty"
+    placeholder="Stock Quantity"
+  >
+
+  <input
+    type="number"
+    id="lowStock"
+    placeholder="Low Stock Alert"
+    value="5"
+  >
+
+  <button
+    type="button"
+    class="add"
+    onclick="addProduct()">
+    ➕ Add Product
+  </button>
+
+  <div id="productList" style="margin-top:20px;">
+    No products added yet.
+  </div>
+
+</div>
 </body>
 </html>
