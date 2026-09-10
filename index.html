@@ -288,7 +288,90 @@
       showCart();
 
     });
+let products = [];
 
+function addProduct() {
+
+  const name = document.getElementById("newProductName").value.trim();
+  const cost = Number(document.getElementById("costPrice").value);
+  const price = Number(document.getElementById("sellingPrice").value);
+  const stock = Number(document.getElementById("stockQty").value);
+  const lowStock = Number(document.getElementById("lowStock").value);
+
+  if (name === "") {
+    alert("Product Name ထည့်ပါ");
+    return;
+  }
+
+  if (cost <= 0 || price <= 0) {
+    alert("Cost Price နှင့် Selling Price ထည့်ပါ");
+    return;
+  }
+
+  if (stock < 0) {
+    alert("Stock Quantity မှန်ကန်စွာထည့်ပါ");
+    return;
+  }
+
+  products.push({
+    name: name,
+    cost: cost,
+    price: price,
+    stock: stock,
+    lowStock: lowStock
+  });
+
+  document.getElementById("newProductName").value = "";
+  document.getElementById("costPrice").value = "";
+  document.getElementById("sellingPrice").value = "";
+  document.getElementById("stockQty").value = "";
+  document.getElementById("lowStock").value = 5;
+
+  showProducts();
+}
+
+function showProducts() {
+
+  const list = document.getElementById("productList");
+
+  if (products.length === 0) {
+    list.innerHTML = "No products added yet.";
+    return;
+  }
+
+  let html = "";
+
+  products.forEach(function(product, index) {
+
+    let warning = "";
+
+    if (product.stock <= product.lowStock) {
+      warning = " ⚠️ Low Stock";
+    }
+
+    html += `
+      <div class="cart-item">
+        <strong>${product.name}</strong><br>
+        Cost: ${product.cost.toLocaleString()} Ks<br>
+        Selling: ${product.price.toLocaleString()} Ks<br>
+        Stock: ${product.stock}${warning}
+        <br>
+        <button type="button" onclick="deleteProduct(${index})">
+          🗑️ Delete
+        </button>
+      </div>
+    `;
+  });
+
+  list.innerHTML = html;
+}
+
+function deleteProduct(index) {
+
+  products.splice(index, 1);
+
+  showProducts();
+}
 </script>
 <div class="box">
 
