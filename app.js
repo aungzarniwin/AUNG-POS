@@ -1,86 +1,80 @@
 let cart = [];
 
 function addToCart() {
-  const name = document.getElementById("productName").value.trim();
-  const price = Number(document.getElementById("productPrice").value);
-  const qty = Number(document.getElementById("productQty").value);
+    let name = document.getElementById("productName").value;
+    let price = Number(document.getElementById("productPrice").value);
+    let qty = Number(document.getElementById("productQty").value);
 
-  if (!name || price <= 0 || qty <= 0) {
-    alert("Please enter product name, price and quantity.");
-    return;
-  }
+    if (name === "" || price <= 0 || qty <= 0) {
+        alert("Please enter product name, price and quantity.");
+        return;
+    }
 
-  cart.push({
-    name: name,
-    price: price,
-    qty: qty
-  });
+    cart.push({
+        name: name,
+        price: price,
+        qty: qty
+    });
 
-  document.getElementById("productName").value = "";
-  document.getElementById("productPrice").value = "";
-  document.getElementById("productQty").value = 1;
+    document.getElementById("productName").value = "";
+    document.getElementById("productPrice").value = "";
+    document.getElementById("productQty").value = 1;
 
-  displayCart();
+    displayCart();
 }
 
 function displayCart() {
-  const cartItems = document.getElementById("cartItems");
-  const totalAmount = document.getElementById("totalAmount");
+    let cartItems = document.getElementById("cartItems");
+    let totalAmount = document.getElementById("totalAmount");
 
-  if (cart.length === 0) {
-    cartItems.innerHTML = "<p>No products added yet.</p>";
-    totalAmount.textContent = "0 Ks";
-    return;
-  }
+    let total = 0;
 
-  let total = 0;
-  let html = "";
+    if (cart.length === 0) {
+        cartItems.innerHTML = "<p>No products added yet.</p>";
+        totalAmount.innerText = "0 Ks";
+        return;
+    }
 
-  cart.forEach((item, index) => {
-    const subtotal = item.price * item.qty;
-    total += subtotal;
+    let html = "";
 
-    html += `
-      <div class="cart-item">
-        <div>
-          <strong>${item.name}</strong>
-          <p>${item.qty} × ${item.price.toLocaleString()} Ks</p>
-        </div>
+    cart.forEach(function(item, index) {
+        let subtotal = item.price * item.qty;
+        total += subtotal;
 
-        <div>
-          <strong>${subtotal.toLocaleString()} Ks</strong>
-          <button onclick="removeItem(${index})">❌</button>
-        </div>
-      </div>
-    `;
-  });
+        html += `
+            <div>
+                <strong>${item.name}</strong>
+                <p>${item.qty} × ${item.price.toLocaleString()} Ks</p>
+                <strong>${subtotal.toLocaleString()} Ks</strong>
+                <button onclick="removeItem(${index})">❌</button>
+            </div>
+            <hr>
+        `;
+    });
 
-  cartItems.innerHTML = html;
-  totalAmount.textContent = total.toLocaleString() + " Ks";
+    cartItems.innerHTML = html;
+    totalAmount.innerText = total.toLocaleString() + " Ks";
 }
 
 function removeItem(index) {
-  cart.splice(index, 1);
-  displayCart();
+    cart.splice(index, 1);
+    displayCart();
 }
 
 function checkout() {
-  if (cart.length === 0) {
-    alert("Cart is empty.");
-    return;
-  }
+    if (cart.length === 0) {
+        alert("Cart is empty.");
+        return;
+    }
 
-  let total = 0;
+    let total = 0;
 
-  cart.forEach(item => {
-    total += item.price * item.qty;
-  });
+    cart.forEach(function(item) {
+        total += item.price * item.qty;
+    });
 
-  alert(
-    "✅ Sale Completed!\n\n" +
-    "Total: " + total.toLocaleString() + " Ks"
-  );
+    alert("Sale Completed!\n\nTotal: " + total.toLocaleString() + " Ks");
 
-  cart = [];
-  displayCart();
+    cart = [];
+    displayCart();
 }
