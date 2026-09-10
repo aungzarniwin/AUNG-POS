@@ -288,7 +288,7 @@
       showCart();
 
     });
-let products = [];
+let products = JSON.parse(localStorage.getItem("aungPOSProducts")) || [];
 
 function addProduct() {
 
@@ -320,7 +320,7 @@ function addProduct() {
     stock: stock,
     lowStock: lowStock
   });
-
+localStorage.setItem("aungPOSProducts", JSON.stringify(products));
   document.getElementById("newProductName").value = "";
   document.getElementById("costPrice").value = "";
   document.getElementById("sellingPrice").value = "";
