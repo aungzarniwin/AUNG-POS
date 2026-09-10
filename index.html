@@ -3,65 +3,272 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Aung POS</title>
-  <link rel="stylesheet" href="style.css">
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      margin-top: 20px;
+      border-radius: 12px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+
+    button {
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    .add {
+      width: 100%;
+    }
+
+    .checkout {
+      width: 100%;
+    }
+
+    .item {
+      padding: 12px 0;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .total {
+      font-size: 22px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 
 <body>
 
-  <header class="topbar">
-    <div class="logo">Aung POS</div>
-    <div class="user">👤 Admin</div>
-  </header>
+<div class="container">
 
-  <main class="container">
+  <h1>🛒 Aung POS</h1>
 
-  <h1>Sales</h1>
-  <p class="subtitle">Create a new sale</p>
+  <div class="box">
 
-  <section class="sales-box">
+    <h2>Add Sale</h2>
 
-    <div class="input-group">
-      <label>Product Name</label>
-      <input type="text" id="productName" placeholder="Enter product name">
-    </div>
+    <input
+      type="text"
+      id="productName"
+      placeholder="Product Name"
+    >
 
-    <div class="input-group">
-      <label>Price (Ks)</label>
-      <input type="number" id="productPrice" placeholder="0">
-    </div>
+    <input
+      type="number"
+      id="productPrice"
+      placeholder="Price (Ks)"
+    >
 
-    <div class="input-group">
-      <label>Quantity</label>
-      <input type="number" id="productQty" value="1" min="1">
-    </div>
+    <input
+      type="number"
+      id="productQty"
+      placeholder="Quantity"
+      value="1"
+      min="1"
+    >
 
-    <button class="add-btn" onclick="addToCart()">
+    <button class="add" onclick="addToCart()">
       ➕ Add to Cart
     </button>
 
-  </section>
+  </div>
 
-  <section class="cart-box">
+  <div class="box">
 
     <h2>🛒 Cart</h2>
 
     <div id="cartItems">
-      <p>No products added yet.</p>
+      No products yet.
     </div>
 
     <div class="total">
-      Total: <strong id="totalAmount">0 Ks</strong>
+      Total: <span id="totalAmount">0 Ks</span>
     </div>
 
-    <button class="checkout-btn" onclick="checkout()">
+    <button class="checkout" onclick="checkout()">
       💰 Checkout
     </button>
 
-  </section>
+  </div>
 
-</main>
-  <script src="app.js"></script>
+</div>
+
+<script>
+
+let cart = [];
+
+function addToCart() {
+
+  const name =
+    document.getElementById("productName").value.trim();
+
+  const price =
+    Number(document.getElementById("productPrice").value);
+
+  const qty =
+    Number(document.getElementById("productQty").value);
+
+  if (name === "") {
+    alert("Product name ထည့်ပါ");
+    return;
+  }
+
+  if (price <= 0) {
+    alert("Price ထည့်ပါ");
+    return;
+  }
+
+  if (qty <= 0) {
+    alert("Quantity ထည့်ပါ");
+    return;
+  }
+
+  cart.push({
+    name: name,
+    price: price,
+    qty: qty
+  });
+
+  document.getElementById("productName").value = "";
+  document.getElementById("productPrice").value = "";
+  document.getElementById("productQty").value = 1;
+
+  showCart();
+}
+
+
+function showCart() {
+
+  const cartItems =
+    document.getElementById("cartItems");
+
+  const totalAmount =
+    document.getElementById("totalAmount");
+
+  if (cart.length === 0) {
+
+    cartItems.innerHTML =
+      "No products yet.";
+
+    totalAmount.innerText =
+      "0 Ks";
+
+    return;
+  }
+
+  let total = 0;
+  let html = "";
+
+  cart.forEach(function(item, index) {
+
+    const subtotal =
+      item.price * item.qty;
+
+    total += subtotal;
+
+    html += `
+      <div class="item">
+
+        <strong>${item.name}</strong>
+
+        <br>
+
+        ${item.qty} ×
+        ${item.price.toLocaleString()} Ks
+
+        <br>
+
+        <strong>
+          ${subtotal.toLocaleString()} Ks
+        </strong>
+
+        <br>
+
+        <button onclick="removeItem(${index})">
+          ❌ Remove
+        </button>
+
+      </div>
+    `;
+  });
+
+  cartItems.innerHTML = html;
+
+  totalAmount.innerText =
+    total.toLocaleString() + " Ks";
+}
+
+
+function removeItem(index) {
+
+  cart.splice(index, 1);
+
+  showCart();
+}
+
+
+function checkout() {
+
+  if (cart.length === 0) {
+
+    alert("Cart ထဲမှာ ပစ္စည်းမရှိသေးပါ");
+
+    return;
+  }
+
+  let total = 0;
+
+  cart.forEach(function(item) {
+
+    total +=
+      item.price * item.qty;
+
+  });
+
+  alert(
+    "✅ SALE COMPLETED\n\n" +
+    "Total: " +
+    total.toLocaleString() +
+    " Ks"
+  );
+
+  cart = [];
+
+  showCart();
+}
+
+</script>
 
 </body>
 </html>
