@@ -34,7 +34,7 @@
       box-shadow: 0 3px 10px rgba(0,0,0,0.08);
     }
 
-    input {
+    input, select {
       width: 100%;
       padding: 14px;
       margin: 8px 0;
@@ -63,6 +63,11 @@
       color: white;
     }
 
+    .delete {
+      background: #dc2626;
+      color: white;
+    }
+
     .cart-item {
       padding: 15px 0;
       border-bottom: 1px solid #ddd;
@@ -71,6 +76,11 @@
     .total {
       margin-top: 20px;
       font-size: 22px;
+      font-weight: bold;
+    }
+
+    .stock-warning {
+      color: #dc2626;
       font-weight: bold;
     }
   </style>
@@ -82,21 +92,14 @@
 
   <h1>🛒 Aung POS</h1>
 
+  <!-- SALES -->
   <div class="box">
 
-    <h2>Sales</h2>
+    <h2>🛒 Sales</h2>
 
-    <input
-      type="text"
-      id="productName"
-      placeholder="Product Name"
-    >
-
-    <input
-      type="number"
-      id="productPrice"
-      placeholder="Price (Ks)"
-    >
+    <select id="saleProduct">
+      <option value="">Select Product</option>
+    </select>
 
     <input
       type="number"
@@ -115,6 +118,8 @@
 
   </div>
 
+
+  <!-- CART -->
   <div class="box">
 
     <h2>🛒 Cart</h2>
@@ -137,53 +142,371 @@
 
   </div>
 
+
+  <!-- PRODUCT MANAGEMENT -->
+  <div class="box">
+
+    <h2>📦 Product & Stock Management</h2>
+
+    <input
+      type="text"
+      id="newProductName"
+      placeholder="Product Name"
+    >
+
+    <input
+      type="number"
+      id="costPrice"
+      placeholder="Cost Price (Ks)"
+    >
+
+    <input
+      type="number"
+      id="sellingPrice"
+      placeholder="Selling Price (Ks)"
+    >
+
+    <input
+      type="number"
+      id="stockQty"
+      placeholder="Stock Quantity"
+      min="0"
+    >
+
+    <input
+      type="number"
+      id="lowStock"
+      placeholder="Low Stock Alert"
+      value="5"
+      min="0"
+    >
+
+    <button
+      type="button"
+      class="add"
+      onclick="addProduct()">
+      ➕ Add Product
+    </button>
+
+    <div id="productList" style="margin-top:20px;">
+      No products added yet.
+    </div>
+
+  </div>
+
 </div>
+
 
 <script>
 
+  /* =========================
+     PRODUCT DATABASE
+  ========================= */
+
+  let products =
+    JSON.parse(localStorage.getItem("aungPOSProducts")) || [];
+
   let cart = [];
 
-  const addButton = document.getElementById("addButton");
 
-  addButton.addEventListener("click", function () {
+  /* =========================
+     PRODUCT MANAGEMENT
+  ========================= */
+
+  function addProduct() {
 
     const name =
-      document.getElementById("productName").value.trim();
+      document.getElementById("newProductName").value.trim();
+
+    const cost =
+      Number(document.getElementById("costPrice").value);
 
     const price =
-      Number(document.getElementById("productPrice").value);
+      Number(document.getElementById("sellingPrice").value);
 
-    const qty =
-      Number(document.getElementById("productQty").value);
+    const stock =
+      Number(document.getElementById("stockQty").value);
+
+    const lowStock =
+      Number(document.getElementById("lowStock").value);
+
 
     if (name === "") {
       alert("Product Name ထည့်ပါ");
       return;
     }
 
+    if (cost <= 0) {
+      alert("Cost Price ထည့်ပါ");
+      return;
+    }
+
     if (price <= 0) {
-      alert("Price ထည့်ပါ");
+      alert("Selling Price ထည့်ပါ");
       return;
     }
 
-    if (qty <= 0) {
-      alert("Quantity ထည့်ပါ");
+    if (stock < 0) {
+      alert("Stock Quantity မှန်ကန်စွာထည့်ပါ");
       return;
     }
 
-    cart.push({
+
+    products.push({
       name: name,
+      cost: cost,
       price: price,
-      qty: qty
+      stock: stock,
+      lowStock: lowStock
     });
 
-    document.getElementById("productName").value = "";
-    document.getElementById("productPrice").value = "";
-    document.getElementById("productQty").value = 1;
 
-    showCart();
+    saveProducts();
+
+    document.getElementById("newProductName").value = "";
+    document.getElementById("costPrice").value = "";
+    document.getElementById("sellingPrice").value = "";
+    document.getElementById("stockQty").value = "";
+    document.getElementById("lowStock").value = 5;
+
+
+    showProducts();
+    updateProductSelect();
+
+
+    alert("✅ Product Added Successfully");
+  }
+
+
+  function saveProducts() {
+
+    localStorage.setItem(
+      "aungPOSProducts",
+      JSON.stringify(products)
+    );
+
+  }
+
+
+  function showProducts() {
+
+    const list =
+      document.getElementById("productList");
+
+
+    if (products.length === 0) {
+
+      list.innerHTML =
+        "No products added yet.";
+
+      return;
+    }
+
+
+    let html = "";
+
+
+    products.forEach(function(product, index) {
+
+      let warning = "";
+
+
+      if (product.stock <= product.lowStock) {
+
+        warning =
+          '<div class="stock-warning">⚠️ Low Stock</div>';
+
+      }
+
+
+      html += `
+
+        <div class="cart-item">
+
+          <strong>
+            ${product.name}
+          </strong>
+
+          <br>
+
+          Cost:
+          ${product.cost.toLocaleString()} Ks
+
+          <br>
+
+          Selling:
+          ${product.price.toLocaleString()} Ks
+
+          <br>
+
+          Stock:
+          ${product.stock}
+
+          ${warning}
+
+          <button
+            type="button"
+            class="delete"
+            onclick="deleteProduct(${index})">
+
+            🗑️ Delete
+
+          </button>
+
+        </div>
+
+      `;
+
+    });
+
+
+    list.innerHTML = html;
+
+  }
+
+
+  function deleteProduct(index) {
+
+    if (
+      !confirm(
+        "ဒီ Product ကို ဖျက်မှာသေချာပါသလား?"
+      )
+    ) {
+      return;
+    }
+
+
+    products.splice(index, 1);
+
+    saveProducts();
+
+    showProducts();
+
+    updateProductSelect();
+
+  }
+
+
+  /* =========================
+     PRODUCT SELECT
+  ========================= */
+
+  function updateProductSelect() {
+
+    const select =
+      document.getElementById("saleProduct");
+
+
+    select.innerHTML =
+      '<option value="">Select Product</option>';
+
+
+    products.forEach(function(product, index) {
+
+      select.innerHTML += `
+
+        <option value="${index}">
+
+          ${product.name}
+          — ${product.price.toLocaleString()} Ks
+          — Stock: ${product.stock}
+
+        </option>
+
+      `;
+
+    });
+
+  }
+
+
+  /* =========================
+     ADD TO CART
+  ========================= */
+
+  document
+    .getElementById("addButton")
+    .addEventListener("click", function() {
+
+
+      const productIndex =
+        document.getElementById("saleProduct").value;
+
+
+      const qty =
+        Number(
+          document.getElementById("productQty").value
+        );
+
+
+      if (productIndex === "") {
+
+        alert("Product ရွေးပါ");
+
+        return;
+      }
+
+
+      if (qty <= 0) {
+
+        alert("Quantity မှန်ကန်စွာထည့်ပါ");
+
+        return;
+      }
+
+
+      const product =
+        products[Number(productIndex)];
+
+
+      if (!product) {
+
+        alert("Product မတွေ့ပါ");
+
+        return;
+      }
+
+
+      if (qty > product.stock) {
+
+        alert(
+          "❌ Stock မလုံလောက်ပါ\n\n" +
+          "Available Stock: " +
+          product.stock
+        );
+
+        return;
+      }
+
+
+      cart.push({
+
+        productIndex: Number(productIndex),
+
+        name: product.name,
+
+        price: product.price,
+
+        cost: product.cost,
+
+        qty: qty
+
+      });
+
+
+      document.getElementById("saleProduct").value = "";
+
+      document.getElementById("productQty").value = 1;
+
+
+      showCart();
+
   });
 
+
+  /* =========================
+     SHOW CART
+  ========================= */
 
   function showCart() {
 
@@ -193,7 +516,9 @@
     const totalAmount =
       document.getElementById("totalAmount");
 
+
     let total = 0;
+
 
     if (cart.length === 0) {
 
@@ -206,19 +531,26 @@
       return;
     }
 
+
     let html = "";
+
 
     cart.forEach(function(item, index) {
 
       const subtotal =
         item.price * item.qty;
 
+
       total += subtotal;
 
+
       html += `
+
         <div class="cart-item">
 
-          <strong>${item.name}</strong>
+          <strong>
+            ${item.name}
+          </strong>
 
           <br>
 
@@ -235,190 +567,156 @@
 
           <button
             type="button"
+            class="delete"
             onclick="removeItem(${index})">
+
             ❌ Remove
+
           </button>
 
         </div>
+
       `;
+
     });
+
 
     cartItems.innerHTML = html;
 
+
     totalAmount.innerText =
       total.toLocaleString() + " Ks";
+
   }
 
+
+  /* =========================
+     REMOVE CART ITEM
+  ========================= */
 
   function removeItem(index) {
 
     cart.splice(index, 1);
 
     showCart();
+
   }
 
 
-  document.getElementById("checkoutButton")
-    .addEventListener("click", function () {
+  /* =========================
+     CHECKOUT
+  ========================= */
+
+  document
+    .getElementById("checkoutButton")
+    .addEventListener("click", function() {
+
 
       if (cart.length === 0) {
 
-        alert("Cart ထဲမှာ ပစ္စည်းမရှိသေးပါ");
+        alert(
+          "Cart ထဲမှာ ပစ္စည်းမရှိသေးပါ"
+        );
 
         return;
       }
 
+
       let total = 0;
+
+
+      /* Check stock again */
+
+      for (let item of cart) {
+
+        const product =
+          products[item.productIndex];
+
+
+        if (!product) {
+
+          alert(
+            "Product မတွေ့တော့ပါ"
+          );
+
+          return;
+        }
+
+
+        if (item.qty > product.stock) {
+
+          alert(
+            "❌ " +
+            product.name +
+            " Stock မလုံလောက်ပါ"
+          );
+
+          return;
+        }
+
+      }
+
+
+      /* Reduce Stock */
 
       cart.forEach(function(item) {
 
-        total += item.price * item.qty;
+        const product =
+          products[item.productIndex];
+
+
+        product.stock -= item.qty;
+
+
+        total +=
+          item.price * item.qty;
 
       });
 
+
+      /* Save New Stock */
+
+      saveProducts();
+
+
       alert(
+
         "✅ SALE COMPLETED\n\n" +
+
         "Total: " +
+
         total.toLocaleString() +
+
         " Ks"
+
       );
+
+
+      /* Clear Cart */
 
       cart = [];
 
+
       showCart();
 
-    });
-let products = JSON.parse(localStorage.getItem("aungPOSProducts")) || [];
+      showProducts();
 
-function addProduct() {
+      updateProductSelect();
 
-  const name = document.getElementById("newProductName").value.trim();
-  const cost = Number(document.getElementById("costPrice").value);
-  const price = Number(document.getElementById("sellingPrice").value);
-  const stock = Number(document.getElementById("stockQty").value);
-  const lowStock = Number(document.getElementById("lowStock").value);
-
-  if (name === "") {
-    alert("Product Name ထည့်ပါ");
-    return;
-  }
-
-  if (cost <= 0 || price <= 0) {
-    alert("Cost Price နှင့် Selling Price ထည့်ပါ");
-    return;
-  }
-
-  if (stock < 0) {
-    alert("Stock Quantity မှန်ကန်စွာထည့်ပါ");
-    return;
-  }
-
-  products.push({
-    name: name,
-    cost: cost,
-    price: price,
-    stock: stock,
-    lowStock: lowStock
-  });
-localStorage.setItem("aungPOSProducts", JSON.stringify(products));
-  document.getElementById("newProductName").value = "";
-  document.getElementById("costPrice").value = "";
-  document.getElementById("sellingPrice").value = "";
-  document.getElementById("stockQty").value = "";
-  document.getElementById("lowStock").value = 5;
-
-  showProducts();
-}
-
-function showProducts() {
-
-  const list = document.getElementById("productList");
-
-  if (products.length === 0) {
-    list.innerHTML = "No products added yet.";
-    return;
-  }
-
-  let html = "";
-
-  products.forEach(function(product, index) {
-
-    let warning = "";
-
-    if (product.stock <= product.lowStock) {
-      warning = " ⚠️ Low Stock";
-    }
-
-    html += `
-      <div class="cart-item">
-        <strong>${product.name}</strong><br>
-        Cost: ${product.cost.toLocaleString()} Ks<br>
-        Selling: ${product.price.toLocaleString()} Ks<br>
-        Stock: ${product.stock}${warning}
-        <br>
-        <button type="button" onclick="deleteProduct(${index})">
-          🗑️ Delete
-        </button>
-      </div>
-    `;
   });
 
-  list.innerHTML = html;
-}
 
-function deleteProduct(index) {
-
-  products.splice(index, 1);
+  /* =========================
+     START APP
+  ========================= */
 
   showProducts();
-}
+
+  updateProductSelect();
+
+  showCart();
+
 </script>
-<div class="box">
 
-  <h2>📦 Product & Stock Management</h2>
-
-  <input
-    type="text"
-    id="newProductName"
-    placeholder="Product Name"
-  >
-
-  <input
-    type="number"
-    id="costPrice"
-    placeholder="Cost Price (Ks)"
-  >
-
-  <input
-    type="number"
-    id="sellingPrice"
-    placeholder="Selling Price (Ks)"
-  >
-
-  <input
-    type="number"
-    id="stockQty"
-    placeholder="Stock Quantity"
-  >
-
-  <input
-    type="number"
-    id="lowStock"
-    placeholder="Low Stock Alert"
-    value="5"
-  >
-
-  <button
-    type="button"
-    class="add"
-    onclick="addProduct()">
-    ➕ Add Product
-  </button>
-
-  <div id="productList" style="margin-top:20px;">
-    No products added yet.
-  </div>
-
-</div>
 </body>
 </html>
