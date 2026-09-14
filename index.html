@@ -2,1276 +2,2194 @@
 <html lang="my">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <meta name="theme-color" content="#0f172a">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
 <title>Aung POS</title>
 
-<link rel="stylesheet" href="style.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,"Noto Sans Myanmar",sans-serif;
+  background:#f1f5f9;color:#0f172a;
+}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{display:flex;min-height:100vh}
+
+/* SIDEBAR */
+.sidebar{
+  width:245px;background:#0f172a;color:#fff;
+  position:fixed;left:0;top:0;bottom:0;
+  overflow-y:auto;z-index:100;
+}
+.logo{
+  padding:22px 18px;border-bottom:1px solid #263449;
+}
+.logo h1{font-size:23px}
+.logo p{font-size:12px;color:#94a3b8;margin-top:5px}
+.nav{padding:12px}
+.nav button{
+  width:100%;border:0;background:transparent;color:#cbd5e1;
+  padding:12px 14px;border-radius:9px;text-align:left;
+  margin-bottom:4px;font-size:14px;
+}
+.nav button:hover,.nav button.active{
+  background:#2563eb;color:#fff;
+}
+.nav-title{
+  color:#64748b;font-size:11px;font-weight:bold;
+  padding:16px 12px 7px;text-transform:uppercase;
+}
+
+/* MAIN */
+.main{margin-left:245px;width:calc(100% - 245px);min-height:100vh}
+.topbar{
+  height:68px;background:#fff;border-bottom:1px solid #e2e8f0;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 25px;position:sticky;top:0;z-index:50;
+}
+.topbar h2{font-size:20px}
+.shop-badge{
+  background:#eff6ff;color:#2563eb;padding:8px 12px;
+  border-radius:20px;font-size:13px;
+}
+.content{padding:24px}
+
+/* PAGES */
+.page{display:none}
+.page.active{display:block}
+.page-head{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:20px;gap:12px;flex-wrap:wrap;
+}
+.page-head h2{font-size:23px}
+.page-head p{color:#64748b;font-size:13px;margin-top:5px}
+
+/* BUTTONS */
+.btn{
+  border:0;border-radius:8px;padding:10px 15px;
+  background:#e2e8f0;color:#0f172a;
+}
+.btn-primary{background:#2563eb;color:#fff}
+.btn-success{background:#16a34a;color:#fff}
+.btn-danger{background:#dc2626;color:#fff}
+.btn-warning{background:#f59e0b;color:#fff}
+.btn-sm{padding:7px 10px;font-size:12px}
+
+/* CARDS */
+.cards{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:15px;margin-bottom:22px;
+}
+.card{
+  background:#fff;border:1px solid #e2e8f0;border-radius:12px;
+  padding:18px;box-shadow:0 2px 8px #00000008;
+}
+.card-label{color:#64748b;font-size:13px}
+.card-value{font-size:25px;font-weight:bold;margin-top:8px}
+.card-note{font-size:12px;color:#94a3b8;margin-top:5px}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+.panel{
+  background:#fff;border:1px solid #e2e8f0;border-radius:12px;
+  padding:18px;margin-bottom:18px;
+}
+.panel h3{font-size:16px;margin-bottom:15px}
+
+/* TABLE */
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{
+  padding:11px 10px;border-bottom:1px solid #e2e8f0;
+  text-align:left;font-size:13px;
+}
+th{background:#f8fafc;color:#475569}
+.empty{text-align:center;color:#94a3b8;padding:30px}
+
+/* FORM */
+.form-grid{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+}
+.field{margin-bottom:4px}
+.field label{
+  display:block;font-size:12px;font-weight:bold;
+  color:#475569;margin-bottom:5px;
+}
+.field input,.field select,.field textarea{
+  width:100%;border:1px solid #cbd5e1;border-radius:8px;
+  padding:10px;background:#fff;outline:none;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:#2563eb;
+}
+.filters{
+  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px;
+}
+.filters input,.filters select{
+  padding:9px;border:1px solid #cbd5e1;border-radius:8px;
+}
+
+/* POS */
+.pos-layout{
+  display:grid;grid-template-columns:1fr 380px;gap:18px;
+}
+.product-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+}
+.product-card{
+  background:#fff;border:1px solid #e2e8f0;border-radius:10px;
+  padding:14px;text-align:left;
+}
+.product-card:hover{border-color:#2563eb}
+.product-name{font-weight:bold;font-size:14px}
+.product-price{color:#2563eb;font-weight:bold;margin-top:7px}
+.product-stock{font-size:11px;color:#64748b;margin-top:5px}
+.cart{
+  background:#fff;border:1px solid #e2e8f0;border-radius:12px;
+  padding:18px;position:sticky;top:85px;height:max-content;
+}
+.cart-row{
+  display:flex;justify-content:space-between;gap:8px;
+  padding:10px 0;border-bottom:1px solid #e2e8f0;font-size:13px;
+}
+.qty{
+  display:flex;align-items:center;gap:5px;margin-top:5px;
+}
+.qty button{
+  width:25px;height:25px;border:0;border-radius:5px;
+  background:#e2e8f0;
+}
+.cart-total{
+  display:flex;justify-content:space-between;
+  padding:10px 0;font-weight:bold;
+}
+.payment-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.payment-buttons button.active{background:#2563eb;color:#fff}
+
+/* ALERT */
+.alert{
+  padding:11px 13px;border-radius:8px;margin-bottom:8px;
+  font-size:13px;
+}
+.alert-warning{background:#fff7ed;color:#9a3412}
+.alert-danger{background:#fef2f2;color:#b91c1c}
+.alert-success{background:#f0fdf4;color:#166534}
+
+/* BADGE */
+.badge{
+  display:inline-block;padding:4px 8px;border-radius:15px;
+  font-size:11px;background:#e2e8f0;
+}
+.badge-green{background:#dcfce7;color:#166534}
+.badge-red{background:#fee2e2;color:#991b1b}
+.badge-blue{background:#dbeafe;color:#1d4ed8}
+
+/* MODAL */
+.modal-overlay{
+  display:none;position:fixed;inset:0;background:#0008;
+  z-index:500;align-items:center;justify-content:center;padding:15px;
+}
+.modal-overlay.show{display:flex}
+.modal{
+  background:#fff;border-radius:14px;width:min(650px,100%);
+  max-height:90vh;overflow-y:auto;
+}
+.modal-head{
+  padding:18px;border-bottom:1px solid #e2e8f0;
+  display:flex;justify-content:space-between;
+}
+.modal-body{padding:18px}
+.modal-foot{
+  padding:15px 18px;border-top:1px solid #e2e8f0;
+  display:flex;justify-content:flex-end;gap:8px;
+}
+.close{border:0;background:none;font-size:22px}
+
+/* TOAST */
+.toast{
+  position:fixed;right:20px;bottom:20px;background:#0f172a;
+  color:#fff;padding:12px 16px;border-radius:8px;
+  z-index:1000;box-shadow:0 5px 20px #0003;
+}
+
+/* MOBILE */
+.mobile-menu{display:none;border:0;background:#e2e8f0;padding:8px 11px;border-radius:7px}
+@media(max-width:1100px){
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .pos-layout{grid-template-columns:1fr}
+  .cart{position:static}
+}
+@media(max-width:768px){
+  .sidebar{
+    transform:translateX(-100%);transition:.25s;
+    box-shadow:5px 0 20px #0004;
+  }
+  .sidebar.open{transform:translateX(0)}
+  .main{margin-left:0;width:100%}
+  .mobile-menu{display:block}
+  .topbar{padding:0 15px}
+  .content{padding:15px}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .product-grid{grid-template-columns:repeat(2,1fr)}
+  .form-grid{grid-template-columns:1fr}
+}
+@media(max-width:430px){
+  .cards{grid-template-columns:1fr 1fr;gap:8px}
+  .card{padding:12px}
+  .card-value{font-size:19px}
+  .product-grid{grid-template-columns:1fr 1fr}
+  .page-head h2{font-size:19px}
+}
+</style>
 </head>
 
 <body>
 
-<div id="app">
-
-  <!-- ================= SIDEBAR ================= -->
-  <aside class="sidebar" id="sidebar">
-
-    <div class="brand">
-      <div class="brand-logo">A</div>
-      <div>
-        <h1>Aung POS</h1>
-        <span>Business Management</span>
-      </div>
-    </div>
-
-    <nav class="nav">
-
-      <button class="nav-item active" data-page="dashboard">
-        <span>🏠</span>
-        <span>Dashboard</span>
-      </button>
-
-      <button class="nav-item" data-page="sales">
-        <span>🛒</span>
-        <span>အရောင်း</span>
-      </button>
-
-      <button class="nav-item" data-page="products">
-        <span>📦</span>
-        <span>ကုန်ပစ္စည်း</span>
-      </button>
-
-      <button class="nav-item" data-page="purchases">
-        <span>🧾</span>
-        <span>အဝယ်</span>
-      </button>
-
-      <button class="nav-item" data-page="stock">
-        <span>📊</span>
-        <span>ကုန်လက်ကျန်</span>
-      </button>
-
-      <button class="nav-item" data-page="customers">
-        <span>👥</span>
-        <span>Customer</span>
-      </button>
-
-      <button class="nav-item" data-page="suppliers">
-        <span>🚚</span>
-        <span>Supplier</span>
-      </button>
-
-      <button class="nav-item" data-page="debts">
-        <span>💰</span>
-        <span>အကြွေးစာရင်း</span>
-      </button>
-
-      <button class="nav-item" data-page="expenses">
-        <span>💸</span>
-        <span>ကုန်ကျစရိတ်</span>
-      </button>
-
-      <button class="nav-item" data-page="employees">
-        <span>👨‍💼</span>
-        <span>ဝန်ထမ်း</span>
-      </button>
-
-      <button class="nav-item" data-page="reports">
-        <span>📈</span>
-        <span>Reports</span>
-      </button>
-
-      <button class="nav-item" data-page="settings">
-        <span>⚙️</span>
-        <span>Settings</span>
-      </button>
-
-    </nav>
-
-    <div class="sidebar-footer">
-      <div class="shop-mini">
-        <div class="avatar">A</div>
-        <div>
-          <strong id="sideShopName">Aung Shop</strong>
-          <small>Owner Account</small>
-        </div>
-      </div>
-
-      <div class="version">
-        Aung POS V1.0
-      </div>
-    </div>
-
-  </aside>
-
-
-  <!-- ================= MAIN ================= -->
-  <main class="main">
-
-    <!-- TOPBAR -->
-    <header class="topbar">
-
-      <button class="menu-btn" id="menuBtn">
-        ☰
-      </button>
-
-      <div class="page-title">
-        <h2 id="pageTitle">Dashboard</h2>
-        <span id="pageSubtitle">
-          သင့်ဆိုင်လုပ်ငန်းကို တစ်နေရာတည်းမှ စီမံပါ
-        </span>
-      </div>
-
-      <div class="top-actions">
-
-        <button class="icon-btn" id="notificationBtn">
-          🔔
-          <span class="notification-dot"></span>
-        </button>
-
-        <button class="profile-btn">
-          <span class="profile-avatar">A</span>
-          <span class="profile-text">
-            <strong>Owner</strong>
-            <small>Admin</small>
-          </span>
-        </button>
-
-      </div>
-
-    </header>
-
-
-    <!-- ================= CONTENT ================= -->
-    <section class="content">
-
-      <!-- ==================================================
-           DASHBOARD
-      =================================================== -->
-      <div class="page active" id="page-dashboard">
-
-        <div class="welcome-card">
-
-          <div>
-            <span class="welcome-small">မင်္ဂလာပါ 👋</span>
-            <h1 id="welcomeShopName">Aung Shop</h1>
-            <p>
-              ယနေ့ဆိုင်လုပ်ငန်းအခြေအနေကို ဒီနေရာမှာ ကြည့်နိုင်ပါတယ်။
-            </p>
-          </div>
-
-          <button class="primary-btn" data-page-go="sales">
-            + အရောင်းစတင်မည်
-          </button>
-
-        </div>
-
-
-        <!-- STAT CARDS -->
-        <div class="stats-grid">
-
-          <div class="stat-card">
-            <div class="stat-icon sales-icon">🛒</div>
-            <div>
-              <span>ယနေ့အရောင်း</span>
-              <strong id="todaySales">0 Ks</strong>
-              <small id="todaySalesCount">0 ဘောက်ချာ</small>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-icon profit-icon">📈</div>
-            <div>
-              <span>ယနေ့အမြတ်</span>
-              <strong id="todayProfit">0 Ks</strong>
-              <small>Gross Profit</small>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-icon purchase-icon">🧾</div>
-            <div>
-              <span>ယနေ့အဝယ်</span>
-              <strong id="todayPurchase">0 Ks</strong>
-              <small>Purchase</small>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-icon expense-icon">💸</div>
-            <div>
-              <span>ယနေ့ကုန်ကျစရိတ်</span>
-              <strong id="todayExpense">0 Ks</strong>
-              <small>Expense</small>
-            </div>
-          </div>
-
-        </div>
-
-
-        <!-- SECOND STATS -->
-        <div class="mini-stats">
-
-          <div class="mini-card">
-            <span>📦 ကုန်ပစ္စည်း</span>
-            <strong id="totalProducts">0</strong>
-            <small>Products</small>
-          </div>
-
-          <div class="mini-card">
-            <span>⚠️ Low Stock</span>
-            <strong id="lowStockCount">0</strong>
-            <small>ပစ္စည်း</small>
-          </div>
-
-          <div class="mini-card">
-            <span>⏰ Expiry Alert</span>
-            <strong id="expiryCount">0</strong>
-            <small>ပစ္စည်း</small>
-          </div>
-
-          <div class="mini-card">
-            <span>👥 Customers</span>
-            <strong id="totalCustomers">0</strong>
-            <small>Customers</small>
-          </div>
-
-        </div>
-
-
-        <div class="dashboard-grid">
-
-          <!-- RECENT SALES -->
-          <div class="panel">
-
-            <div class="panel-header">
-              <div>
-                <h3>နောက်ဆုံးအရောင်းများ</h3>
-                <span>Recent Sales</span>
-              </div>
-
-              <button class="text-btn" data-page-go="sales">
-                အားလုံးကြည့်ရန် →
-              </button>
-            </div>
-
-            <div id="recentSales" class="table-wrap">
-
-              <div class="empty-state">
-                <div>🧾</div>
-                <h4>အရောင်းစာရင်း မရှိသေးပါ</h4>
-                <p>ပထမဆုံးအရောင်းကို စတင်လိုက်ပါ။</p>
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <!-- ALERTS -->
-          <div class="panel">
-
-            <div class="panel-header">
-              <div>
-                <h3>အသိပေးချက်များ</h3>
-                <span>Alerts</span>
-              </div>
-            </div>
-
-            <div id="dashboardAlerts">
-
-              <div class="alert-item info">
-                <div class="alert-icon">📦</div>
-                <div>
-                  <strong>Stock Management</strong>
-                  <p>ကုန်ပစ္စည်းများကို စတင်ထည့်သွင်းပါ။</p>
-                </div>
-              </div>
-
-              <div class="alert-item warning">
-                <div class="alert-icon">⚠️</div>
-                <div>
-                  <strong>Low Stock</strong>
-                  <p>လက်ကျန်နည်းသောပစ္စည်းများ ဒီမှာပေါ်ပါမည်။</p>
-                </div>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-
-        <!-- QUICK ACTIONS -->
-        <div class="section-title">
-          <div>
-            <h3>Quick Actions</h3>
-            <span>အသုံးများသောလုပ်ဆောင်ချက်များ</span>
-          </div>
-        </div>
-
-        <div class="quick-grid">
-
-          <button class="quick-card" data-page-go="sales">
-            <span>🛒</span>
-            <strong>အရောင်း</strong>
-            <small>New Sale</small>
-          </button>
-
-          <button class="quick-card" data-page-go="products">
-            <span>📦</span>
-            <strong>ကုန်ပစ္စည်း</strong>
-            <small>Add Product</small>
-          </button>
-
-          <button class="quick-card" data-page-go="purchases">
-            <span>🧾</span>
-            <strong>အဝယ်</strong>
-            <small>New Purchase</small>
-          </button>
-
-          <button class="quick-card" data-page-go="expenses">
-            <span>💸</span>
-            <strong>ကုန်ကျစရိတ်</strong>
-            <small>Add Expense</small>
-          </button>
-
-          <button class="quick-card" data-page-go="customers">
-            <span>👥</span>
-            <strong>Customer</strong>
-            <small>Add Customer</small>
-          </button>
-
-          <button class="quick-card" data-page-go="reports">
-            <span>📊</span>
-            <strong>Reports</strong>
-            <small>View Reports</small>
-          </button>
-
-        </div>
-
-      </div>
-
-
-      <!-- ==================================================
-           SALES
-      =================================================== -->
-      <div class="page" id="page-sales">
-
-        <div class="page-header">
-
-          <div>
-            <h2>🛒 အရောင်း</h2>
-            <p>ကုန်ပစ္စည်းများကို ရွေးချယ်ပြီး အရောင်းဘောက်ချာပြုလုပ်ပါ။</p>
-          </div>
-
-          <button class="primary-btn" id="newSaleBtn">
-            + New Sale
-          </button>
-
-        </div>
-
-
-        <div class="pos-layout">
-
-          <!-- PRODUCTS -->
-          <div class="pos-products panel">
-
-            <div class="pos-search">
-
-              <input
-                type="search"
-                id="salesSearch"
-                placeholder="🔎 ကုန်ပစ္စည်းရှာရန်..."
-              >
-
-              <select id="salesCategory">
-                <option value="">ကုန်အုပ်စုအားလုံး</option>
-              </select>
-
-            </div>
-
-            <div id="salesProducts" class="product-grid">
-
-              <div class="empty-state">
-                <div>📦</div>
-                <h4>ကုန်ပစ္စည်း မရှိသေးပါ</h4>
-                <p>Product menu မှာ ပစ္စည်းထည့်ပါ။</p>
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <!-- CART -->
-          <div class="cart-panel panel">
-
-            <div class="cart-header">
-              <div>
-                <h3>🛒 အရောင်းစာရင်း</h3>
-                <span id="cartCount">0 items</span>
-              </div>
-
-              <button class="clear-btn" id="clearCartBtn">
-                ရှင်းမည်
-              </button>
-            </div>
-
-
-            <div id="cartItems" class="cart-items">
-
-              <div class="cart-empty">
-                <div>🛒</div>
-                <strong>အရောင်းပစ္စည်း မရှိသေးပါ</strong>
-                <span>ဘယ်ဘက်မှ Product ကိုနှိပ်ပြီး ထည့်ပါ။</span>
-              </div>
-
-            </div>
-
-
-            <div class="cart-summary">
-
-              <div class="summary-row">
-                <span>Subtotal</span>
-                <strong id="cartSubtotal">0 Ks</strong>
-              </div>
-
-              <div class="summary-row">
-                <span>Discount</span>
-
-                <input
-                  type="number"
-                  id="saleDiscount"
-                  min="0"
-                  value="0"
-                  placeholder="0"
-                >
-              </div>
-
-              <div class="summary-total">
-                <span>Total</span>
-                <strong id="cartTotal">0 Ks</strong>
-              </div>
-
-              <div class="payment-methods">
-
-                <button class="payment-btn active" data-payment="cash">
-                  💵 Cash
-                </button>
-
-                <button class="payment-btn" data-payment="credit">
-                  💳 Credit
-                </button>
-
-              </div>
-
-              <button class="checkout-btn" id="checkoutBtn">
-                ✓ အရောင်းပြီးစီးမည်
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ==================================================
-           PRODUCTS
-      =================================================== -->
-      <div class="page" id="page-products">
-
-        <div class="page-header">
-
-          <div>
-            <h2>📦 ကုန်ပစ္စည်း</h2>
-            <p>ကုန်ပစ္စည်းအချက်အလက်နှင့် လက်ကျန်များကို စီမံပါ။</p>
-          </div>
-
-          <button class="primary-btn" id="addProductBtn">
-            + ကုန်ပစ္စည်းထည့်မည်
-          </button>
-
-        </div>
-
-
-        <div class="filter-bar">
-
-          <input
-            type="search"
-            id="productSearch"
-            placeholder="🔎 Product ရှာရန်..."
-          >
-
-          <select id="productCategoryFilter">
-            <option value="">Category အားလုံး</option>
-          </select>
-
-          <select id="stockFilter">
-            <option value="">Stock အားလုံး</option>
-            <option value="low">Low Stock</option>
-            <option value="out">Out of Stock</option>
-            <option value="available">Available</option>
-          </select>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="table-wrap">
-
-            <table>
-
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Barcode</th>
-                  <th>Category</th>
-                  <th>Purchase</th>
-                  <th>Retail</th>
-                  <th>Wholesale</th>
-                  <th>Stock</th>
-                  <th>Expiry</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-
-              <tbody id="productsTableBody">
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ==================================================
-           PURCHASES
-      =================================================== -->
-      <div class="page" id="page-purchases">
-
-        <div class="page-header">
-
-          <div>
-            <h2>🧾 အဝယ်စာရင်း</h2>
-            <p>Supplier ထံမှ ဝယ်ယူမှုများကို စီမံပါ။</p>
-          </div>
-
-          <button class="primary-btn" id="newPurchaseBtn">
-            + အဝယ်ထည့်မည်
-          </button>
-
-        </div>
-
-
-        <div class="stats-grid">
-
-          <div class="stat-card">
-            <div class="stat-icon purchase-icon">🧾</div>
-            <div>
-              <span>ယနေ့အဝယ်</span>
-              <strong id="purchaseTodayTotal">0 Ks</strong>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-icon">📋</div>
-            <div>
-              <span>အဝယ်ဘောက်ချာ</span>
-              <strong id="purchaseInvoiceCount">0</strong>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-icon expense-icon">💰</div>
-            <div>
-              <span>ပေးရန်ရှိ</span>
-              <strong id="supplierPayable">0 Ks</strong>
-            </div>
-          </div>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="panel-header">
-            <div>
-              <h3>Purchase History</h3>
-              <span>အဝယ်မှတ်တမ်းများ</span>
-            </div>
-          </div>
-
-          <div class="table-wrap">
-
-            <table>
-
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Invoice</th>
-                  <th>Supplier</th>
-                  <th>Items</th>
-                  <th>Total</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-
-              <tbody id="purchaseTableBody">
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ==================================================
-           STOCK
-      =================================================== -->
-      <div class="page" id="page-stock">
-
-        <div class="page-header">
-
-          <div>
-            <h2>📊 ကုန်လက်ကျန်</h2>
-            <p>Stock လက်ကျန်၊ တန်ဖိုးနှင့် Alert များကို စစ်ဆေးပါ။</p>
-          </div>
-
-        </div>
-
-
-        <div class="mini-stats">
-
-          <div class="mini-card">
-            <span>📦 Products</span>
-            <strong id="stockProductCount">0</strong>
-          </div>
-
-          <div class="mini-card">
-            <span>📊 Total Units</span>
-            <strong id="stockUnitCount">0</strong>
-          </div>
-
-          <div class="mini-card">
-            <span>💰 Stock Cost Value</span>
-            <strong id="stockCostValue">0 Ks</strong>
-          </div>
-
-          <div class="mini-card">
-            <span>⚠️ Low Stock</span>
-            <strong id="stockLowCount">0</strong>
-          </div>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="panel-header">
-
-            <div>
-              <h3>Stock List</h3>
-              <span>ကုန်ပစ္စည်းလက်ကျန်စာရင်း</span>
-            </div>
-
-            <button class="secondary-btn" id="stockAdjustmentBtn">
-              ± Stock Adjustment
-            </button>
-
-          </div>
-
-          <div class="table-wrap">
-
-            <table>
-
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Unit</th>
-                  <th>Stock</th>
-                  <th>Purchase Value</th>
-                  <th>Retail Value</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-
-              <tbody id="stockTableBody">
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ==================================================
-           CUSTOMERS
-      =================================================== -->
-      <div class="page" id="page-customers">
-
-        <div class="page-header">
-
-          <div>
-            <h2>👥 Customer</h2>
-            <p>Customer များနှင့် ရရန်ရှိငွေများကို စီမံပါ။</p>
-          </div>
-
-          <button class="primary-btn" id="addCustomerBtn">
-            + Customer ထည့်မည်
-          </button>
-
-        </div>
-
-
-        <div class="mini-stats">
-
-          <div class="mini-card">
-            <span>👥 Customers</span>
-            <strong id="customerCount">0</strong>
-          </div>
-
-          <div class="mini-card">
-            <span>💰 Receivable</span>
-            <strong id="customerReceivable">0 Ks</strong>
-          </div>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="filter-bar">
-
-            <input
-              type="search"
-              id="customerSearch"
-              placeholder="🔎 Customer ရှာရန်..."
-            >
-
-          </div>
-
-          <div class="table-wrap">
-
-            <table>
-
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Phone</th>
-                  <th>Address</th>
-                  <th>Total Purchase</th>
-                  <th>Receivable</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-
-              <tbody id="customerTableBody">
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ==================================================
-           SUPPLIERS
-      =================================================== -->
-      <div class="page" id="page-suppliers">
-
-        <div class="page-header">
-
-          <div>
-            <h2>🚚 Supplier</h2>
-            <p>Supplier များနှင့် ပေးရန်ရှိငွေများကို စီမံပါ။</p>
-          </div>
-
-          <button class="primary-btn" id="addSupplierBtn">
-            + Supplier ထည့်မည်
-          </button>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="table-wrap">
-
-            <table>
-
-              <thead>
-                <tr>
-                  <th>Supplier</th>
-                  <th>Phone</th>
-                  <th>Address</th>
-                  <th>Total Purchase</th>
-                  <th>Payable</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-
-              <tbody id="supplierTableBody">
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ==================================================
-           DEBTS
-      =================================================== -->
-      <div class="page" id="page-debts">
-
-        <div class="page-header">
-
-          <div>
-            <h2>💰 အကြွေးစာရင်း</h2>
-            <p>ရရန်ရှိနှင့် ပေးရန်ရှိငွေများကို စီမံပါ။</p>
-          </div>
-
-        </div>
-
-
-        <div class="stats-grid">
-
-          <div class="stat-card">
-            <div class="stat-icon profit-icon">💰</div>
-            <div>
-              <span>Customer ရရန်ရှိ</span>
-              <strong id="totalReceivable">0 Ks</strong>
-            </div>
-          </div>
-
-          <div class="stat-card">
-            <div class="stat-icon expense-icon">💳</div>
-            <div>
-              <span>Supplier ပေးရန်ရှိ</span>
-              <strong id="totalPayable">0 Ks</strong>
-            </div>
-          </div>
-
-        </div>
-
-
-        <div class="dashboard-grid">
-
-          <div class="panel">
-
-            <div class="panel-header">
-              <div>
-                <h3>Customer Receivable</h3>
-                <span>ရရန်ရှိငွေ</span>
-              </div>
-            </div>
-
-            <div id="receivableList">
-
-              <div class="empty-state">
-                <div>💰</div>
-                <h4>ရရန်ရှိစာရင်း မရှိပါ</h4>
-              </div>
-
-            </div>
-
-          </div>
-
-
-          <div class="panel">
-
-            <div class="panel-header">
-              <div>
-                <h3>Supplier Payable</h3>
-                <span>ပေးရန်ရှိငွေ</span>
-              </div>
-            </div>
-
-            <div id="payableList">
-
-              <div class="empty-state">
-                <div>💳</div>
-                <h4>ပေးရန်ရှိစာရင်း မရှိပါ</h4>
-              </div>
-
-            </div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ==================================================
-           EXPENSES
-      =================================================== -->
-      <div class="page" id="page-expenses">
-
-        <div class="page-header">
-
-          <div>
-            <h2>💸 ကုန်ကျစရိတ်</h2>
-            <p>ဆိုင်လုပ်ငန်းကုန်ကျစရိတ်များကို မှတ်တမ်းတင်ပါ။</p>
-          </div>
-
-          <button class="primary-btn" id="addExpenseBtn">
-            + ကုန်ကျစရိတ်ထည့်မည်
-          </button>
-
-        </div>
-
-
-        <div class="mini-stats">
-
-          <div class="mini-card">
-            <span>ယနေ့</span>
-            <strong id="expenseToday">0 Ks</strong>
-          </div>
-
-          <div class="mini-card">
-            <span>ဒီလ</span>
-            <strong id="expenseMonth">0 Ks</strong>
-          </div>
-
-          <div class="mini-card">
-            <span>ယခုနှစ်</span>
-            <strong id="expenseYear">0 Ks</strong>
-          </div>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="table-wrap">
-
-            <table>
-
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Category</th>
-                  <th>Description</th>
-                  <th>Amount</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-
-              <tbody id="expenseTableBody">
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ==================================================
-           EMPLOYEES
-      =================================================== -->
-      <div class="page" id="page-employees">
-
-        <div class="page-header">
-
-          <div>
-            <h2>👨‍💼 ဝန်ထမ်း</h2>
-            <p>ဝန်ထမ်းများ၊ လစာနှင့် ကြိုတင်ထုတ်ငွေများကို စီမံပါ။</p>
-          </div>
-
-          <button class="primary-btn" id="addEmployeeBtn">
-            + ဝန်ထမ်းထည့်မည်
-          </button>
-
-        </div>
-
-
-        <div class="panel">
-
-          <div class="table-wrap">
-
-            <table>
-
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Phone</th>
-                  <th>Position</th>
-                  <th>Salary</th>
-                  <th>Advance</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-
-              <tbody id="employeeTableBody">
-
-              </tbody>
-
-            </table>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ==================================================
-           REPORTS
-      =================================================== -->
-      <div class="page" id="page-reports">
-
-        <div class="page-header">
-
-          <div>
-            <h2>📈 Reports</h2>
-            <p>လုပ်ငန်းအခြေအနေကို ရက် / လ / နှစ်အလိုက် စစ်ဆေးပါ။</p>
-          </div>
-
-          <select id="reportPeriod" class="period-select">
-            <option value="today">ယနေ့</option>
-            <option value="month">ဒီလ</option>
-            <option value="year">ယခုနှစ်</option>
-          </select>
-
-        </div>
-
-
-        <div class="report-cards">
-
-          <div class="report-card">
-            <span>Sales</span>
-            <strong id="reportSales">0 Ks</strong>
-          </div>
-
-          <div class="report-card">
-            <span>Purchase</span>
-            <strong id="reportPurchase">0 Ks</strong>
-          </div>
-
-          <div class="report-card">
-            <span>Expenses</span>
-            <strong id="reportExpenses">0 Ks</strong>
-          </div>
-
-          <div class="report-card highlight">
-            <span>Net Profit</span>
-            <strong id="reportProfit">0 Ks</strong>
-          </div>
-
-        </div>
-
-
-        <div class="dashboard-grid">
-
-          <div class="panel">
-
-            <div class="panel-header">
-              <div>
-                <h3>Sales Summary</h3>
-                <span>အရောင်းစာရင်းချုပ်</span>
-              </div>
-            </div>
-
-            <div id="salesReportSummary"></div>
-
-          </div>
-
-
-          <div class="panel">
-
-            <div class="panel-header">
-              <div>
-                <h3>Profit Summary</h3>
-                <span>အမြတ်စာရင်းချုပ်</span>
-              </div>
-            </div>
-
-            <div id="profitReportSummary"></div>
-
-          </div>
-
-        </div>
-
-      </div>
-
-
-      <!-- ==================================================
-           SETTINGS
-      =================================================== -->
-      <div class="page" id="page-settings">
-
-        <div class="page-header">
-
-          <div>
-            <h2>⚙️ Settings</h2>
-            <p>Aung POS ကို သင့်ဆိုင်အလိုက် စိတ်ကြိုက်ပြင်ဆင်ပါ။</p>
-          </div>
-
-        </div>
-
-
-        <div class="settings-grid">
-
-          <div class="settings-card">
-
-            <div class="settings-icon">🏪</div>
-
-            <div>
-              <h3>ဆိုင်အချက်အလက်</h3>
-              <p>ဆိုင်အမည်၊ လိပ်စာ၊ ဖုန်းနံပါတ်</p>
-            </div>
-
-            <button class="secondary-btn" id="shopSettingsBtn">
-              ပြင်မည်
-            </button>
-
-          </div>
-
-
-          <div class="settings-card">
-
-            <div class="settings-icon">🧾</div>
-
-            <div>
-              <h3>Receipt Settings</h3>
-              <p>ဘောက်ချာပေါ်တွင် ပြသမည့်အချက်များ</p>
-            </div>
-
-            <button class="secondary-btn" id="receiptSettingsBtn">
-              ပြင်မည်
-            </button>
-
-          </div>
-
-
-          <div class="settings-card">
-
-            <div class="settings-icon">👤</div>
-
-            <div>
-              <h3>User Management</h3>
-              <p>Account နှင့် Permission များ</p>
-            </div>
-
-            <button class="secondary-btn" id="userSettingsBtn">
-              စီမံမည်
-            </button>
-
-          </div>
-
-
-          <div class="settings-card">
-
-            <div class="settings-icon">💾</div>
-
-            <div>
-              <h3>Backup & Restore</h3>
-              <p>Data Backup / Restore</p>
-            </div>
-
-            <button class="secondary-btn" id="backupBtn">
-              Backup
-            </button>
-
-          </div>
-
-
-          <div class="settings-card danger-card">
-
-            <div class="settings-icon">🗑️</div>
-
-            <div>
-              <h3>Data Management</h3>
-              <p>Test Data များကို ဖျက်ရန်</p>
-            </div>
-
-            <button class="danger-btn" id="clearDataBtn">
-              Clear Data
-            </button>
-
-          </div>
-
-        </div>
-
-      </div>
-
-    </section>
-
-  </main>
-
-</div>
-
-
-<!-- ==================================================
-     MODAL
-=================================================== -->
-
-<div class="modal-overlay" id="modalOverlay">
-
-  <div class="modal" id="modal">
-
-    <div class="modal-header">
-
-      <div>
-        <h3 id="modalTitle">Form</h3>
-        <span id="modalSubtitle"></span>
-      </div>
-
-      <button class="modal-close" id="modalClose">
-        ×
-      </button>
-
-    </div>
-
-    <div class="modal-body" id="modalBody"></div>
-
+<div class="app">
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="logo">
+    <h1>🧾 Aung POS</h1>
+    <p>Professional Business POS</p>
   </div>
 
+  <nav class="nav">
+    <div class="nav-title">Main</div>
+
+    <button class="nav-btn active" data-page="dashboard">📊 Dashboard</button>
+    <button class="nav-btn" data-page="sales">🛒 Sales</button>
+    <button class="nav-btn" data-page="products">📦 Products</button>
+    <button class="nav-btn" data-page="purchases">🚚 Purchases</button>
+    <button class="nav-btn" data-page="stock">📋 Stock</button>
+
+    <div class="nav-title">People</div>
+
+    <button class="nav-btn" data-page="customers">👥 Customers</button>
+    <button class="nav-btn" data-page="suppliers">🏢 Suppliers</button>
+    <button class="nav-btn" data-page="debts">💳 Debts</button>
+    <button class="nav-btn" data-page="employees">👨‍💼 Employees</button>
+
+    <div class="nav-title">Finance</div>
+
+    <button class="nav-btn" data-page="expenses">💸 Expenses</button>
+    <button class="nav-btn" data-page="reports">📈 Reports</button>
+
+    <div class="nav-title">System</div>
+
+    <button class="nav-btn" data-page="settings">⚙️ Settings</button>
+  </nav>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+<header class="topbar">
+  <div style="display:flex;align-items:center;gap:10px">
+    <button class="mobile-menu" id="mobileMenu">☰</button>
+    <div>
+      <h2 id="pageTitle">Dashboard</h2>
+    </div>
+  </div>
+  <div class="shop-badge" id="shopBadge">My Shop</div>
+</header>
+
+<div class="content">
+
+<!-- DASHBOARD -->
+<section class="page active" id="page-dashboard">
+  <div class="page-head">
+    <div>
+      <h2>Dashboard</h2>
+      <p>သင့်လုပ်ငန်းရဲ့ အခြေအနေကို တစ်နေရာတည်းမှာ ကြည့်နိုင်ပါတယ်။</p>
+    </div>
+    <button class="btn btn-primary" data-page="sales">+ New Sale</button>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">ယနေ့ရောင်းအား</div>
+      <div class="card-value" id="todaySales">0 Ks</div>
+      <div class="card-note" id="todaySalesCount">0 sales</div>
+    </div>
+    <div class="card">
+      <div class="card-label">ယနေ့အမြတ်</div>
+      <div class="card-value" id="todayProfit">0 Ks</div>
+      <div class="card-note">Gross Profit</div>
+    </div>
+    <div class="card">
+      <div class="card-label">ယနေ့ဝယ်ယူမှု</div>
+      <div class="card-value" id="todayPurchase">0 Ks</div>
+      <div class="card-note">Purchases</div>
+    </div>
+    <div class="card">
+      <div class="card-label">ယနေ့ကုန်ကျစရိတ်</div>
+      <div class="card-value" id="todayExpense">0 Ks</div>
+      <div class="card-note">Expenses</div>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">Products</div>
+      <div class="card-value" id="totalProducts">0</div>
+      <div class="card-note">Total products</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Low Stock</div>
+      <div class="card-value" id="lowStockCount">0</div>
+      <div class="card-note">Need attention</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Expiry</div>
+      <div class="card-value" id="expiryCount">0</div>
+      <div class="card-note">Expiring soon</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Customers</div>
+      <div class="card-value" id="totalCustomers">0</div>
+      <div class="card-note">Customers</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <h3>⚠️ Alerts</h3>
+      <div id="dashboardAlerts"></div>
+    </div>
+
+    <div class="panel">
+      <h3>🧾 Recent Sales</h3>
+      <div id="recentSales"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SALES -->
+<section class="page" id="page-sales">
+  <div class="page-head">
+    <div>
+      <h2>Sales / POS</h2>
+      <p>ပစ္စည်းရွေးပြီး အရောင်းဘောင်ထဲထည့်ပါ။</p>
+    </div>
+    <button class="btn btn-warning" id="clearCartBtn">Clear Cart</button>
+  </div>
+
+  <div class="pos-layout">
+    <div>
+      <div class="filters">
+        <input id="salesSearch" placeholder="🔍 ပစ္စည်းရှာရန်">
+        <select id="salesCategory">
+          <option value="">All Categories</option>
+        </select>
+      </div>
+      <div class="product-grid" id="salesProducts"></div>
+    </div>
+
+    <div class="cart">
+      <h3 style="margin-bottom:12px">🛒 Cart <span id="cartCount">(0)</span></h3>
+
+      <div id="cartItems">
+        <div class="empty">ပစ္စည်းမရှိသေးပါ</div>
+      </div>
+
+      <div class="field" style="margin-top:12px">
+        <label>Customer</label>
+        <select id="saleCustomer">
+          <option value="">Walk-in Customer</option>
+        </select>
+      </div>
+
+      <div class="field" style="margin-top:8px">
+        <label>Discount</label>
+        <input id="saleDiscount" type="number" value="0" min="0">
+      </div>
+
+      <div class="cart-total">
+        <span>Subtotal</span>
+        <span id="cartSubtotal">0 Ks</span>
+      </div>
+      <div class="cart-total">
+        <span>Total</span>
+        <strong id="cartTotal">0 Ks</strong>
+      </div>
+
+      <div style="margin:10px 0">
+        <div style="font-size:12px;margin-bottom:6px">Payment</div>
+        <div class="payment-buttons">
+          <button class="btn active" data-payment="Cash">Cash</button>
+          <button class="btn" data-payment="Credit">Credit</button>
+          <button class="btn" data-payment="Other">Other</button>
+        </div>
+      </div>
+
+      <button class="btn btn-success" id="checkoutBtn"
+        style="width:100%;margin-top:8px">
+        Complete Sale
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCTS -->
+<section class="page" id="page-products">
+  <div class="page-head">
+    <div>
+      <h2>Products</h2>
+      <p>ပစ္စည်း၊ ဈေးနှုန်း၊ stock နဲ့ expiry ကို စီမံပါ။</p>
+    </div>
+    <button class="btn btn-primary" id="addProductBtn">+ Add Product</button>
+  </div>
+
+  <div class="panel">
+    <div class="filters">
+      <input id="productSearch" placeholder="🔍 Product ရှာရန်">
+      <select id="productCategoryFilter">
+        <option value="">All Categories</option>
+      </select>
+      <select id="stockFilter">
+        <option value="">All Stock</option>
+        <option value="low">Low Stock</option>
+        <option value="out">Out of Stock</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>Category</th>
+            <th>Unit</th>
+            <th>Cost</th>
+            <th>Retail</th>
+            <th>Wholesale</th>
+            <th>Stock</th>
+            <th>Expiry</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="productsTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- PURCHASES -->
+<section class="page" id="page-purchases">
+  <div class="page-head">
+    <div>
+      <h2>Purchases</h2>
+      <p>Supplier ဆီက ဝယ်ယူမှုတွေကို မှတ်တမ်းတင်ပါ။</p>
+    </div>
+    <button class="btn btn-primary" id="newPurchaseBtn">+ New Purchase</button>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="card-label">Today Purchase</div><div class="card-value" id="purchaseTodayTotal">0 Ks</div></div>
+    <div class="card"><div class="card-label">Invoices</div><div class="card-value" id="purchaseInvoiceCount">0</div></div>
+    <div class="card"><div class="card-label">Supplier Payable</div><div class="card-value" id="supplierPayable">0 Ks</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Invoice</th><th>Supplier</th><th>Total</th><th>Payment</th></tr>
+        </thead>
+        <tbody id="purchaseTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- STOCK -->
+<section class="page" id="page-stock">
+  <div class="page-head">
+    <div>
+      <h2>Stock Management</h2>
+      <p>လက်ကျန် stock ကို စောင့်ကြည့်ပါ။</p>
+    </div>
+    <button class="btn btn-primary" id="stockAdjustmentBtn">+ Stock Adjustment</button>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="card-label">Products</div><div class="card-value" id="stockProductCount">0</div></div>
+    <div class="card"><div class="card-label">Units</div><div class="card-value" id="stockUnitCount">0</div></div>
+    <div class="card"><div class="card-label">Cost Value</div><div class="card-value" id="stockCostValue">0 Ks</div></div>
+    <div class="card"><div class="card-label">Low Stock</div><div class="card-value" id="stockLowCount">0</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Product</th><th>Category</th><th>Stock</th><th>Unit</th><th>Cost Value</th><th>Retail Value</th><th>Status</th></tr>
+        </thead>
+        <tbody id="stockTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- CUSTOMERS -->
+<section class="page" id="page-customers">
+  <div class="page-head">
+    <div>
+      <h2>Customers</h2>
+      <p>Customer information နဲ့ receivable ကို စီမံပါ။</p>
+    </div>
+    <button class="btn btn-primary" id="addCustomerBtn">+ Add Customer</button>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="card-label">Customers</div><div class="card-value" id="customerCount">0</div></div>
+    <div class="card"><div class="card-label">Receivable</div><div class="card-value" id="customerReceivable">0 Ks</div></div>
+  </div>
+
+  <div class="panel">
+    <input id="customerSearch" placeholder="🔍 Customer ရှာရန်"
+      style="padding:10px;width:100%;max-width:350px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:15px">
+
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Name</th><th>Phone</th><th>Address</th><th>Due</th><th>Action</th></tr></thead>
+        <tbody id="customerTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- SUPPLIERS -->
+<section class="page" id="page-suppliers">
+  <div class="page-head">
+    <div>
+      <h2>Suppliers</h2>
+      <p>Supplier information နဲ့ payable ကို စီမံပါ။</p>
+    </div>
+    <button class="btn btn-primary" id="addSupplierBtn">+ Add Supplier</button>
+  </div>
+
+  <div class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Name</th><th>Phone</th><th>Address</th><th>Payable</th><th>Action</th></tr></thead>
+        <tbody id="supplierTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- DEBTS -->
+<section class="page" id="page-debts">
+  <div class="page-head">
+    <div>
+      <h2>Debts / Ledger</h2>
+      <p>Customer receivable နှင့် supplier payable ကို စီမံပါ။</p>
+    </div>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="card-label">Customer Receivable</div><div class="card-value" id="totalReceivable">0 Ks</div></div>
+    <div class="card"><div class="card-label">Supplier Payable</div><div class="card-value" id="totalPayable">0 Ks</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <h3>Customer Receivable</h3>
+      <div id="receivableList"></div>
+    </div>
+    <div class="panel">
+      <h3>Supplier Payable</h3>
+      <div id="payableList"></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPENSES -->
+<section class="page" id="page-expenses">
+  <div class="page-head">
+    <div>
+      <h2>Expenses</h2>
+      <p>နေ့စဉ်၊ လစဉ်၊ နှစ်စဉ်ကုန်ကျစရိတ်များ။</p>
+    </div>
+    <button class="btn btn-primary" id="addExpenseBtn">+ Add Expense</button>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="card-label">Today</div><div class="card-value" id="expenseToday">0 Ks</div></div>
+    <div class="card"><div class="card-label">This Month</div><div class="card-value" id="expenseMonth">0 Ks</div></div>
+    <div class="card"><div class="card-label">This Year</div><div class="card-value" id="expenseYear">0 Ks</div></div>
+  </div>
+
+  <div class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Action</th></tr></thead>
+        <tbody id="expenseTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- EMPLOYEES -->
+<section class="page" id="page-employees">
+  <div class="page-head">
+    <div>
+      <h2>Employees</h2>
+      <p>ဝန်ထမ်းစာရင်းနှင့် လစာ/ပေးချေမှုများ။</p>
+    </div>
+    <button class="btn btn-primary" id="addEmployeeBtn">+ Add Employee</button>
+  </div>
+
+  <div class="panel">
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Name</th><th>Position</th><th>Phone</th><th>Salary</th><th>Action</th></tr></thead>
+        <tbody id="employeeTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- REPORTS -->
+<section class="page" id="page-reports">
+  <div class="page-head">
+    <div>
+      <h2>Reports & P&L</h2>
+      <p>လုပ်ငန်းရဲ့ Sales, Purchase, Expense နဲ့ Profit ကိုကြည့်ပါ။</p>
+    </div>
+    <select id="reportPeriod" class="btn">
+      <option value="today">Today</option>
+      <option value="month" selected>This Month</option>
+      <option value="year">This Year</option>
+      <option value="all">All Time</option>
+    </select>
+  </div>
+
+  <div class="cards">
+    <div class="card"><div class="card-label">Sales</div><div class="card-value" id="reportSales">0 Ks</div></div>
+    <div class="card"><div class="card-label">Purchase</div><div class="card-value" id="reportPurchase">0 Ks</div></div>
+    <div class="card"><div class="card-label">Expenses</div><div class="card-value" id="reportExpenses">0 Ks</div></div>
+    <div class="card"><div class="card-label">Net Profit</div><div class="card-value" id="reportProfit">0 Ks</div></div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <h3>Sales Report</h3>
+      <div id="salesReportSummary"></div>
+    </div>
+    <div class="panel">
+      <h3>Profit & Loss</h3>
+      <div id="profitReportSummary"></div>
+    </div>
+  </div>
+</section>
+
+<!-- SETTINGS -->
+<section class="page" id="page-settings">
+  <div class="page-head">
+    <div>
+      <h2>Settings</h2>
+      <p>Shop information နှင့် data management။</p>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div class="panel">
+      <h3>🏪 Shop Settings</h3>
+      <div class="form-grid">
+        <div class="field">
+          <label>Shop Name</label>
+          <input id="settingShopName">
+        </div>
+        <div class="field">
+          <label>Phone</label>
+          <input id="settingPhone">
+        </div>
+        <div class="field">
+          <label>Address</label>
+          <input id="settingAddress">
+        </div>
+        <div class="field">
+          <label>Receipt Footer</label>
+          <input id="settingFooter">
+        </div>
+      </div>
+      <button class="btn btn-primary" id="saveShopBtn" style="margin-top:12px">
+        Save Settings
+      </button>
+    </div>
+
+    <div class="panel">
+      <h3>💾 Data Management</h3>
+      <button class="btn btn-success" id="backupBtn" style="width:100%;margin-bottom:8px">
+        Export Backup
+      </button>
+      <button class="btn btn-danger" id="clearDataBtn" style="width:100%">
+        Clear All Data
+      </button>
+    </div>
+  </div>
+</section>
+
+</div>
+</main>
 </div>
 
+<!-- MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <div class="modal-head">
+      <div>
+        <h3 id="modalTitle">Form</h3>
+        <div id="modalSubtitle" style="font-size:12px;color:#64748b;margin-top:3px"></div>
+      </div>
+      <button class="close" id="modalClose">×</button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-foot" id="modalFoot"></div>
+  </div>
+</div>
 
-<!-- ==================================================
-     TOAST
-=================================================== -->
+<script>
+/* =========================================================
+   AUNG POS - SINGLE FILE VERSION
+   No external JS / CSS required
+========================================================= */
 
-<div id="toastContainer"></div>
+const KEY="aung_pos_single_v1";
 
+const defaultData={
+  settings:{
+    shopName:"My Shop",
+    phone:"",
+    address:"",
+    footer:"Thank You!"
+  },
+  products:[],
+  sales:[],
+  purchases:[],
+  customers:[],
+  suppliers:[],
+  expenses:[],
+  employees:[],
+  stockMoves:[]
+};
 
-<script src="app.js"></script>
+let data=loadData();
+let cart=[];
+let payment="Cash";
+
+function loadData(){
+  try{
+    const x=localStorage.getItem(KEY);
+    return x?JSON.parse(x):JSON.parse(JSON.stringify(defaultData));
+  }catch(e){
+    return JSON.parse(JSON.stringify(defaultData));
+  }
+}
+
+function saveData(){
+  localStorage.setItem(KEY,JSON.stringify(data));
+}
+
+function money(n){
+  return Number(n||0).toLocaleString("en-US")+" Ks";
+}
+
+function today(){
+  return new Date().toISOString().slice(0,10);
+}
+
+function month(){
+  return today().slice(0,7);
+}
+
+function year(){
+  return today().slice(0,4);
+}
+
+function esc(v){
+  return String(v??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;");
+}
+
+function uid(prefix="ID"){
+  return prefix+"-"+Date.now()+"-"+Math.floor(Math.random()*999);
+}
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function toast(msg){
+  const old=document.querySelector(".toast");
+  if(old)old.remove();
+
+  const t=document.createElement("div");
+  t.className="toast";
+  t.textContent=msg;
+  document.body.appendChild(t);
+
+  setTimeout(()=>t.remove(),2200);
+}
+
+/* ================= NAVIGATION ================= */
+
+const pageNames={
+  dashboard:"Dashboard",
+  sales:"Sales / POS",
+  products:"Products",
+  purchases:"Purchases",
+  stock:"Stock",
+  customers:"Customers",
+  suppliers:"Suppliers",
+  debts:"Debts / Ledger",
+  expenses:"Expenses",
+  employees:"Employees",
+  reports:"Reports",
+  settings:"Settings"
+};
+
+function showPage(name){
+  document.querySelectorAll(".page").forEach(p=>{
+    p.classList.remove("active");
+  });
+
+  const page=$("page-"+name);
+  if(page)page.classList.add("active");
+
+  document.querySelectorAll(".nav-btn").forEach(b=>{
+    b.classList.toggle("active",b.dataset.page===name);
+  });
+
+  $("pageTitle").textContent=pageNames[name]||"Aung POS";
+
+  if(window.innerWidth<=768){
+    $("sidebar").classList.remove("open");
+  }
+
+  refresh();
+}
+
+document.addEventListener("click",e=>{
+  const nav=e.target.closest("[data-page]");
+  if(nav){
+    e.preventDefault();
+    showPage(nav.dataset.page);
+    return;
+  }
+});
+
+/* ================= MODAL ================= */
+
+function openModal(title,body,buttons=""){
+  $("modalTitle").textContent=title;
+  $("modalSubtitle").textContent="";
+  $("modalBody").innerHTML=body;
+  $("modalFoot").innerHTML=buttons;
+  $("modalOverlay").classList.add("show");
+}
+
+function closeModal(){
+  $("modalOverlay").classList.remove("show");
+  $("modalBody").innerHTML="";
+  $("modalFoot").innerHTML="";
+}
+
+$("modalClose").addEventListener("click",closeModal);
+
+$("modalOverlay").addEventListener("click",e=>{
+  if(e.target===$("modalOverlay"))closeModal();
+});
+
+/* ================= DASHBOARD ================= */
+
+function refreshDashboard(){
+  const td=today();
+
+  const sales=data.sales.filter(x=>x.date===td);
+
+  const salesTotal=sales.reduce((a,x)=>a+Number(x.total),0);
+  const profit=sales.reduce((a,x)=>a+Number(x.profit||0),0);
+
+  const purchases=data.purchases
+    .filter(x=>x.date===td)
+    .reduce((a,x)=>a+Number(x.total),0);
+
+  const expenses=data.expenses
+    .filter(x=>x.date===td)
+    .reduce((a,x)=>a+Number(x.amount),0);
+
+  $("todaySales").textContent=money(salesTotal);
+  $("todayProfit").textContent=money(profit);
+  $("todayPurchase").textContent=money(purchases);
+  $("todayExpense").textContent=money(expenses);
+  $("todaySalesCount").textContent=sales.length+" sales";
+
+  $("totalProducts").textContent=data.products.length;
+
+  const low=data.products.filter(p=>Number(p.stock)<=Number(p.minStock||5));
+  $("lowStockCount").textContent=low.length;
+
+  const exp=data.products.filter(p=>p.expiry && daysUntil(p.expiry)<=30);
+  $("expiryCount").textContent=exp.length;
+
+  $("totalCustomers").textContent=data.customers.length;
+
+  let alerts="";
+
+  if(low.length){
+    alerts+=`<div class="alert alert-warning">
+      ⚠️ Low Stock: ${low.length} product(s)
+    </div>`;
+  }
+
+  if(exp.length){
+    alerts+=`<div class="alert alert-danger">
+      ⏰ Expiry within 30 days: ${exp.length} product(s)
+    </div>`;
+  }
+
+  if(!alerts){
+    alerts=`<div class="alert alert-success">✓ လက်ရှိအရေးကြီး Alert မရှိပါ။</div>`;
+  }
+
+  $("dashboardAlerts").innerHTML=alerts;
+
+  if(!sales.length){
+    $("recentSales").innerHTML=`<div class="empty">ယနေ့အရောင်းမရှိသေးပါ။</div>`;
+  }else{
+    $("recentSales").innerHTML=sales.slice(-5).reverse().map(s=>`
+      <div class="cart-row">
+        <span>${esc(s.invoice)}</span>
+        <strong>${money(s.total)}</strong>
+      </div>
+    `).join("");
+  }
+
+  $("shopBadge").textContent=data.settings.shopName||"My Shop";
+}
+
+function daysUntil(date){
+  const a=new Date();
+  const b=new Date(date);
+  a.setHours(0,0,0,0);
+  b.setHours(0,0,0,0);
+  return Math.ceil((b-a)/86400000);
+}
+
+/* ================= PRODUCTS ================= */
+
+function categories(){
+  return [...new Set(data.products.map(p=>p.category).filter(Boolean))];
+}
+
+function populateCategories(){
+  const cats=categories();
+
+  ["salesCategory","productCategoryFilter"].forEach(id=>{
+    const el=$(id);
+    if(!el)return;
+
+    const current=el.value;
+
+    el.innerHTML=
+      `<option value="">All Categories</option>`+
+      cats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
+
+    el.value=current;
+  });
+
+  const customer=$("saleCustomer");
+
+  if(customer){
+    const current=customer.value;
+
+    customer.innerHTML=
+      `<option value="">Walk-in Customer</option>`+
+      data.customers.map(c=>
+        `<option value="${c.id}">${esc(c.name)}</option>`
+      ).join("");
+
+    customer.value=current;
+  }
+}
+
+function renderProducts(){
+  const search=($("productSearch")?.value||"").toLowerCase();
+  const cat=$("productCategoryFilter")?.value||"";
+  const filter=$("stockFilter")?.value||"";
+
+  let list=data.products.filter(p=>{
+    const matchSearch=
+      p.name.toLowerCase().includes(search)||
+      String(p.barcode||"").includes(search);
+
+    const matchCat=!cat||p.category===cat;
+
+    let matchStock=true;
+
+    if(filter==="low")
+      matchStock=Number(p.stock)<=Number(p.minStock||5)&&Number(p.stock)>0;
+
+    if(filter==="out")
+      matchStock=Number(p.stock)<=0;
+
+    return matchSearch&&matchCat&&matchStock;
+  });
+
+  $("productsTableBody").innerHTML=list.length?list.map(p=>`
+    <tr>
+      <td><strong>${esc(p.name)}</strong><br>
+        <small>${esc(p.barcode||"")}</small>
+      </td>
+      <td>${esc(p.category||"-")}</td>
+      <td>${esc(p.unit||"pcs")}</td>
+      <td>${money(p.cost)}</td>
+      <td>${money(p.retail)}</td>
+      <td>${money(p.wholesale)}</td>
+      <td>
+        <span class="badge ${Number(p.stock)<=Number(p.minStock||5)?"badge-red":"badge-green"}">
+          ${p.stock}
+        </span>
+      </td>
+      <td>${p.expiry||"-"}</td>
+      <td>
+        <button class="btn btn-sm btn-primary edit-product" data-id="${p.id}">Edit</button>
+        <button class="btn btn-sm btn-danger delete-product" data-id="${p.id}">Delete</button>
+      </td>
+    </tr>
+  `).join(""):`<tr><td colspan="9" class="empty">Product မရှိသေးပါ။</td></tr>`;
+}
+
+function productForm(p={}){
+  return `
+    <div class="form-grid">
+      <div class="field">
+        <label>Product Name *</label>
+        <input id="fName" value="${esc(p.name||"")}">
+      </div>
+
+      <div class="field">
+        <label>Barcode</label>
+        <input id="fBarcode" value="${esc(p.barcode||"")}">
+      </div>
+
+      <div class="field">
+        <label>Category</label>
+        <input id="fCategory" value="${esc(p.category||"")}">
+      </div>
+
+      <div class="field">
+        <label>Subcategory</label>
+        <input id="fSubcategory" value="${esc(p.subcategory||"")}">
+      </div>
+
+      <div class="field">
+        <label>Unit</label>
+        <select id="fUnit">
+          <option ${p.unit==="pcs"||!p.unit?"selected":""}>pcs</option>
+          <option ${p.unit==="pack"?"selected":""}>pack</option>
+          <option ${p.unit==="box"?"selected":""}>box</option>
+          <option ${p.unit==="kg"?"selected":""}>kg</option>
+          <option ${p.unit==="liter"?"selected":""}>liter</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Cost Price</label>
+        <input id="fCost" type="number" value="${p.cost||0}">
+      </div>
+
+      <div class="field">
+        <label>Retail Price</label>
+        <input id="fRetail" type="number" value="${p.retail||0}">
+      </div>
+
+      <div class="field">
+        <label>Wholesale Price</label>
+        <input id="fWholesale" type="number" value="${p.wholesale||0}">
+      </div>
+
+      <div class="field">
+        <label>Stock</label>
+        <input id="fStock" type="number" value="${p.stock||0}">
+      </div>
+
+      <div class="field">
+        <label>Minimum Stock Alert</label>
+        <input id="fMinStock" type="number" value="${p.minStock||5}">
+      </div>
+
+      <div class="field">
+        <label>Expiry Date</label>
+        <input id="fExpiry" type="date" value="${p.expiry||""}">
+      </div>
+
+      <div class="field">
+        <label>Variant / Size / Color</label>
+        <input id="fVariant" value="${esc(p.variant||"")}">
+      </div>
+    </div>
+  `;
+}
+
+function saveProduct(id=null){
+  const name=$("fName").value.trim();
+
+  if(!name){
+    toast("Product Name ထည့်ပါ");
+    return;
+  }
+
+  const obj={
+    id:id||uid("P"),
+    name,
+    barcode:$("fBarcode").value.trim(),
+    category:$("fCategory").value.trim(),
+    subcategory:$("fSubcategory").value.trim(),
+    unit:$("fUnit").value,
+    cost:Number($("fCost").value||0),
+    retail:Number($("fRetail").value||0),
+    wholesale:Number($("fWholesale").value||0),
+    stock:Number($("fStock").value||0),
+    minStock:Number($("fMinStock").value||5),
+    expiry:$("fExpiry").value,
+    variant:$("fVariant").value.trim()
+  };
+
+  const index=data.products.findIndex(p=>p.id===id);
+
+  if(index>=0)data.products[index]=obj;
+  else data.products.push(obj);
+
+  saveData();
+  closeModal();
+  toast(id?"Product updated":"Product added");
+  refresh();
+}
+
+$("addProductBtn").addEventListener("click",()=>{
+  openModal(
+    "Add Product",
+    productForm(),
+    `<button class="btn" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-primary" onclick="saveProduct()">Save Product</button>`
+  );
+});
+
+document.addEventListener("click",e=>{
+  const edit=e.target.closest(".edit-product");
+  if(edit){
+    const p=data.products.find(x=>x.id===edit.dataset.id);
+    if(!p)return;
+
+    openModal(
+      "Edit Product",
+      productForm(p),
+      `<button class="btn" onclick="closeModal()">Cancel</button>
+       <button class="btn btn-primary" onclick="saveProduct('${p.id}')">Update</button>`
+    );
+  }
+
+  const del=e.target.closest(".delete-product");
+  if(del){
+    if(confirm("ဒီ Product ကိုဖျက်မလား?")){
+      data.products=data.products.filter(p=>p.id!==del.dataset.id);
+      saveData();
+      refresh();
+      toast("Product deleted");
+    }
+  }
+});
+
+/* ================= SALES POS ================= */
+
+function renderSalesProducts(){
+  const search=($("salesSearch").value||"").toLowerCase();
+  const cat=$("salesCategory").value||"";
+
+  const list=data.products.filter(p=>{
+    const a=p.name.toLowerCase().includes(search);
+    const b=String(p.barcode||"").includes(search);
+    const c=!cat||p.category===cat;
+    return (a||b)&&c;
+  });
+
+  $("salesProducts").innerHTML=list.length?list.map(p=>`
+    <button class="product-card" data-add-product="${p.id}">
+      <div class="product-name">${esc(p.name)}</div>
+      <div class="product-price">${money(p.retail)}</div>
+      <div class="product-stock">Stock: ${p.stock} ${esc(p.unit||"pcs")}</div>
+    </button>
+  `).join(""):`<div class="empty">Product မရှိပါ။</div>`;
+}
+
+function addToCart(id){
+  const p=data.products.find(x=>x.id===id);
+  if(!p)return;
+
+  if(Number(p.stock)<=0){
+    toast("Stock မရှိပါ");
+    return;
+  }
+
+  const item=cart.find(x=>x.productId===id);
+
+  if(item){
+    if(item.qty>=p.stock){
+      toast("လက်ကျန် stock ထက်မကျော်နိုင်ပါ");
+      return;
+    }
+    item.qty++;
+  }else{
+    cart.push({
+      productId:id,
+      name:p.name,
+      qty:1,
+      price:Number(p.retail),
+      cost:Number(p.cost)
+    });
+  }
+
+  renderCart();
+}
+
+function renderCart(){
+  const count=cart.reduce((a,x)=>a+x.qty,0);
+  const subtotal=cart.reduce((a,x)=>a+x.qty*x.price,0);
+  const discount=Number($("saleDiscount").value||0);
+  const total=Math.max(0,subtotal-discount);
+
+  $("cartCount").textContent="("+count+")";
+  $("cartSubtotal").textContent=money(subtotal);
+  $("cartTotal").textContent=money(total);
+
+  if(!cart.length){
+    $("cartItems").innerHTML=`<div class="empty">ပစ္စည်းမရှိသေးပါ</div>`;
+    return;
+  }
+
+  $("cartItems").innerHTML=cart.map(x=>`
+    <div class="cart-row">
+      <div style="flex:1">
+        <strong>${esc(x.name)}</strong>
+        <div>${money(x.price)} × ${x.qty}</div>
+        <div class="qty">
+          <button data-cart-minus="${x.productId}">−</button>
+          <span>${x.qty}</span>
+          <button data-cart-plus="${x.productId}">+</button>
+          <button class="btn btn-sm btn-danger" data-cart-remove="${x.productId}">×</button>
+        </div>
+      </div>
+      <strong>${money(x.price*x.qty)}</strong>
+    </div>
+  `).join("");
+}
+
+document.addEventListener("click",e=>{
+  const add=e.target.closest("[data-add-product]");
+  if(add){
+    addToCart(add.dataset.addProduct);
+    return;
+  }
+
+  const plus=e.target.closest("[data-cart-plus]");
+  if(plus){
+    const item=cart.find(x=>x.productId===plus.dataset.cartPlus);
+    const p=data.products.find(x=>x.id===plus.dataset.cartPlus);
+
+    if(item&&p&&item.qty<p.stock)item.qty++;
+    else toast("Stock မလုံလောက်ပါ");
+
+    renderCart();
+  }
+
+  const minus=e.target.closest("[data-cart-minus]");
+  if(minus){
+    const item=cart.find(x=>x.productId===minus.dataset.cartMinus);
+
+    if(item){
+      item.qty--;
+
+      if(item.qty<=0)
+        cart=cart.filter(x=>x.productId!==minus.dataset.cartMinus);
+    }
+
+    renderCart();
+  }
+
+  const remove=e.target.closest("[data-cart-remove]");
+  if(remove){
+    cart=cart.filter(x=>x.productId!==remove.dataset.cartRemove);
+    renderCart();
+  }
+});
+
+$("clearCartBtn").addEventListener("click",()=>{
+  cart=[];
+  renderCart();
+});
+
+$("saleDiscount").addEventListener("input",renderCart);
+
+document.querySelectorAll("[data-payment]").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    payment=btn.dataset.payment;
+
+    document.querySelectorAll("[data-payment]").forEach(x=>
+      x.classList.remove("active")
+    );
+
+    btn.classList.add("active");
+  });
+});
+
+$("checkoutBtn").addEventListener("click",()=>{
+  if(!cart.length){
+    toast("Cart ထဲမှာ Product ထည့်ပါ");
+    return;
+  }
+
+  const discount=Number($("saleDiscount").value||0);
+  const subtotal=cart.reduce((a,x)=>a+x.qty*x.price,0);
+  const total=Math.max(0,subtotal-discount);
+  const profit=cart.reduce((a,x)=>a+(x.price-x.cost)*x.qty,0)-discount;
+
+  const customerId=$("saleCustomer").value;
+  const customer=data.customers.find(c=>c.id===customerId);
+
+  const sale={
+    id:uid("S"),
+    invoice:"INV-"+Date.now().toString().slice(-7),
+    date:today(),
+    customerId:customerId||"",
+    customerName:customer?.name||"Walk-in Customer",
+    items:cart.map(x=>({...x})),
+    subtotal,
+    discount,
+    total,
+    profit,
+    payment
+  };
+
+  data.sales.push(sale);
+
+  cart.forEach(x=>{
+    const p=data.products.find(p=>p.id===x.productId);
+    if(p)p.stock=Math.max(0,Number(p.stock)-x.qty);
+  });
+
+  if(customerId&&payment==="Credit"){
+    const c=data.customers.find(x=>x.id===customerId);
+    if(c)c.due=Number(c.due||0)+total;
+  }
+
+  saveData();
+
+  cart=[];
+  $("saleDiscount").value=0;
+
+  renderCart();
+  refresh();
+
+  toast("Sale completed ✓");
+});
+
+/* ================= PURCHASE ================= */
+
+function purchaseForm(){
+  return `
+    <div class="form-grid">
+      <div class="field">
+        <label>Supplier</label>
+        <select id="purchaseSupplier">
+          <option value="">Select Supplier</option>
+          ${data.suppliers.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("")}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Product</label>
+        <select id="purchaseProduct">
+          ${data.products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("")}
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Quantity</label>
+        <input id="purchaseQty" type="number" value="1" min="1">
+      </div>
+
+      <div class="field">
+        <label>Cost Price</label>
+        <input id="purchaseCost" type="number" value="0">
+      </div>
+
+      <div class="field">
+        <label>Payment</label>
+        <select id="purchasePayment">
+          <option>Cash</option>
+          <option>Credit</option>
+        </select>
+      </div>
+    </div>
+  `;
+}
+
+$("newPurchaseBtn").addEventListener("click",()=>{
+  if(!data.products.length){
+    toast("အရင် Product ထည့်ပါ");
+    return;
+  }
+
+  openModal(
+    "New Purchase",
+    purchaseForm(),
+    `<button class="btn" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-primary" onclick="savePurchase()">Save Purchase</button>`
+  );
+});
+
+function savePurchase(){
+  const productId=$("purchaseProduct").value;
+  const p=data.products.find(x=>x.id===productId);
+
+  if(!p)return;
+
+  const qty=Number($("purchaseQty").value||0);
+  const cost=Number($("purchaseCost").value||0);
+
+  if(qty<=0){
+    toast("Quantity မှန်အောင်ထည့်ပါ");
+    return;
+  }
+
+  const total=qty*cost;
+
+  data.purchases.push({
+    id:uid("PUR"),
+    invoice:"PUR-"+Date.now().toString().slice(-7),
+    date:today(),
+    supplierId:$("purchaseSupplier").value,
+    supplierName:data.suppliers.find(
+      s=>s.id===$("purchaseSupplier").value
+    )?.name||"Unknown Supplier",
+    productId,
+    productName:p.name,
+    qty,
+    cost,
+    total,
+    payment:$("purchasePayment").value
+  });
+
+  p.stock=Number(p.stock||0)+qty;
+  p.cost=cost;
+
+  saveData();
+  closeModal();
+  refresh();
+  toast("Purchase saved ✓");
+}
+
+/* ================= STOCK ================= */
+
+$("stockAdjustmentBtn").addEventListener("click",()=>{
+  if(!data.products.length){
+    toast("Product မရှိသေးပါ");
+    return;
+  }
+
+  const body=`
+    <div class="field">
+      <label>Product</label>
+      <select id="adjustProduct">
+        ${data.products.map(p=>`<option value="${p.id}">${esc(p.name)} — ${p.stock}</option>`).join("")}
+      </select>
+    </div>
+
+    <div class="field" style="margin-top:10px">
+      <label>Adjustment (+ / -)</label>
+      <input id="adjustQty" type="number" value="0">
+    </div>
+
+    <div class="field" style="margin-top:10px">
+      <label>Reason</label>
+      <input id="adjustReason" placeholder="Stock count / Damage / etc.">
+    </div>
+  `;
+
+  openModal(
+    "Stock Adjustment",
+    body,
+    `<button class="btn" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-primary" onclick="saveAdjustment()">Save</button>`
+  );
+});
+
+function saveAdjustment(){
+  const id=$("adjustProduct").value;
+  const p=data.products.find(x=>x.id===id);
+  const qty=Number($("adjustQty").value||0);
+
+  if(!p)return;
+
+  p.stock=Math.max(0,Number(p.stock)+qty);
+
+  data.stockMoves.push({
+    id:uid("SM"),
+    date:today(),
+    productId:id,
+    productName:p.name,
+    qty,
+    reason:$("adjustReason").value
+  });
+
+  saveData();
+  closeModal();
+  refresh();
+  toast("Stock updated");
+}
+
+/* ================= CUSTOMERS ================= */
+
+function customerForm(c={}){
+  return `
+    <div class="form-grid">
+      <div class="field"><label>Name *</label><input id="cName" value="${esc(c.name||"")}"></div>
+      <div class="field"><label>Phone</label><input id="cPhone" value="${esc(c.phone||"")}"></div>
+      <div class="field"><label>Address</label><input id="cAddress" value="${esc(c.address||"")}"></div>
+      <div class="field"><label>Opening Due</label><input id="cDue" type="number" value="${c.due||0}"></div>
+    </div>
+  `;
+}
+
+$("addCustomerBtn").addEventListener("click",()=>{
+  openModal(
+    "Add Customer",
+    customerForm(),
+    `<button class="btn" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-primary" onclick="saveCustomer()">Save</button>`
+  );
+});
+
+function saveCustomer(id=null){
+  const name=$("cName").value.trim();
+
+  if(!name){
+    toast("Customer name ထည့်ပါ");
+    return;
+  }
+
+  const obj={
+    id:id||uid("C"),
+    name,
+    phone:$("cPhone").value.trim(),
+    address:$("cAddress").value.trim(),
+    due:Number($("cDue").value||0)
+  };
+
+  const i=data.customers.findIndex(x=>x.id===id);
+
+  if(i>=0)data.customers[i]=obj;
+  else data.customers.push(obj);
+
+  saveData();
+  closeModal();
+  refresh();
+  toast("Customer saved");
+}
+
+function renderCustomers(){
+  const search=($("customerSearch").value||"").toLowerCase();
+
+  const list=data.customers.filter(c=>
+    c.name.toLowerCase().includes(search)||
+    String(c.phone||"").includes(search)
+  );
+
+  $("customerCount").textContent=data.customers.length;
+
+  $("customerReceivable").textContent=money(
+    data.customers.reduce((a,c)=>a+Number(c.due||0),0)
+  );
+
+  $("customerTableBody").innerHTML=list.length?list.map(c=>`
+    <tr>
+      <td><strong>${esc(c.name)}</strong></td>
+      <td>${esc(c.phone||"-")}</td>
+      <td>${esc(c.address||"-")}</td>
+      <td>${money(c.due)}</td>
+      <td>
+        <button class="btn btn-sm btn-primary edit-customer" data-id="${c.id}">Edit</button>
+        <button class="btn btn-sm btn-danger delete-customer" data-id="${c.id}">Delete</button>
+      </td>
+    </tr>
+  `).join(""):`<tr><td colspan="5" class="empty">Customer မရှိသေးပါ။</td></tr>`;
+}
+
+$("customerSearch").addEventListener("input",renderCustomers);
+
+document.addEventListener("click",e=>{
+  const edit=e.target.closest(".edit-customer");
+
+  if(edit){
+    const c=data.customers.find(x=>x.id===edit.dataset.id);
+
+    openModal(
+      "Edit Customer",
+      customerForm(c),
+      `<button class="btn" onclick="closeModal()">Cancel</button>
+       <button class="btn btn-primary" onclick="saveCustomer('${c.id}')">Update</button>`
+    );
+  }
+
+  const del=e.target.closest(".delete-customer");
+
+  if(del&&confirm("Customer ကိုဖျက်မလား?")){
+    data.customers=data.customers.filter(c=>c.id!==del.dataset.id);
+    saveData();
+    refresh();
+  }
+});
+
+/* ================= SUPPLIERS ================= */
+
+function supplierForm(s={}){
+  return `
+    <div class="form-grid">
+      <div class="field"><label>Name *</label><input id="sName" value="${esc(s.name||"")}"></div>
+      <div class="field"><label>Phone</label><input id="sPhone" value="${esc(s.phone||"")}"></div>
+      <div class="field"><label>Address</label><input id="sAddress" value="${esc(s.address||"")}"></div>
+      <div class="field"><label>Payable</label><input id="sDue" type="number" value="${s.due||0}"></div>
+    </div>
+  `;
+}
+
+$("addSupplierBtn").addEventListener("click",()=>{
+  openModal(
+    "Add Supplier",
+    supplierForm(),
+    `<button class="btn" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-primary" onclick="saveSupplier()">Save</button>`
+  );
+});
+
+function saveSupplier(id=null){
+  const name=$("sName").value.trim();
+
+  if(!name){
+    toast("Supplier name ထည့်ပါ");
+    return;
+  }
+
+  const obj={
+    id:id||uid("SUP"),
+    name,
+    phone:$("sPhone").value.trim(),
+    address:$("sAddress").value.trim(),
+    due:Number($("sDue").value||0)
+  };
+
+  const i=data.suppliers.findIndex(x=>x.id===id);
+
+  if(i>=0)data.suppliers[i]=obj;
+  else data.suppliers.push(obj);
+
+  saveData();
+  closeModal();
+  refresh();
+  toast("Supplier saved");
+}
+
+function renderSuppliers(){
+  $("supplierTableBody").innerHTML=data.suppliers.length?
+    data.suppliers.map(s=>`
+      <tr>
+        <td><strong>${esc(s.name)}</strong></td>
+        <td>${esc(s.phone||"-")}</td>
+        <td>${esc(s.address||"-")}</td>
+        <td>${money(s.due)}</td>
+        <td>
+          <button class="btn btn-sm btn-primary edit-supplier" data-id="${s.id}">Edit</button>
+          <button class="btn btn-sm btn-danger delete-supplier" data-id="${s.id}">Delete</button>
+        </td>
+      </tr>
+    `).join("")
+  :`<tr><td colspan="5" class="empty">Supplier မရှိသေးပါ။</td></tr>`;
+}
+
+document.addEventListener("click",e=>{
+  const edit=e.target.closest(".edit-supplier");
+
+  if(edit){
+    const s=data.suppliers.find(x=>x.id===edit.dataset.id);
+
+    openModal(
+      "Edit Supplier",
+      supplierForm(s),
+      `<button class="btn" onclick="closeModal()">Cancel</button>
+       <button class="btn btn-primary" onclick="saveSupplier('${s.id}')">Update</button>`
+    );
+  }
+
+  const del=e.target.closest(".delete-supplier");
+
+  if(del&&confirm("Supplier ကိုဖျက်မလား?")){
+    data.suppliers=data.suppliers.filter(s=>s.id!==del.dataset.id);
+    saveData();
+    refresh();
+  }
+});
+
+/* ================= DEBTS ================= */
+
+function renderDebts(){
+  const rec=data.customers.reduce((a,c)=>a+Number(c.due||0),0);
+  const pay=data.suppliers.reduce((a,s)=>a+Number(s.due||0),0);
+
+  $("totalReceivable").textContent=money(rec);
+  $("totalPayable").textContent=money(pay);
+
+  $("receivableList").innerHTML=data.customers.filter(c=>Number(c.due)>0).length
+    ?data.customers.filter(c=>Number(c.due)>0).map(c=>`
+      <div class="cart-row">
+        <span>${esc(c.name)}</span>
+        <strong>${money(c.due)}</strong>
+      </div>
+    `).join("")
+    :`<div class="empty">Receivable မရှိပါ။</div>`;
+
+  $("payableList").innerHTML=data.suppliers.filter(s=>Number(s.due)>0).length
+    ?data.suppliers.filter(s=>Number(s.due)>0).map(s=>`
+      <div class="cart-row">
+        <span>${esc(s.name)}</span>
+        <strong>${money(s.due)}</strong>
+      </div>
+    `).join("")
+    :`<div class="empty">Payable မရှိပါ။</div>`;
+}
+
+/* ================= EXPENSES ================= */
+
+function expenseForm(e={}){
+  return `
+    <div class="form-grid">
+      <div class="field">
+        <label>Category</label>
+        <select id="eCategory">
+          <option ${e.category==="Rent"?"selected":""}>Rent</option>
+          <option ${e.category==="Salary"?"selected":""}>Salary</option>
+          <option ${e.category==="Transport"?"selected":""}>Transport</option>
+          <option ${e.category==="Electricity"?"selected":""}>Electricity</option>
+          <option ${e.category==="Other"?"selected":""}>Other</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label>Amount</label>
+        <input id="eAmount" type="number" value="${e.amount||0}">
+      </div>
+
+      <div class="field" style="grid-column:1/-1">
+        <label>Description</label>
+        <input id="eDescription" value="${esc(e.description||"")}">
+      </div>
+    </div>
+  `;
+}
+
+$("addExpenseBtn").addEventListener("click",()=>{
+  openModal(
+    "Add Expense",
+    expenseForm(),
+    `<button class="btn" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-primary" onclick="saveExpense()">Save</button>`
+  );
+});
+
+function saveExpense(){
+  const amount=Number($("eAmount").value||0);
+
+  if(amount<=0){
+    toast("Amount ထည့်ပါ");
+    return;
+  }
+
+  data.expenses.push({
+    id:uid("E"),
+    date:today(),
+    category:$("eCategory").value,
+    description:$("eDescription").value.trim(),
+    amount
+  });
+
+  saveData();
+  closeModal();
+  refresh();
+  toast("Expense saved");
+}
+
+function renderExpenses(){
+  const td=today();
+  const mo=month();
+  const yr=year();
+
+  const todayTotal=data.expenses.filter(e=>e.date===td)
+    .reduce((a,e)=>a+Number(e.amount),0);
+
+  const monthTotal=data.expenses.filter(e=>e.date.startsWith(mo))
+    .reduce((a,e)=>a+Number(e.amount),0);
+
+  const yearTotal=data.expenses.filter(e=>e.date.startsWith(yr))
+    .reduce((a,e)=>a+Number(e.amount),0);
+
+  $("expenseToday").textContent=money(todayTotal);
+  $("expenseMonth").textContent=money(monthTotal);
+  $("expenseYear").textContent=money(yearTotal);
+
+  $("expenseTableBody").innerHTML=data.expenses.length?
+    [...data.expenses].reverse().map(e=>`
+      <tr>
+        <td>${e.date}</td>
+        <td>${esc(e.category)}</td>
+        <td>${esc(e.description||"-")}</td>
+        <td>${money(e.amount)}</td>
+        <td>
+          <button class="btn btn-sm btn-danger delete-expense" data-id="${e.id}">
+            Delete
+          </button>
+        </td>
+      </tr>
+    `).join("")
+  :`<tr><td colspan="5" class="empty">Expense မရှိသေးပါ။</td></tr>`;
+}
+
+document.addEventListener("click",e=>{
+  const del=e.target.closest(".delete-expense");
+
+  if(del&&confirm("Expense ကိုဖျက်မလား?")){
+    data.expenses=data.expenses.filter(x=>x.id!==del.dataset.id);
+    saveData();
+    refresh();
+  }
+});
+
+/* ================= EMPLOYEES ================= */
+
+function employeeForm(e={}){
+  return `
+    <div class="form-grid">
+      <div class="field"><label>Name *</label><input id="empName" value="${esc(e.name||"")}"></div>
+      <div class="field"><label>Position</label><input id="empPosition" value="${esc(e.position||"")}"></div>
+      <div class="field"><label>Phone</label><input id="empPhone" value="${esc(e.phone||"")}"></div>
+      <div class="field"><label>Monthly Salary</label><input id="empSalary" type="number" value="${e.salary||0}"></div>
+    </div>
+  `;
+}
+
+$("addEmployeeBtn").addEventListener("click",()=>{
+  openModal(
+    "Add Employee",
+    employeeForm(),
+    `<button class="btn" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-primary" onclick="saveEmployee()">Save</button>`
+  );
+});
+
+function saveEmployee(id=null){
+  const name=$("empName").value.trim();
+
+  if(!name){
+    toast("Employee name ထည့်ပါ");
+    return;
+  }
+
+  const obj={
+    id:id||uid("EMP"),
+    name,
+    position:$("empPosition").value.trim(),
+    phone:$("empPhone").value.trim(),
+    salary:Number($("empSalary").value||0)
+  };
+
+  const i=data.employees.findIndex(x=>x.id===id);
+
+  if(i>=0)data.employees[i]=obj;
+  else data.employees.push(obj);
+
+  saveData();
+  closeModal();
+  refresh();
+  toast("Employee saved");
+}
+
+function renderEmployees(){
+  $("employeeTableBody").innerHTML=data.employees.length?
+    data.employees.map(e=>`
+      <tr>
+        <td>${esc(e.name)}</td>
+        <td>${esc(e.position||"-")}</td>
+        <td>${esc(e.phone||"-")}</td>
+        <td>${money(e.salary)}</td>
+        <td>
+          <button class="btn btn-sm btn-primary edit-employee" data-id="${e.id}">Edit</button>
+          <button class="btn btn-sm btn-danger delete-employee" data-id="${e.id}">Delete</button>
+        </td>
+      </tr>
+    `).join("")
+  :`<tr><td colspan="5" class="empty">Employee မရှိသေးပါ။</td></tr>`;
+}
+
+document.addEventListener("click",e=>{
+  const edit=e.target.closest(".edit-employee");
+
+  if(edit){
+    const emp=data.employees.find(x=>x.id===edit.dataset.id);
+
+    openModal(
+      "Edit Employee",
+      employeeForm(emp),
+      `<button class="btn" onclick="closeModal()">Cancel</button>
+       <button class="btn btn-primary" onclick="saveEmployee('${emp.id}')">Update</button>`
+    );
+  }
+
+  const del=e.target.closest(".delete-employee");
+
+  if(del&&confirm("Employee ကိုဖျက်မလား?")){
+    data.employees=data.employees.filter(x=>x.id!==del.dataset.id);
+    saveData();
+    refresh();
+  }
+});
+
+/* ================= REPORTS ================= */
+
+function getReportData(){
+  const period=$("reportPeriod").value;
+
+  let sales=data.sales;
+  let purchases=data.purchases;
+  let expenses=data.expenses;
+
+  if(period==="today"){
+    sales=sales.filter(x=>x.date===today());
+    purchases=purchases.filter(x=>x.date===today());
+    expenses=expenses.filter(x=>x.date===today());
+  }
+
+  if(period==="month"){
+    sales=sales.filter(x=>x.date.startsWith(month()));
+    purchases=purchases.filter(x=>x.date.startsWith(month()));
+    expenses=expenses.filter(x=>x.date.startsWith(month()));
+  }
+
+  if(period==="year"){
+    sales=sales.filter(x=>x.date.startsWith(year()));
+    purchases=purchases.filter(x=>x.date.startsWith(year()));
+    expenses=expenses.filter(x=>x.date.startsWith(year()));
+  }
+
+  const salesTotal=sales.reduce((a,x)=>a+Number(x.total),0);
+  const purchaseTotal=purchases.reduce((a,x)=>a+Number(x.total),0);
+  const expenseTotal=expenses.reduce((a,x)=>a+Number(x.amount),0);
+  const grossProfit=sales.reduce((a,x)=>a+Number(x.profit||0),0);
+  const netProfit=grossProfit-expenseTotal;
+
+  return {sales,salesTotal,purchaseTotal,expenseTotal,grossProfit,netProfit};
+}
+
+function renderReports(){
+  const r=getReportData();
+
+  $("reportSales").textContent=money(r.salesTotal);
+  $("reportPurchase").textContent=money(r.purchaseTotal);
+  $("reportExpenses").textContent=money(r.expenseTotal);
+  $("reportProfit").textContent=money(r.netProfit);
+
+  $("salesReportSummary").innerHTML=`
+    <div class="cart-row"><span>Invoices</span><strong>${r.sales.length}</strong></div>
+    <div class="cart-row"><span>Sales</span><strong>${money(r.salesTotal)}</strong></div>
+    <div class="cart-row"><span>Gross Profit</span><strong>${money(r.grossProfit)}</strong></div>
+  `;
+
+  $("profitReportSummary").innerHTML=`
+    <div class="cart-row"><span>Gross Profit</span><strong>${money(r.grossProfit)}</strong></div>
+    <div class="cart-row"><span>Expenses</span><strong>${money(r.expenseTotal)}</strong></div>
+    <div class="cart-row"><span>Net Profit</span><strong>${money(r.netProfit)}</strong></div>
+  `;
+}
+
+$("reportPeriod").addEventListener("change",renderReports);
+
+/* ================= PURCHASE TABLE ================= */
+
+function renderPurchases(){
+  const td=today();
+
+  const total=data.purchases.filter(x=>x.date===td)
+    .reduce((a,x)=>a+Number(x.total),0);
+
+  $("purchaseTodayTotal").textContent=money(total);
+  $("purchaseInvoiceCount").textContent=data.purchases.length;
+
+  $("supplierPayable").textContent=money(
+    data.suppliers.reduce((a,s)=>a+Number(s.due||0),0)
+  );
+
+  $("purchaseTableBody").innerHTML=data.purchases.length?
+    [...data.purchases].reverse().map(p=>`
+      <tr>
+        <td>${p.date}</td>
+        <td>${esc(p.invoice)}</td>
+        <td>${esc(p.supplierName)}</td>
+        <td>${money(p.total)}</td>
+        <td>${esc(p.payment)}</td>
+      </tr>
+    `).join("")
+  :`<tr><td colspan="5" class="empty">Purchase မရှိသေးပါ။</td></tr>`;
+}
+
+/* ================= STOCK TABLE ================= */
+
+function renderStock(){
+  const units=data.products.reduce((a,p)=>a+Number(p.stock||0),0);
+  const costValue=data.products.reduce((a,p)=>a+Number(p.stock||0)*Number(p.cost||0),0);
+  const low=data.products.filter(p=>Number(p.stock)<=Number(p.minStock||5)).length;
+
+  $("stockProductCount").textContent=data.products.length;
+  $("stockUnitCount").textContent=units;
+  $("stockCostValue").textContent=money(costValue);
+  $("stockLowCount").textContent=low;
+
+  $("stockTableBody").innerHTML=data.products.length?
+    data.products.map(p=>{
+      const isLow=Number(p.stock)<=Number(p.minStock||5);
+
+      return `
+        <tr>
+          <td>${esc(p.name)}</td>
+          <td>${esc(p.category||"-")}</td>
+          <td>${p.stock}</td>
+          <td>${esc(p.unit||"pcs")}</td>
+          <td>${money(p.stock*p.cost)}</td>
+          <td>${money(p.stock*p.retail)}</td>
+          <td>
+            <span class="badge ${isLow?"badge-red":"badge-green"}">
+              ${isLow?"Low":"OK"}
+            </span>
+          </td>
+        </tr>
+      `;
+    }).join("")
+  :`<tr><td colspan="7" class="empty">Stock မရှိသေးပါ။</td></tr>`;
+}
+
+/* ================= SETTINGS ================= */
+
+function loadSettings(){
+  $("settingShopName").value=data.settings.shopName||"";
+  $("settingPhone").value=data.settings.phone||"";
+  $("settingAddress").value=data.settings.address||"";
+  $("settingFooter").value=data.settings.footer||"";
+}
+
+$("saveShopBtn").addEventListener("click",()=>{
+  data.settings.shopName=$("settingShopName").value.trim()||"My Shop";
+  data.settings.phone=$("settingPhone").value.trim();
+  data.settings.address=$("settingAddress").value.trim();
+  data.settings.footer=$("settingFooter").value.trim();
+
+  saveData();
+  refresh();
+  toast("Shop settings saved ✓");
+});
+
+$("backupBtn").addEventListener("click",()=>{
+  const blob=new Blob(
+    [JSON.stringify(data,null,2)],
+    {type:"application/json"}
+  );
+
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+
+  a.href=url;
+  a.download="aung-pos-backup-"+today()+".json";
+  a.click();
+
+  URL.revokeObjectURL(url);
+  toast("Backup downloaded");
+});
+
+$("clearDataBtn").addEventListener("click",()=>{
+  if(!confirm("Data အားလုံးကို ဖျက်မှာသေချာပါသလား?"))return;
+
+  localStorage.removeItem(KEY);
+  data=JSON.parse(JSON.stringify(defaultData));
+  cart=[];
+
+  refresh();
+  toast("Data cleared");
+});
+
+/* ================= SEARCH ================= */
+
+$("productSearch").addEventListener("input",renderProducts);
+$("productCategoryFilter").addEventListener("change",renderProducts);
+$("stockFilter").addEventListener("change",renderProducts);
+
+$("salesSearch").addEventListener("input",renderSalesProducts);
+$("salesCategory").addEventListener("change",renderSalesProducts);
+
+/* ================= MOBILE ================= */
+
+$("mobileMenu").addEventListener("click",()=>{
+  $("sidebar").classList.toggle("open");
+});
+
+/* ================= REFRESH ================= */
+
+function refresh(){
+  populateCategories();
+  refreshDashboard();
+  renderProducts();
+  renderSalesProducts();
+  renderCart();
+  renderPurchases();
+  renderStock();
+  renderCustomers();
+  renderSuppliers();
+  renderDebts();
+  renderExpenses();
+  renderEmployees();
+  renderReports();
+  loadSettings();
+}
+
+/* ================= START ================= */
+
+document.addEventListener("DOMContentLoaded",()=>{
+  refresh();
+  showPage("dashboard");
+});
+
+window.AungPOS={
+  data,
+  refresh,
+  showPage,
+  saveData
+};
+
+</script>
 
 </body>
 </html>
