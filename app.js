@@ -1,7 +1,7 @@
 /* =========================================================
    AUNG POS
    Professional Mobile POS & Business Management System
-   Full app.js replacement
+   Version 2.0
    ========================================================= */
 
 "use strict";
@@ -14,14 +14,12 @@ const STORAGE_KEY = "aung_pos_v2_data";
 
 const DEFAULT_DATA = {
   settings: {
-    shopName: "Aung POS Shop",
+    shopName: "Aung POS",
     address: "",
     phone: "",
-    footer: "Thank you for your business",
+    footer: "Thank You",
     currency: "Ks",
-    receiptFontSize: 14,
-    lowStockLimit: 5,
-    expiryWarningDays: 30
+    receiptFontSize: 14
   },
 
   products: [],
@@ -53,35 +51,25 @@ function $(id) {
 }
 
 function $$(selector) {
-  try {
-    return Array.from(document.querySelectorAll(selector));
-  } catch (e) {
-    return [];
-  }
+  return Array.from(document.querySelectorAll(selector));
 }
 
 function el(id) {
   return $(id);
 }
 
-function uid(prefix) {
+function uid(prefix = "id") {
   return (
     prefix +
     "_" +
     Date.now().toString(36) +
     "_" +
-    Math.random().toString(36).slice(2, 8)
+    Math.random().toString(36).substring(2, 8)
   );
 }
 
 function today() {
-  const d = new Date();
-
-  const y = d.getFullYear();
-  const m = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-
-  return `${y}-${m}-${day}`;
+  return new Date().toISOString().slice(0, 10);
 }
 
 function now() {
@@ -94,17 +82,7 @@ function number(value) {
 }
 
 function money(value) {
-  const n = number(value);
-
-  return n.toLocaleString("en-US", {
-    maximumFractionDigits: 0
-  }) + " Ks";
-}
-
-function moneyPlain(value) {
-  return number(value).toLocaleString("en-US", {
-    maximumFractionDigits: 0
-  });
+  return number(value).toLocaleString("en-US") + " Ks";
 }
 
 function escapeHTML(value) {
@@ -121,17 +99,29 @@ function sameDay(date) {
 }
 
 function sameMonth(date) {
-  const d = String(date || "").slice(0, 7);
-  return d === today().slice(0, 7);
+  const d = new Date(date);
+  const t = new Date();
+
+  return (
+    d.getFullYear() === t.getFullYear() &&
+    d.getMonth() === t.getMonth()
+  );
 }
 
 function sameYear(date) {
-  const d = String(date || "").slice(0, 4);
-  return d === today().slice(0, 4);
+  const d = new Date(date);
+  const t = new Date();
+
+  return d.getFullYear() === t.getFullYear();
 }
 
+
+/* =========================================================
+   SAFE DOM
+   ========================================================= */
+
 function setText(id, value) {
-  const node = $(id);
+  const node = el(id);
 
   if (node) {
     node.textContent = value;
@@ -139,28 +129,40 @@ function setText(id, value) {
 }
 
 function setHTML(id, value) {
-  const node = $(id);
+  const node = el(id);
 
   if (node) {
     node.innerHTML = value;
   }
 }
 
-function valueOf(id, fallback = "") {
-  const node = $(id);
-
-  if (!node) {
-    return fallback;
-  }
-
-  return node.value;
-}
-
 function setValue(id, value) {
-  const node = $(id);
+  const node = el(id);
 
   if (node) {
     node.value = value ?? "";
+  }
+}
+
+function getValue(id) {
+  const node = el(id);
+
+  return node ? node.value : "";
+}
+
+function show(id) {
+  const node = el(id);
+
+  if (node) {
+    node.style.display = "";
+  }
+}
+
+function hide(id) {
+  const node = el(id);
+
+  if (node) {
+    node.style.display = "none";
   }
 }
 
@@ -169,67 +171,51 @@ function setValue(id, value) {
    DATA
    ========================================================= */
 
+let DATA = loadData();
+
 function loadData() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const saved = localStorage.getItem(STORAGE_KEY);
 
-    if (!raw) {
+    if (!saved) {
       return structuredClone(DEFAULT_DATA);
     }
 
-    const saved = JSON.parse(raw);
+    const parsed = JSON.parse(saved);
 
     return {
       ...structuredClone(DEFAULT_DATA),
-      ...saved,
-
+      ...parsed,
       settings: {
         ...DEFAULT_DATA.settings,
-        ...(saved.settings || {})
+        ...(parsed.settings || {})
       },
-
-      products: Array.isArray(saved.products)
-        ? saved.products
+      products: Array.isArray(parsed.products) ? parsed.products : [],
+      sales: Array.isArray(parsed.sales) ? parsed.sales : [],
+      purchases: Array.isArray(parsed.purchases)
+        ? parsed.purchases
         : [],
-
-      sales: Array.isArray(saved.sales)
-        ? saved.sales
+      customers: Array.isArray(parsed.customers)
+        ? parsed.customers
         : [],
-
-      purchases: Array.isArray(saved.purchases)
-        ? saved.purchases
+      suppliers: Array.isArray(parsed.suppliers)
+        ? parsed.suppliers
         : [],
-
-      customers: Array.isArray(saved.customers)
-        ? saved.customers
+      expenses: Array.isArray(parsed.expenses)
+        ? parsed.expenses
         : [],
-
-      suppliers: Array.isArray(saved.suppliers)
-        ? saved.suppliers
+      employees: Array.isArray(parsed.employees)
+        ? parsed.employees
         : [],
-
-      expenses: Array.isArray(saved.expenses)
-        ? saved.expenses
-        : [],
-
-      employees: Array.isArray(saved.employees)
-        ? saved.employees
-        : [],
-
-      cart: Array.isArray(saved.cart)
-        ? saved.cart
-        : [],
-
-      paymentMethod: saved.paymentMethod || "cash"
+      cart: Array.isArray(parsed.cart) ? parsed.cart : [],
+      paymentMethod: parsed.paymentMethod || "cash"
     };
   } catch (error) {
-    console.error("Load Data Error:", error);
+    console.error("Load data error:", error);
 
     return structuredClone(DEFAULT_DATA);
   }
 }
-
-let DATA = loadData();
 
 function saveData() {
   try {
@@ -237,17 +223,9 @@ function saveData() {
       STORAGE_KEY,
       JSON.stringify(DATA)
     );
-
-    return true;
   } catch (error) {
-    console.error("Save Data Error:", error);
-
-    showToast(
-      "Data သိမ်းရာတွင် Error ဖြစ်နေပါသည်",
-      "error"
-    );
-
-    return false;
+    console.error("Save data error:", error);
+    showToast("Data သိမ်းရာတွင် Error ဖြစ်နေပါသည်", "error");
   }
 }
 
@@ -257,46 +235,25 @@ function saveData() {
    ========================================================= */
 
 function showToast(message, type = "success") {
-  let container = $("toastContainer");
+  let container = el("toastContainer");
 
   if (!container) {
     container = document.createElement("div");
     container.id = "toastContainer";
-
-    container.style.position = "fixed";
-    container.style.bottom = "20px";
-    container.style.left = "50%";
-    container.style.transform = "translateX(-50%)";
-    container.style.zIndex = "99999";
 
     document.body.appendChild(container);
   }
 
   const toast = document.createElement("div");
 
+  toast.className = "toast " + type;
   toast.textContent = message;
-
-  toast.style.padding = "13px 18px";
-  toast.style.marginTop = "8px";
-  toast.style.borderRadius = "12px";
-  toast.style.background =
-    type === "error"
-      ? "#dc2626"
-      : type === "warning"
-        ? "#d97706"
-        : "#16a34a";
-
-  toast.style.color = "#fff";
-  toast.style.fontSize = "14px";
-  toast.style.fontWeight = "600";
-  toast.style.boxShadow =
-    "0 8px 30px rgba(0,0,0,.2)";
 
   container.appendChild(toast);
 
   setTimeout(() => {
     toast.remove();
-  }, 2800);
+  }, 3000);
 }
 
 
@@ -304,12 +261,12 @@ function showToast(message, type = "success") {
    MODAL
    ========================================================= */
 
-function openModal(title, body, subtitle = "") {
+function openModal(title, subtitle, body) {
   setText("modalTitle", title);
-  setText("modalSubtitle", subtitle);
+  setText("modalSubtitle", subtitle || "");
   setHTML("modalBody", body);
 
-  const overlay = $("modalOverlay");
+  const overlay = el("modalOverlay");
 
   if (overlay) {
     overlay.classList.add("active");
@@ -318,7 +275,7 @@ function openModal(title, body, subtitle = "") {
 }
 
 function closeModal() {
-  const overlay = $("modalOverlay");
+  const overlay = el("modalOverlay");
 
   if (overlay) {
     overlay.classList.remove("active");
@@ -334,27 +291,27 @@ function closeModal() {
 const PAGE_TITLES = {
   dashboard: [
     "Dashboard",
-    "Business Overview"
+    "Business overview"
   ],
 
   sales: [
     "Sales",
-    "Create sales and manage POS transactions"
+    "Create and manage sales"
   ],
 
   products: [
     "Products",
-    "Manage products, prices and inventory"
+    "Product management"
   ],
 
   purchases: [
     "Purchases",
-    "Manage supplier purchases"
+    "Purchase management"
   ],
 
   stock: [
     "Stock",
-    "Inventory and stock control"
+    "Inventory management"
   ],
 
   customers: [
@@ -369,7 +326,7 @@ const PAGE_TITLES = {
 
   debts: [
     "Debts",
-    "Receivables and payables"
+    "Receivables & payables"
   ],
 
   expenses: [
@@ -379,115 +336,70 @@ const PAGE_TITLES = {
 
   employees: [
     "Employees",
-    "Employee and salary management"
+    "Employee management"
   ],
 
   reports: [
     "Reports",
-    "Business performance reports"
+    "Business reports"
   ],
 
   settings: [
     "Settings",
-    "Shop and system settings"
+    "POS settings"
   ]
 };
 
-let CURRENT_PAGE = "dashboard";
 
-
-function findPageElement(page) {
-  const possibilities = [
-    page,
-    "page-" + page
-  ];
-
-  for (const id of possibilities) {
-    const node = $(id);
-
-    if (node) {
-      return node;
-    }
-  }
-
-  return null;
-}
-
-
-function showPage(page) {
+function showPage(pageName) {
   try {
-    const target = findPageElement(page);
+    const pages = $$(".page");
 
-    if (!target) {
-      console.warn(
-        "Page not found:",
-        page
-      );
+    pages.forEach(page => {
+      page.classList.remove("active");
 
-      return;
-    }
-
-    CURRENT_PAGE = page;
-
-    /* Hide all pages */
-    $$(".page").forEach(node => {
-      node.classList.remove("active");
-      node.style.display = "none";
+      page.style.display = "none";
     });
 
-    /* Show target */
-    target.classList.add("active");
-    target.style.display = "block";
+    let target =
+      el("page-" + pageName) ||
+      el(pageName);
 
-    /* Navigation active */
-    $$(
+    if (target) {
+      target.classList.add("active");
+      target.style.display = "block";
+    }
+
+    const buttons = $(
       ".nav-item, .menu-item, .nav-btn, [data-page]"
-    ).forEach(button => {
-      const btnPage =
-        button.getAttribute("data-page");
+    );
 
-      if (btnPage === page) {
-        button.classList.add("active");
-      } else if (
-        button.matches(
-          ".nav-item, .menu-item, .nav-btn"
-        )
-      ) {
-        button.classList.remove("active");
-      }
+    buttons.forEach(button => {
+      const buttonPage = button.dataset.page;
+
+      button.classList.toggle(
+        "active",
+        buttonPage === pageName
+      );
     });
 
-    const title = PAGE_TITLES[page];
+    const title =
+      PAGE_TITLES[pageName] ||
+      [pageName, ""];
 
-    if (title) {
-      setText("pageTitle", title[0]);
-      setText("pageSubtitle", title[1]);
-    }
+    setText("pageTitle", title[0]);
+    setText("pageSubtitle", title[1]);
 
-    /* Close mobile sidebar */
-    const sidebar = $("sidebar");
+    const sidebar = el("sidebar");
 
     if (sidebar) {
       sidebar.classList.remove("open");
     }
 
-    refreshPage(page);
-
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth"
-    });
+    refreshPage(pageName);
 
   } catch (error) {
-    console.error(
-      "Navigation Error:",
-      error
-    );
-
-    showToast(
-      "Page ဖွင့်ရာတွင် Error ဖြစ်နေပါသည်",
-      "error"
-    );
+    console.error("Navigation error:", error);
   }
 }
 
@@ -496,12 +408,20 @@ function showPage(page) {
    MOBILE MENU
    ========================================================= */
 
-function toggleMobileMenu() {
-  const sidebar = $("sidebar");
+function setupMobileMenu() {
+  const menuButtons = $(
+    "#mobileMenu, #menuToggle, .menu-toggle"
+  );
 
-  if (sidebar) {
-    sidebar.classList.toggle("open");
-  }
+  menuButtons.forEach(button => {
+    button.addEventListener("click", function () {
+      const sidebar = el("sidebar");
+
+      if (sidebar) {
+        sidebar.classList.toggle("open");
+      }
+    });
+  });
 }
 
 
@@ -509,183 +429,139 @@ function toggleMobileMenu() {
    DASHBOARD
    ========================================================= */
 
-function getTodaySales() {
-  return DATA.sales.filter(s =>
+function calculateTotals() {
+  const todaySales = DATA.sales.filter(s =>
     sameDay(s.date)
   );
-}
 
-function getTodayPurchases() {
-  return DATA.purchases.filter(p =>
+  const todayPurchases = DATA.purchases.filter(p =>
     sameDay(p.date)
   );
-}
 
-function getTodayExpenses() {
-  return DATA.expenses.filter(e =>
+  const todayExpenses = DATA.expenses.filter(e =>
     sameDay(e.date)
   );
+
+  const salesAmount = todaySales.reduce(
+    (sum, s) => sum + number(s.total),
+    0
+  );
+
+  const purchaseAmount = todayPurchases.reduce(
+    (sum, p) => sum + number(p.total),
+    0
+  );
+
+  const expenseAmount = todayExpenses.reduce(
+    (sum, e) => sum + number(e.amount),
+    0
+  );
+
+  const profit = todaySales.reduce(
+    (sum, s) => sum + number(s.profit),
+    0
+  ) - expenseAmount;
+
+  return {
+    salesAmount,
+    purchaseAmount,
+    expenseAmount,
+    profit,
+    salesCount: todaySales.length
+  };
 }
 
-function calculateSaleTotal(sale) {
-  if (
-    sale.total !== undefined &&
-    sale.total !== null
-  ) {
-    return number(sale.total);
-  }
-
-  return number(sale.subtotal)
-    - number(sale.discount);
-}
-
-function calculateSaleProfit(sale) {
-  if (
-    sale.profit !== undefined &&
-    sale.profit !== null
-  ) {
-    return number(sale.profit);
-  }
-
-  if (Array.isArray(sale.items)) {
-    return sale.items.reduce(
-      (sum, item) => {
-        const qty = number(item.qty);
-        const price = number(item.price);
-        const cost = number(item.cost);
-
-        return sum + ((price - cost) * qty);
-      },
-      0
-    ) - number(sale.discount);
-  }
-
-  return 0;
-}
 
 function updateDashboard() {
-  try {
-    const sales = getTodaySales();
-    const purchases = getTodayPurchases();
-    const expenses = getTodayExpenses();
+  const totals = calculateTotals();
 
-    const salesTotal = sales.reduce(
-      (sum, sale) =>
-        sum + calculateSaleTotal(sale),
-      0
-    );
+  setText(
+    "todaySales",
+    money(totals.salesAmount)
+  );
 
-    const profitTotal = sales.reduce(
-      (sum, sale) =>
-        sum + calculateSaleProfit(sale),
-      0
-    );
+  setText(
+    "todayProfit",
+    money(totals.profit)
+  );
 
-    const purchaseTotal = purchases.reduce(
-      (sum, purchase) =>
-        sum + number(purchase.total),
-      0
-    );
+  setText(
+    "todayPurchase",
+    money(totals.purchaseAmount)
+  );
 
-    const expenseTotal = expenses.reduce(
-      (sum, expense) =>
-        sum + number(expense.amount),
-      0
-    );
+  setText(
+    "todayExpense",
+    money(totals.expenseAmount)
+  );
 
-    const lowStockProducts =
-      DATA.products.filter(product =>
-        number(product.stock) <=
-        number(
-          product.lowStock ??
-          DATA.settings.lowStockLimit
-        )
-      );
+  setText(
+    "todaySalesCount",
+    totals.salesCount
+  );
 
-    const expiryProducts =
-      DATA.products.filter(product =>
-        isExpiring(product)
-      );
+  setText(
+    "totalProducts",
+    DATA.products.length
+  );
 
-    setText(
-      "todaySales",
-      money(salesTotal)
-    );
+  const lowStock = DATA.products.filter(p =>
+    number(p.stock) <= number(p.lowStock || 5)
+  );
 
-    setText(
-      "todayProfit",
-      money(profitTotal)
-    );
+  setText(
+    "lowStockCount",
+    lowStock.length
+  );
 
-    setText(
-      "todayPurchase",
-      money(purchaseTotal)
-    );
+  const expiry = DATA.products.filter(p => {
+    if (!p.expiry) return false;
 
-    setText(
-      "todayExpense",
-      money(expenseTotal)
-    );
+    const exp = new Date(p.expiry);
+    const current = new Date();
 
-    setText(
-      "todaySalesCount",
-      sales.length
-    );
+    const diff =
+      (exp - current) /
+      (1000 * 60 * 60 * 24);
 
-    setText(
-      "totalProducts",
-      DATA.products.length
-    );
+    return diff <= 30;
+  });
 
-    setText(
-      "lowStockCount",
-      lowStockProducts.length
-    );
+  setText(
+    "expiryCount",
+    expiry.length
+  );
 
-    setText(
-      "expiryCount",
-      expiryProducts.length
-    );
+  setText(
+    "totalCustomers",
+    DATA.customers.length
+  );
 
-    setText(
-      "totalCustomers",
-      DATA.customers.length
-    );
+  setText(
+    "welcomeShopName",
+    DATA.settings.shopName || "Aung POS"
+  );
 
-    setText(
-      "welcomeShopName",
-      DATA.settings.shopName
-    );
+  setText(
+    "sideShopName",
+    DATA.settings.shopName || "Aung POS"
+  );
 
-    setText(
-      "sideShopName",
-      DATA.settings.shopName
-    );
-
-    renderRecentSales();
-    renderDashboardAlerts();
-
-  } catch (error) {
-    console.error(
-      "Dashboard Error:",
-      error
-    );
-  }
+  renderRecentSales();
+  renderDashboardAlerts();
 }
 
 
 function renderRecentSales() {
-  const node = $("recentSales");
+  const node = el("recentSales");
 
-  if (!node) {
-    return;
-  }
+  if (!node) return;
 
-  const sales = [...DATA.sales]
+  const sales = DATA.sales
+    .slice()
     .sort(
       (a, b) =>
-        new Date(b.date || 0) -
-        new Date(a.date || 0)
+        new Date(b.date) - new Date(a.date)
     )
     .slice(0, 8);
 
@@ -697,28 +573,18 @@ function renderRecentSales() {
   }
 
   node.innerHTML = sales.map(sale => `
-    <div class="recent-sale-item">
+    <div class="recent-sale">
       <div>
         <strong>
-          ${escapeHTML(
-            sale.invoice ||
-            sale.id ||
-            "Sale"
-          )}
+          ${escapeHTML(sale.invoice || "-")}
         </strong>
-
         <small>
-          ${escapeHTML(
-            sale.customerName ||
-            "Walk-in Customer"
-          )}
+          ${escapeHTML(sale.customerName || "Walk-in Customer")}
         </small>
       </div>
 
       <strong>
-        ${money(
-          calculateSaleTotal(sale)
-        )}
+        ${money(sale.total)}
       </strong>
     </div>
   `).join("");
@@ -726,56 +592,56 @@ function renderRecentSales() {
 
 
 function renderDashboardAlerts() {
-  const node = $("dashboardAlerts");
+  const node = el("dashboardAlerts");
 
-  if (!node) {
-    return;
-  }
+  if (!node) return;
 
-  const lowStock =
-    DATA.products.filter(product =>
-      number(product.stock) <=
-      number(
-        product.lowStock ??
-        DATA.settings.lowStockLimit
-      )
-    );
+  const lowStock = DATA.products.filter(
+    p => number(p.stock) <= number(p.lowStock || 5)
+  );
 
-  const expiry =
-    DATA.products.filter(product =>
-      isExpiring(product)
-    );
+  const expiry = DATA.products.filter(p => {
+    if (!p.expiry) return false;
+
+    const exp = new Date(p.expiry);
+    const current = new Date();
+
+    const days =
+      (exp - current) /
+      (1000 * 60 * 60 * 24);
+
+    return days <= 30;
+  });
 
   let html = "";
 
-  lowStock.slice(0, 5).forEach(product => {
+  if (lowStock.length) {
     html += `
       <div class="alert-item warning">
         <strong>Low Stock</strong>
         <span>
-          ${escapeHTML(product.name)}
-          — ${number(product.stock)}
+          ${lowStock.length} product(s) need attention
         </span>
       </div>
     `;
-  });
+  }
 
-  expiry.slice(0, 5).forEach(product => {
+  if (expiry.length) {
     html += `
       <div class="alert-item danger">
         <strong>Expiry Alert</strong>
         <span>
-          ${escapeHTML(product.name)}
-          — ${escapeHTML(product.expiry)}
+          ${expiry.length} product(s) near expiry
         </span>
       </div>
     `;
-  });
+  }
 
   if (!html) {
     html = `
-      <div class="empty-state">
-        No alerts
+      <div class="alert-item success">
+        <strong>All Good</strong>
+        <span>No urgent inventory alerts</span>
       </div>
     `;
   }
@@ -785,451 +651,62 @@ function renderDashboardAlerts() {
 
 
 /* =========================================================
-   EXPIRY
-   ========================================================= */
-
-function isExpiring(product) {
-  if (!product.expiry) {
-    return false;
-  }
-
-  const expiryDate =
-    new Date(product.expiry);
-
-  if (Number.isNaN(expiryDate.getTime())) {
-    return false;
-  }
-
-  const todayDate = new Date();
-
-  todayDate.setHours(0, 0, 0, 0);
-
-  const warningDays =
-    number(
-      DATA.settings.expiryWarningDays
-    );
-
-  const warningDate =
-    new Date(todayDate);
-
-  warningDate.setDate(
-    warningDate.getDate() +
-    warningDays
-  );
-
-  return expiryDate <= warningDate;
-}
-
-
-/* =========================================================
    PRODUCTS
    ========================================================= */
 
-function openProductForm(productId = null) {
-  const product = productId
-    ? DATA.products.find(
-        p => p.id === productId
-      )
-    : null;
-
-  openModal(
-    product
-      ? "Edit Product"
-      : "Add Product",
-
-    `
-      <form id="productForm">
-
-        <div class="form-grid">
-
-          <div class="form-group">
-            <label>Product Name</label>
-            <input
-              id="formProductName"
-              required
-              value="${escapeHTML(
-                product?.name || ""
-              )}"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Barcode</label>
-            <input
-              id="formProductBarcode"
-              value="${escapeHTML(
-                product?.barcode || ""
-              )}"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Category</label>
-            <input
-              id="formProductCategory"
-              value="${escapeHTML(
-                product?.category || ""
-              )}"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Sub Category</label>
-            <input
-              id="formProductSubcategory"
-              value="${escapeHTML(
-                product?.subcategory || ""
-              )}"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Unit</label>
-            <input
-              id="formProductUnit"
-              placeholder="pcs / pack / box"
-              value="${escapeHTML(
-                product?.unit || "pcs"
-              )}"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Purchase Price</label>
-            <input
-              id="formProductCost"
-              type="number"
-              min="0"
-              value="${number(
-                product?.cost
-              )}"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Retail Price</label>
-            <input
-              id="formProductRetail"
-              type="number"
-              min="0"
-              value="${number(
-                product?.retail
-              )}"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Wholesale Price</label>
-            <input
-              id="formProductWholesale"
-              type="number"
-              min="0"
-              value="${number(
-                product?.wholesale
-              )}"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Stock</label>
-            <input
-              id="formProductStock"
-              type="number"
-              min="0"
-              value="${number(
-                product?.stock
-              )}"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Low Stock Alert</label>
-            <input
-              id="formProductLowStock"
-              type="number"
-              min="0"
-              value="${number(
-                product?.lowStock ??
-                DATA.settings.lowStockLimit
-              )}"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Expiry Date</label>
-            <input
-              id="formProductExpiry"
-              type="date"
-              value="${escapeHTML(
-                product?.expiry || ""
-              )}"
-            >
-          </div>
-
-          <div class="form-group">
-            <label>Color / Variant</label>
-            <input
-              id="formProductVariant"
-              value="${escapeHTML(
-                product?.variant || ""
-              )}"
-            >
-          </div>
-
-        </div>
-
-        <div class="modal-actions">
-
-          <button
-            type="button"
-            class="btn btn-secondary"
-            id="productCancelBtn"
-          >
-            Cancel
-          </button>
-
-          <button
-            type="submit"
-            class="btn btn-primary"
-          >
-            ${product ? "Update" : "Save"} Product
-          </button>
-
-        </div>
-
-      </form>
-    `
-  );
-
-  const form = $("productForm");
-
-  if (form) {
-    form.addEventListener(
-      "submit",
-      function(event) {
-        event.preventDefault();
-
-        saveProduct(productId);
-      }
-    );
-  }
-
-  const cancel =
-    $("productCancelBtn");
-
-  if (cancel) {
-    cancel.addEventListener(
-      "click",
-      closeModal
-    );
-  }
-}
-
-
-function saveProduct(productId) {
-  const name =
-    valueOf("formProductName").trim();
-
-  if (!name) {
-    showToast(
-      "Product Name ထည့်ပါ",
-      "warning"
-    );
-
-    return;
-  }
-
-  const data = {
-    name,
-
-    barcode:
-      valueOf(
-        "formProductBarcode"
-      ).trim(),
-
-    category:
-      valueOf(
-        "formProductCategory"
-      ).trim(),
-
-    subcategory:
-      valueOf(
-        "formProductSubcategory"
-      ).trim(),
-
-    unit:
-      valueOf(
-        "formProductUnit",
-        "pcs"
-      ).trim() || "pcs",
-
-    cost:
-      number(
-        valueOf("formProductCost")
-      ),
-
-    retail:
-      number(
-        valueOf("formProductRetail")
-      ),
-
-    wholesale:
-      number(
-        valueOf("formProductWholesale")
-      ),
-
-    stock:
-      number(
-        valueOf("formProductStock")
-      ),
-
-    lowStock:
-      number(
-        valueOf("formProductLowStock")
-      ),
-
-    expiry:
-      valueOf("formProductExpiry"),
-
-    variant:
-      valueOf("formProductVariant")
-        .trim()
-  };
-
-  if (productId) {
-    const product =
-      DATA.products.find(
-        p => p.id === productId
-      );
-
-    if (product) {
-      Object.assign(product, data);
-    }
-
-    showToast(
-      "Product updated"
-    );
-  } else {
-    DATA.products.push({
-      id: uid("prd"),
-      createdAt: now(),
-      ...data
-    });
-
-    showToast(
-      "Product added"
-    );
-  }
-
-  saveData();
-  closeModal();
-  renderProducts();
-  renderStock();
-  updateDashboard();
-}
-
-
-function deleteProduct(productId) {
-  const product =
-    DATA.products.find(
-      p => p.id === productId
-    );
-
-  if (!product) {
-    return;
-  }
-
-  if (
-    !confirm(
-      `Delete "${product.name}"?`
-    )
-  ) {
-    return;
-  }
-
-  DATA.products =
-    DATA.products.filter(
-      p => p.id !== productId
-    );
-
-  saveData();
-
-  renderProducts();
-  renderStock();
-  updateDashboard();
-
-  showToast(
-    "Product deleted"
-  );
-}
-
-
 function renderProducts() {
-  const body =
-    $("productsTableBody");
+  const node = el("productsTableBody");
 
-  if (!body) {
-    return;
-  }
+  if (!node) return;
 
   const search =
-    valueOf("productSearch")
+    getValue("productSearch")
       .trim()
       .toLowerCase();
 
   const category =
-    valueOf("productCategoryFilter");
+    getValue("productCategoryFilter");
 
   const stockFilter =
-    valueOf("stockFilter");
+    getValue("stockFilter");
 
-  let products =
-    [...DATA.products];
+  let products = DATA.products.filter(product => {
 
-  if (search) {
-    products =
-      products.filter(product =>
-        [
-          product.name,
-          product.barcode,
-          product.category,
-          product.subcategory,
-          product.variant
-        ]
-          .join(" ")
-          .toLowerCase()
-          .includes(search)
-      );
-  }
+    const matchesSearch =
+      !search ||
+      String(product.name || "")
+        .toLowerCase()
+        .includes(search) ||
+      String(product.barcode || "")
+        .toLowerCase()
+        .includes(search);
 
-  if (category) {
-    products =
-      products.filter(
-        p => p.category === category
-      );
-  }
+    const matchesCategory =
+      !category ||
+      product.category === category;
 
-  if (stockFilter === "low") {
-    products =
-      products.filter(
-        p =>
-          number(p.stock) <=
-          number(
-            p.lowStock ??
-            DATA.settings.lowStockLimit
-          )
-      );
-  }
+    let matchesStock = true;
 
-  if (stockFilter === "out") {
-    products =
-      products.filter(
-        p => number(p.stock) <= 0
-      );
-  }
+    if (stockFilter === "low") {
+      matchesStock =
+        number(product.stock) <=
+        number(product.lowStock || 5);
+    }
+
+    if (stockFilter === "out") {
+      matchesStock =
+        number(product.stock) <= 0;
+    }
+
+    return (
+      matchesSearch &&
+      matchesCategory &&
+      matchesStock
+    );
+  });
 
   if (!products.length) {
-    body.innerHTML = `
+    node.innerHTML = `
       <tr>
         <td colspan="10">
           <div class="empty-state">
@@ -1239,275 +716,406 @@ function renderProducts() {
       </tr>
     `;
 
-    updateProductCategories();
-
     return;
   }
 
-  body.innerHTML =
-    products.map(product => {
+  node.innerHTML = products.map(product => `
+    <tr>
+      <td>
+        ${escapeHTML(product.name)}
+      </td>
 
-      const stock =
-        number(product.stock);
+      <td>
+        ${escapeHTML(product.barcode || "-")}
+      </td>
 
-      const low =
-        stock <=
-        number(
-          product.lowStock ??
-          DATA.settings.lowStockLimit
-        );
+      <td>
+        ${escapeHTML(product.category || "-")}
+      </td>
 
-      return `
-        <tr>
+      <td>
+        ${escapeHTML(product.unit || "pcs")}
+      </td>
 
-          <td>
-            <strong>
-              ${escapeHTML(
-                product.name
-              )}
-            </strong>
+      <td>
+        ${number(product.stock)}
+      </td>
 
-            ${
-              product.variant
-                ? `<small>${escapeHTML(
-                    product.variant
-                  )}</small>`
-                : ""
-            }
-          </td>
+      <td>
+        ${money(product.buyPrice)}
+      </td>
 
-          <td>
-            ${escapeHTML(
-              product.barcode || "-"
-            )}
-          </td>
+      <td>
+        ${money(product.retailPrice)}
+      </td>
 
-          <td>
-            ${escapeHTML(
-              product.category || "-"
-            )}
-          </td>
+      <td>
+        ${money(product.wholesalePrice)}
+      </td>
 
-          <td>
-            ${escapeHTML(
-              product.unit || "pcs"
-            )}
-          </td>
+      <td>
+        ${product.expiry || "-"}
+      </td>
 
-          <td>
-            ${money(product.cost)}
-          </td>
+      <td>
+        <button
+          class="btn small"
+          onclick="editProduct('${product.id}')">
+          Edit
+        </button>
 
-          <td>
-            ${money(product.retail)}
-          </td>
-
-          <td>
-            ${money(product.wholesale)}
-          </td>
-
-          <td>
-            <span class="${
-              low
-                ? "status-danger"
-                : "status-success"
-            }">
-              ${stock}
-            </span>
-          </td>
-
-          <td>
-            ${
-              product.expiry
-                ? escapeHTML(
-                    product.expiry
-                  )
-                : "-"
-            }
-          </td>
-
-          <td>
-
-            <div class="table-actions">
-
-              <button
-                class="btn btn-sm btn-secondary"
-                data-edit-product="${product.id}"
-              >
-                Edit
-              </button>
-
-              <button
-                class="btn btn-sm btn-danger"
-                data-delete-product="${product.id}"
-              >
-                Delete
-              </button>
-
-            </div>
-
-          </td>
-
-        </tr>
-      `;
-    }).join("");
-
-  updateProductCategories();
+        <button
+          class="btn small danger"
+          onclick="deleteProduct('${product.id}')">
+          Delete
+        </button>
+      </td>
+    </tr>
+  `).join("");
 }
 
 
-function updateProductCategories() {
-  const select =
-    $("productCategoryFilter");
+function productForm(product = {}) {
+  return `
+    <form id="productForm">
 
-  if (!select) {
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input
+            id="f_productName"
+            value="${escapeHTML(product.name || "")}"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Barcode</label>
+          <input
+            id="f_barcode"
+            value="${escapeHTML(product.barcode || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <input
+            id="f_category"
+            value="${escapeHTML(product.category || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Subcategory</label>
+          <input
+            id="f_subcategory"
+            value="${escapeHTML(product.subcategory || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Unit</label>
+          <input
+            id="f_unit"
+            value="${escapeHTML(product.unit || "pcs")}"
+            placeholder="pcs / box / pack">
+        </div>
+
+        <div class="form-group">
+          <label>Stock</label>
+          <input
+            id="f_stock"
+            type="number"
+            min="0"
+            value="${number(product.stock)}">
+        </div>
+
+        <div class="form-group">
+          <label>Low Stock Alert</label>
+          <input
+            id="f_lowStock"
+            type="number"
+            min="0"
+            value="${number(product.lowStock || 5)}">
+        </div>
+
+        <div class="form-group">
+          <label>Buy Price</label>
+          <input
+            id="f_buyPrice"
+            type="number"
+            min="0"
+            value="${number(product.buyPrice)}">
+        </div>
+
+        <div class="form-group">
+          <label>Retail Price</label>
+          <input
+            id="f_retailPrice"
+            type="number"
+            min="0"
+            value="${number(product.retailPrice)}">
+        </div>
+
+        <div class="form-group">
+          <label>Wholesale Price</label>
+          <input
+            id="f_wholesalePrice"
+            type="number"
+            min="0"
+            value="${number(product.wholesalePrice)}">
+        </div>
+
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input
+            id="f_expiry"
+            type="date"
+            value="${escapeHTML(product.expiry || "")}">
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn"
+          onclick="closeModal()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn primary">
+          Save Product
+        </button>
+
+      </div>
+
+    </form>
+  `;
+}
+
+
+function addProduct() {
+  openModal(
+    "Add Product",
+    "Create a new product",
+    productForm()
+  );
+
+  const form = el("productForm");
+
+  if (!form) return;
+
+  form.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const name =
+      getValue("f_productName").trim();
+
+    if (!name) {
+      showToast(
+        "Product Name ထည့်ပါ",
+        "error"
+      );
+
+      return;
+    }
+
+    DATA.products.push({
+      id: uid("product"),
+      name,
+      barcode: getValue("f_barcode").trim(),
+      category: getValue("f_category").trim(),
+      subcategory: getValue("f_subcategory").trim(),
+      unit: getValue("f_unit").trim() || "pcs",
+      stock: number(getValue("f_stock")),
+      lowStock: number(getValue("f_lowStock")) || 5,
+      buyPrice: number(getValue("f_buyPrice")),
+      retailPrice: number(getValue("f_retailPrice")),
+      wholesalePrice: number(
+        getValue("f_wholesalePrice")
+      ),
+      expiry: getValue("f_expiry")
+    });
+
+    saveData();
+    closeModal();
+    renderProducts();
+    updateDashboard();
+    renderStock();
+
+    showToast(
+      "Product ထည့်ပြီးပါပြီ"
+    );
+  });
+}
+
+
+function editProduct(id) {
+  const product =
+    DATA.products.find(p => p.id === id);
+
+  if (!product) return;
+
+  openModal(
+    "Edit Product",
+    "Update product information",
+    productForm(product)
+  );
+
+  const form = el("productForm");
+
+  if (!form) return;
+
+  form.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    product.name =
+      getValue("f_productName").trim();
+
+    product.barcode =
+      getValue("f_barcode").trim();
+
+    product.category =
+      getValue("f_category").trim();
+
+    product.subcategory =
+      getValue("f_subcategory").trim();
+
+    product.unit =
+      getValue("f_unit").trim() || "pcs";
+
+    product.stock =
+      number(getValue("f_stock"));
+
+    product.lowStock =
+      number(getValue("f_lowStock")) || 5;
+
+    product.buyPrice =
+      number(getValue("f_buyPrice"));
+
+    product.retailPrice =
+      number(getValue("f_retailPrice"));
+
+    product.wholesalePrice =
+      number(getValue("f_wholesalePrice"));
+
+    product.expiry =
+      getValue("f_expiry");
+
+    saveData();
+
+    closeModal();
+
+    renderProducts();
+    renderStock();
+    renderSalesProducts();
+    updateDashboard();
+
+    showToast(
+      "Product ပြင်ပြီးပါပြီ"
+    );
+  });
+}
+
+
+function deleteProduct(id) {
+  const product =
+    DATA.products.find(p => p.id === id);
+
+  if (!product) return;
+
+  if (
+    !confirm(
+      `"${product.name}" ကို ဖျက်မလား?`
+    )
+  ) {
     return;
   }
 
-  const current =
-    select.value;
+  DATA.products =
+    DATA.products.filter(
+      p => p.id !== id
+    );
 
-  const categories =
-    [...new Set(
-      DATA.products
-        .map(p => p.category)
-        .filter(Boolean)
-    )].sort();
+  saveData();
 
-  select.innerHTML =
-    `<option value="">All Categories</option>` +
-    categories.map(category =>
-      `<option value="${escapeHTML(
-        category
-      )}">
-        ${escapeHTML(category)}
-      </option>`
-    ).join("");
+  renderProducts();
+  renderStock();
+  renderSalesProducts();
+  updateDashboard();
 
-  select.value = current;
+  showToast(
+    "Product ဖျက်ပြီးပါပြီ"
+  );
 }
 
 
 /* =========================================================
-   POS SALES
+   SALES / POS
    ========================================================= */
 
-function renderPOSProducts() {
-  const node =
-    $("salesProducts");
+function renderSalesProducts() {
+  const node = el("salesProducts");
 
-  if (!node) {
-    return;
-  }
+  if (!node) return;
 
   const search =
-    valueOf("salesSearch")
+    getValue("salesSearch")
       .trim()
       .toLowerCase();
 
   const category =
-    valueOf("salesCategory");
+    getValue("salesCategory");
 
-  let products =
-    DATA.products.filter(
-      p => number(p.stock) > 0
-    );
+  const products =
+    DATA.products.filter(product => {
 
-  if (search) {
-    products =
-      products.filter(product =>
-        [
-          product.name,
-          product.barcode,
-          product.category,
-          product.variant
-        ]
-          .join(" ")
+      const searchMatch =
+        !search ||
+        String(product.name || "")
           .toLowerCase()
-          .includes(search)
-      );
-  }
+          .includes(search) ||
+        String(product.barcode || "")
+          .toLowerCase()
+          .includes(search);
 
-  if (category) {
-    products =
-      products.filter(
-        p => p.category === category
-      );
-  }
+      const categoryMatch =
+        !category ||
+        product.category === category;
+
+      return searchMatch && categoryMatch;
+    });
 
   if (!products.length) {
-    node.innerHTML =
-      `<div class="empty-state">
-        No products available
-      </div>`;
+    node.innerHTML = `
+      <div class="empty-state">
+        Product မတွေ့ပါ
+      </div>
+    `;
 
     return;
   }
 
-  node.innerHTML =
-    products.map(product => `
-      <button
-        class="pos-product-card"
-        data-add-to-cart="${product.id}"
-        type="button"
-      >
+  node.innerHTML = products.map(product => `
+    <button
+      class="product-card"
+      onclick="addToCart('${product.id}')">
 
-        <div class="pos-product-name">
-          ${escapeHTML(
-            product.name
-          )}
-        </div>
+      <strong>
+        ${escapeHTML(product.name)}
+      </strong>
 
-        <div class="pos-product-category">
-          ${escapeHTML(
-            product.category || ""
-          )}
-        </div>
+      <span>
+        Stock: ${number(product.stock)}
+      </span>
 
-        <div class="pos-product-price">
-          ${money(product.retail)}
-        </div>
+      <b>
+        ${money(product.retailPrice)}
+      </b>
 
-        <div class="pos-product-stock">
-          Stock: ${number(product.stock)}
-        </div>
-
-      </button>
-    `).join("");
-
-  updateSalesCategories();
-}
-
-
-function updateSalesCategories() {
-  const select =
-    $("salesCategory");
-
-  if (!select) {
-    return;
-  }
-
-  const current =
-    select.value;
-
-  const categories =
-    [...new Set(
-      DATA.products
-        .map(p => p.category)
-        .filter(Boolean)
-    )].sort();
-
-  select.innerHTML =
-    `<option value="">All Categories</option>` +
-    categories.map(category =>
-      `<option value="${escapeHTML(
-        category
-      )}">
-        ${escapeHTML(category)}
-      </option>`
-    ).join("");
-
-  select.value = current;
+    </button>
+  `).join("");
 }
 
 
@@ -1517,76 +1125,189 @@ function addToCart(productId) {
       p => p.id === productId
     );
 
-  if (!product) {
+  if (!product) return;
+
+  if (number(product.stock) <= 0) {
+    showToast(
+      "Stock မရှိတော့ပါ",
+      "error"
+    );
+
     return;
   }
 
   const existing =
     DATA.cart.find(
-      item =>
-        item.productId === productId
+      item => item.productId === productId
     );
 
   if (existing) {
+
     if (
-      number(existing.qty) >=
+      number(existing.qty) + 1 >
       number(product.stock)
     ) {
       showToast(
         "Stock မလုံလောက်ပါ",
-        "warning"
+        "error"
       );
 
       return;
     }
 
-    existing.qty =
-      number(existing.qty) + 1;
+    existing.qty += 1;
 
   } else {
+
     DATA.cart.push({
       id: uid("cart"),
-      productId: product.id,
-      name: product.name,
+      productId,
       qty: 1,
-      price: number(product.retail),
-      cost: number(product.cost),
-      unit: product.unit || "pcs"
+      price: number(product.retailPrice)
     });
+
   }
 
   saveData();
   renderCart();
+}
 
-  showToast(
-    `${product.name} added`
+
+function renderCart() {
+  const node = el("cartItems");
+
+  if (!node) return;
+
+  if (!DATA.cart.length) {
+    node.innerHTML = `
+      <div class="empty-state">
+        Cart empty
+      </div>
+    `;
+
+    setText("cartCount", "0");
+    setText("cartSubtotal", money(0));
+    setText("cartTotal", money(0));
+
+    return;
+  }
+
+  let subtotal = 0;
+  let count = 0;
+
+  node.innerHTML = DATA.cart.map(item => {
+
+    const product =
+      DATA.products.find(
+        p => p.id === item.productId
+      );
+
+    if (!product) return "";
+
+    const amount =
+      number(item.qty) *
+      number(item.price);
+
+    subtotal += amount;
+    count += number(item.qty);
+
+    return `
+      <div class="cart-item">
+
+        <div class="cart-item-info">
+          <strong>
+            ${escapeHTML(product.name)}
+          </strong>
+
+          <small>
+            ${money(item.price)}
+          </small>
+        </div>
+
+        <div class="cart-controls">
+
+          <button
+            onclick="changeCartQty('${item.id}', -1)">
+            −
+          </button>
+
+          <span>
+            ${number(item.qty)}
+          </span>
+
+          <button
+            onclick="changeCartQty('${item.id}', 1)">
+            +
+          </button>
+
+        </div>
+
+        <strong>
+          ${money(amount)}
+        </strong>
+
+        <button
+          class="cart-remove"
+          onclick="removeFromCart('${item.id}')">
+          ×
+        </button>
+
+      </div>
+    `;
+  }).join("");
+
+  const discount =
+    number(getValue("saleDiscount"));
+
+  const total =
+    Math.max(
+      0,
+      subtotal - discount
+    );
+
+  setText(
+    "cartCount",
+    count
+  );
+
+  setText(
+    "cartSubtotal",
+    money(subtotal)
+  );
+
+  setText(
+    "cartTotal",
+    money(total)
   );
 }
 
 
-function changeCartQty(
-  cartId,
-  amount
-) {
+function changeCartQty(cartId, change) {
   const item =
     DATA.cart.find(
-      c => c.id === cartId
+      x => x.id === cartId
     );
 
-  if (!item) {
-    return;
-  }
+  if (!item) return;
 
   const product =
     DATA.products.find(
       p => p.id === item.productId
     );
 
+  if (!product) return;
+
   item.qty =
-    number(item.qty) + number(amount);
+    number(item.qty) + change;
+
+  if (item.qty <= 0) {
+    DATA.cart =
+      DATA.cart.filter(
+        x => x.id !== cartId
+      );
+  }
 
   if (
-    product &&
     item.qty > number(product.stock)
   ) {
     item.qty =
@@ -1594,15 +1315,8 @@ function changeCartQty(
 
     showToast(
       "Stock မလုံလောက်ပါ",
-      "warning"
+      "error"
     );
-  }
-
-  if (item.qty <= 0) {
-    DATA.cart =
-      DATA.cart.filter(
-        c => c.id !== cartId
-      );
   }
 
   saveData();
@@ -1621,337 +1335,192 @@ function removeFromCart(cartId) {
 }
 
 
-function getCartSubtotal() {
-  return DATA.cart.reduce(
-    (sum, item) =>
-      sum +
-      number(item.price) *
-      number(item.qty),
-    0
-  );
-}
-
-
-function getCartTotal() {
-  return Math.max(
-    0,
-    getCartSubtotal() -
-    number(
-      valueOf("saleDiscount")
-    )
-  );
-}
-
-
-function renderCart() {
-  const node =
-    $("cartItems");
-
-  if (!node) {
-    return;
-  }
-
-  if (!DATA.cart.length) {
-    node.innerHTML =
-      `<div class="empty-state">
-        Cart is empty
-      </div>`;
-
-    setText(
-      "cartCount",
-      "0"
-    );
-
-    setText(
-      "cartSubtotal",
-      money(0)
-    );
-
-    setText(
-      "cartTotal",
-      money(0)
-    );
-
-    return;
-  }
-
-  node.innerHTML =
-    DATA.cart.map(item => `
-      <div class="cart-item">
-
-        <div class="cart-item-info">
-
-          <strong>
-            ${escapeHTML(
-              item.name
-            )}
-          </strong>
-
-          <small>
-            ${money(item.price)}
-            / ${escapeHTML(
-              item.unit || "pcs"
-            )}
-          </small>
-
-        </div>
-
-        <div class="cart-item-controls">
-
-          <button
-            type="button"
-            data-cart-minus="${item.id}"
-          >
-            −
-          </button>
-
-          <span>
-            ${number(item.qty)}
-          </span>
-
-          <button
-            type="button"
-            data-cart-plus="${item.id}"
-          >
-            +
-          </button>
-
-          <button
-            type="button"
-            data-cart-remove="${item.id}"
-          >
-            ×
-          </button>
-
-        </div>
-
-        <strong>
-          ${money(
-            number(item.price) *
-            number(item.qty)
-          )}
-        </strong>
-
-      </div>
-    `).join("");
-
-  setText(
-    "cartCount",
-    DATA.cart.reduce(
-      (sum, item) =>
-        sum + number(item.qty),
-      0
-    )
-  );
-
-  setText(
-    "cartSubtotal",
-    money(
-      getCartSubtotal()
-    )
-  );
-
-  setText(
-    "cartTotal",
-    money(
-      getCartTotal()
-    )
-  );
-}
-
-
-function setPaymentMethod(method) {
-  DATA.paymentMethod = method;
+function clearCart() {
+  DATA.cart = [];
 
   saveData();
 
-  $$("[data-payment]").forEach(
-    button => {
-      button.classList.toggle(
-        "active",
-        button.getAttribute(
-          "data-payment"
-        ) === method
-      );
-    }
-  );
+  renderCart();
+}
+
+
+function calculateCartTotal() {
+  const subtotal =
+    DATA.cart.reduce(
+      (sum, item) =>
+        sum +
+        number(item.qty) *
+        number(item.price),
+      0
+    );
+
+  const discount =
+    number(getValue("saleDiscount"));
+
+  return {
+    subtotal,
+    discount,
+    total: Math.max(
+      0,
+      subtotal - discount
+    )
+  };
 }
 
 
 function checkout() {
   if (!DATA.cart.length) {
     showToast(
-      "Cart ထဲမှာ Product မရှိပါ",
-      "warning"
+      "Cart ထဲမှာ Product ထည့်ပါ",
+      "error"
     );
 
     return;
   }
 
-  const customerId =
-    valueOf("saleCustomer");
+  for (const item of DATA.cart) {
+    const product =
+      DATA.products.find(
+        p => p.id === item.productId
+      );
 
-  const customer =
-    customerId
-      ? DATA.customers.find(
-          c => c.id === customerId
-        )
-      : null;
+    if (
+      !product ||
+      number(product.stock) <
+      number(item.qty)
+    ) {
+      showToast(
+        "Stock မလုံလောက်ပါ",
+        "error"
+      );
 
-  const discount =
-    number(
-      valueOf("saleDiscount")
-    );
+      return;
+    }
+  }
 
-  const subtotal =
-    getCartSubtotal();
+  const totals =
+    calculateCartTotal();
 
-  const total =
-    Math.max(
-      0,
-      subtotal - discount
-    );
+  const payment =
+    DATA.paymentMethod || "cash";
 
-  let profit =
-    DATA.cart.reduce(
+  let customerName =
+    getValue("saleCustomer");
+
+  if (!customerName) {
+    customerName = "Walk-in Customer";
+  }
+
+  let customerId =
+    getValue("saleCustomerId") || "";
+
+  const saleItems =
+    DATA.cart.map(item => {
+
+      const product =
+        DATA.products.find(
+          p => p.id === item.productId
+        );
+
+      const qty =
+        number(item.qty);
+
+      const price =
+        number(item.price);
+
+      const cost =
+        number(product.buyPrice);
+
+      return {
+        productId: product.id,
+        productName: product.name,
+        qty,
+        price,
+        cost,
+        amount: qty * price,
+        profit:
+          qty * (price - cost)
+      };
+    });
+
+  const profit =
+    saleItems.reduce(
       (sum, item) =>
-        sum +
-        (
-          number(item.price) -
-          number(item.cost)
-        ) *
-        number(item.qty),
+        sum + number(item.profit),
       0
-    );
-
-  profit -= discount;
+    ) - totals.discount;
 
   const invoice =
     "INV-" +
-    Date.now()
-      .toString()
-      .slice(-8);
+    new Date()
+      .toISOString()
+      .replace(/\D/g, "")
+      .slice(0, 14);
 
   const sale = {
     id: uid("sale"),
-
     invoice,
-
     date: now(),
-
-    customerId:
-      customer?.id || "",
-
-    customerName:
-      customer?.name ||
-      "Walk-in Customer",
-
-    items:
-      DATA.cart.map(item => ({
-        productId:
-          item.productId,
-
-        name:
-          item.name,
-
-        qty:
-          number(item.qty),
-
-        price:
-          number(item.price),
-
-        cost:
-          number(item.cost),
-
-        unit:
-          item.unit || "pcs"
-      })),
-
-    subtotal,
-
-    discount,
-
-    total,
-
+    customerId,
+    customerName,
+    items: saleItems,
+    subtotal: totals.subtotal,
+    discount: totals.discount,
+    total: totals.total,
     profit,
-
-    paymentMethod:
-      DATA.paymentMethod,
-
-    status:
-      "completed"
+    paymentMethod: payment
   };
 
-  /* Deduct stock */
+  DATA.sales.push(sale);
+
   DATA.cart.forEach(item => {
+
     const product =
       DATA.products.find(
-        p =>
-          p.id ===
-          item.productId
+        p => p.id === item.productId
       );
 
     if (product) {
       product.stock =
-        Math.max(
-          0,
-          number(product.stock) -
-          number(item.qty)
-        );
+        number(product.stock) -
+        number(item.qty);
     }
+
   });
 
-  /* Customer credit */
   if (
-    customer &&
-    DATA.paymentMethod === "credit"
+    payment === "credit" &&
+    customerId
   ) {
-    customer.balance =
-      number(customer.balance) +
-      total;
-  }
 
-  DATA.sales.push(sale);
+    const customer =
+      DATA.customers.find(
+        c => c.id === customerId
+      );
+
+    if (customer) {
+      customer.receivable =
+        number(customer.receivable) +
+        totals.total;
+    }
+  }
 
   DATA.cart = [];
 
   saveData();
 
   renderCart();
-  renderPOSProducts();
   renderProducts();
   renderStock();
+  renderSalesProducts();
   updateDashboard();
+  renderDebts();
 
   showToast(
-    `Sale completed: ${invoice}`
+    "Sale completed successfully"
   );
 
-  showReceipt(sale);
-}
-
-
-function clearCart() {
-  if (!DATA.cart.length) {
-    return;
-  }
-
-  if (
-    !confirm(
-      "Clear current cart?"
-    )
-  ) {
-    return;
-  }
-
-  DATA.cart = [];
-
-  saveData();
-  renderCart();
-
-  showToast(
-    "Cart cleared"
-  );
+  printReceipt(sale);
 }
 
 
@@ -1959,257 +1528,171 @@ function clearCart() {
    RECEIPT
    ========================================================= */
 
-function showReceipt(sale) {
-  const items =
-    Array.isArray(sale.items)
-      ? sale.items
-      : [];
+function printReceipt(sale) {
+  const shop =
+    DATA.settings;
 
-  const receiptHTML = `
-    <div
-      id="printReceipt"
-      style="
-        max-width:380px;
-        margin:auto;
-        padding:20px;
-        font-family:Arial,sans-serif;
-        color:#111;
-      "
-    >
+  const itemsHTML =
+    sale.items.map(item => `
+      <tr>
+        <td>
+          ${escapeHTML(item.productName)}
+        </td>
 
-      <div style="text-align:center">
+        <td>
+          ${item.qty}
+        </td>
 
-        <h2>
-          ${escapeHTML(
-            DATA.settings.shopName
-          )}
-        </h2>
+        <td>
+          ${money(item.price)}
+        </td>
 
-        ${
-          DATA.settings.address
-            ? `<div>
-                ${escapeHTML(
-                  DATA.settings.address
-                )}
-              </div>`
-            : ""
-        }
+        <td>
+          ${money(item.amount)}
+        </td>
+      </tr>
+    `).join("");
 
-        ${
-          DATA.settings.phone
-            ? `<div>
-                ${escapeHTML(
-                  DATA.settings.phone
-                )}
-              </div>`
-            : ""
-        }
+  const receipt = `
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
 
-      </div>
+<title>${escapeHTML(sale.invoice)}</title>
 
-      <hr>
+<style>
 
-      <div>
-        Invoice:
-        ${escapeHTML(
-          sale.invoice
-        )}
-      </div>
-
-      <div>
-        Date:
-        ${escapeHTML(
-          sale.date
-        )}
-      </div>
-
-      <div>
-        Customer:
-        ${escapeHTML(
-          sale.customerName
-        )}
-      </div>
-
-      <hr>
-
-      ${items.map(item => `
-        <div
-          style="
-            display:flex;
-            justify-content:space-between;
-            margin:7px 0;
-          "
-        >
-
-          <span>
-            ${escapeHTML(
-              item.name
-            )}
-            × ${number(item.qty)}
-          </span>
-
-          <strong>
-            ${money(
-              number(item.price) *
-              number(item.qty)
-            )}
-          </strong>
-
-        </div>
-      `).join("")}
-
-      <hr>
-
-      <div
-        style="
-          display:flex;
-          justify-content:space-between;
-        "
-      >
-        <span>Subtotal</span>
-        <strong>
-          ${money(
-            sale.subtotal
-          )}
-        </strong>
-      </div>
-
-      <div
-        style="
-          display:flex;
-          justify-content:space-between;
-        "
-      >
-        <span>Discount</span>
-        <strong>
-          ${money(
-            sale.discount
-          )}
-        </strong>
-      </div>
-
-      <div
-        style="
-          display:flex;
-          justify-content:space-between;
-          font-size:18px;
-          margin-top:8px;
-        "
-      >
-        <strong>Total</strong>
-
-        <strong>
-          ${money(
-            sale.total
-          )}
-        </strong>
-      </div>
-
-      <div
-        style="
-          text-align:center;
-          margin-top:20px;
-        "
-      >
-        ${escapeHTML(
-          DATA.settings.footer
-        )}
-      </div>
-
-    </div>
-  `;
-
-  openModal(
-    "Receipt",
-    `
-      ${receiptHTML}
-
-      <div
-        class="modal-actions"
-      >
-        <button
-          class="btn btn-primary"
-          id="printReceiptBtn"
-        >
-          Print Receipt
-        </button>
-      </div>
-    `
-  );
-
-  const printBtn =
-    $("printReceiptBtn");
-
-  if (printBtn) {
-    printBtn.addEventListener(
-      "click",
-      function() {
-        printReceipt(
-          receiptHTML
-        );
-      }
-    );
-  }
+body{
+  font-family:Arial,sans-serif;
+  width:300px;
+  margin:0 auto;
+  font-size:${number(shop.receiptFontSize) || 14}px;
 }
 
+h2{
+  text-align:center;
+  margin-bottom:4px;
+}
 
-function printReceipt(html) {
-  const printWindow =
+.center{
+  text-align:center;
+}
+
+hr{
+  border:0;
+  border-top:1px dashed #000;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+
+td{
+  padding:4px 0;
+}
+
+.right{
+  text-align:right;
+}
+
+.total{
+  font-weight:bold;
+  font-size:18px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h2>
+${escapeHTML(shop.shopName || "Aung POS")}
+</h2>
+
+<div class="center">
+${escapeHTML(shop.address || "")}
+</div>
+
+<div class="center">
+${escapeHTML(shop.phone || "")}
+</div>
+
+<hr>
+
+<div>
+Invoice: ${escapeHTML(sale.invoice)}
+</div>
+
+<div>
+Date: ${new Date(sale.date).toLocaleString()}
+</div>
+
+<hr>
+
+<table>
+${itemsHTML}
+</table>
+
+<hr>
+
+<div class="right">
+Subtotal:
+${money(sale.subtotal)}
+</div>
+
+<div class="right">
+Discount:
+${money(sale.discount)}
+</div>
+
+<div class="right total">
+TOTAL:
+${money(sale.total)}
+</div>
+
+<div class="center">
+Payment:
+${escapeHTML(sale.paymentMethod)}
+</div>
+
+<hr>
+
+<div class="center">
+${escapeHTML(shop.footer || "Thank You")}
+</div>
+
+<script>
+window.onload=function(){
+  window.print();
+};
+<\/script>
+
+</body>
+</html>
+`;
+
+  const popup =
     window.open(
       "",
       "_blank",
-      "width=450,height=700"
+      "width=400,height=700"
     );
 
-  if (!printWindow) {
+  if (!popup) {
     showToast(
-      "Popup blocked. Browser setting စစ်ပါ",
-      "warning"
+      "Print window ဖွင့်မရပါ",
+      "error"
     );
 
     return;
   }
 
-  printWindow.document.write(`
-    <!DOCTYPE html>
-
-    <html>
-
-    <head>
-
-      <title>Receipt</title>
-
-      <style>
-        body{
-          margin:0;
-          padding:0;
-          font-family:Arial,sans-serif;
-        }
-
-        @media print{
-          body{
-            width:100%;
-          }
-        }
-      </style>
-
-    </head>
-
-    <body>
-
-      ${html}
-
-    </body>
-
-    </html>
-  `);
-
-  printWindow.document.close();
-
-  setTimeout(() => {
-    printWindow.focus();
-    printWindow.print();
-  }, 300);
+  popup.document.open();
+  popup.document.write(receipt);
+  popup.document.close();
 }
 
 
@@ -2217,293 +1700,18 @@ function printReceipt(html) {
    PURCHASES
    ========================================================= */
 
-function openPurchaseForm() {
-  const productOptions =
-    DATA.products.map(product => `
-      <option value="${product.id}">
-        ${escapeHTML(
-          product.name
-        )}
-      </option>
-    `).join("");
-
-  const supplierOptions =
-    DATA.suppliers.map(supplier => `
-      <option value="${supplier.id}">
-        ${escapeHTML(
-          supplier.name
-        )}
-      </option>
-    `).join("");
-
-  openModal(
-    "New Purchase",
-    `
-      <form id="purchaseForm">
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label>Product</label>
-
-            <select
-              id="purchaseProduct"
-              required
-            >
-              <option value="">
-                Select Product
-              </option>
-
-              ${productOptions}
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Supplier</label>
-
-            <select id="purchaseSupplier">
-
-              <option value="">
-                Select Supplier
-              </option>
-
-              ${supplierOptions}
-
-            </select>
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Quantity</label>
-
-            <input
-              id="purchaseQty"
-              type="number"
-              min="1"
-              value="1"
-              required
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Purchase Price</label>
-
-            <input
-              id="purchaseCost"
-              type="number"
-              min="0"
-              required
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Payment Status</label>
-
-            <select
-              id="purchasePaymentStatus"
-            >
-              <option value="paid">
-                Paid
-              </option>
-
-              <option value="credit">
-                Credit
-              </option>
-            </select>
-
-          </div>
-
-        </div>
-
-        <div class="modal-actions">
-
-          <button
-            type="button"
-            class="btn btn-secondary"
-            id="purchaseCancelBtn"
-          >
-            Cancel
-          </button>
-
-          <button
-            type="submit"
-            class="btn btn-primary"
-          >
-            Save Purchase
-          </button>
-
-        </div>
-
-      </form>
-    `
-  );
-
-  const form =
-    $("purchaseForm");
-
-  if (form) {
-    form.addEventListener(
-      "submit",
-      function(event) {
-        event.preventDefault();
-
-        savePurchase();
-      }
-    );
-  }
-
-  const cancel =
-    $("purchaseCancelBtn");
-
-  if (cancel) {
-    cancel.addEventListener(
-      "click",
-      closeModal
-    );
-  }
-}
-
-
-function savePurchase() {
-  const productId =
-    valueOf("purchaseProduct");
-
-  const product =
-    DATA.products.find(
-      p => p.id === productId
-    );
-
-  if (!product) {
-    showToast(
-      "Product ရွေးပါ",
-      "warning"
-    );
-
-    return;
-  }
-
-  const qty =
-    number(
-      valueOf("purchaseQty")
-    );
-
-  const cost =
-    number(
-      valueOf("purchaseCost")
-    );
-
-  if (qty <= 0) {
-    showToast(
-      "Quantity မှန်အောင်ထည့်ပါ",
-      "warning"
-    );
-
-    return;
-  }
-
-  const supplierId =
-    valueOf("purchaseSupplier");
-
-  const supplier =
-    DATA.suppliers.find(
-      s => s.id === supplierId
-    );
-
-  const total =
-    qty * cost;
-
-  product.stock =
-    number(product.stock) + qty;
-
-  product.cost = cost;
-
-  const purchase = {
-    id: uid("pur"),
-
-    invoice:
-      "PUR-" +
-      Date.now()
-        .toString()
-        .slice(-8),
-
-    date: now(),
-
-    productId,
-
-    productName:
-      product.name,
-
-    supplierId:
-      supplier?.id || "",
-
-    supplierName:
-      supplier?.name || "",
-
-    qty,
-
-    cost,
-
-    total,
-
-    paymentStatus:
-      valueOf(
-        "purchasePaymentStatus"
-      )
-  };
-
-  DATA.purchases.push(
-    purchase
-  );
-
-  if (
-    supplier &&
-    purchase.paymentStatus ===
-      "credit"
-  ) {
-    supplier.balance =
-      number(supplier.balance) +
-      total;
-  }
-
-  saveData();
-
-  closeModal();
-
-  renderProducts();
-  renderStock();
-  renderPurchases();
-  renderSuppliers();
-  renderDebts();
-  updateDashboard();
-
-  showToast(
-    "Purchase saved"
-  );
-}
-
-
 function renderPurchases() {
-  const body =
-    $("purchaseTableBody");
+  const node =
+    el("purchaseTableBody");
 
-  if (!body) {
-    return;
-  }
+  if (!node) return;
 
   const todayPurchases =
     DATA.purchases.filter(
       p => sameDay(p.date)
     );
 
-  const todayTotal =
+  const total =
     todayPurchases.reduce(
       (sum, p) =>
         sum + number(p.total),
@@ -2512,7 +1720,7 @@ function renderPurchases() {
 
   setText(
     "purchaseTodayTotal",
-    money(todayTotal)
+    money(total)
   );
 
   setText(
@@ -2523,7 +1731,7 @@ function renderPurchases() {
   const payable =
     DATA.suppliers.reduce(
       (sum, s) =>
-        sum + number(s.balance),
+        sum + number(s.payable),
       0
     );
 
@@ -2532,20 +1740,12 @@ function renderPurchases() {
     money(payable)
   );
 
-  const purchases =
-    [...DATA.purchases]
-      .sort(
-        (a, b) =>
-          new Date(b.date || 0) -
-          new Date(a.date || 0)
-      );
-
-  if (!purchases.length) {
-    body.innerHTML = `
+  if (!DATA.purchases.length) {
+    node.innerHTML = `
       <tr>
         <td colspan="8">
           <div class="empty-state">
-            No purchases yet
+            No purchases
           </div>
         </td>
       </tr>
@@ -2554,57 +1754,55 @@ function renderPurchases() {
     return;
   }
 
-  body.innerHTML =
-    purchases.map(purchase => `
+  const purchases =
+    DATA.purchases
+      .slice()
+      .sort(
+        (a,b) =>
+          new Date(b.date) -
+          new Date(a.date)
+      );
+
+  node.innerHTML =
+    purchases.map(p => `
       <tr>
 
         <td>
-          ${escapeHTML(
-            purchase.invoice
-          )}
+          ${escapeHTML(p.invoice || "-")}
+        </td>
+
+        <td>
+          ${escapeHTML(p.supplierName || "-")}
+        </td>
+
+        <td>
+          ${p.date
+            ? new Date(p.date)
+                .toLocaleDateString()
+            : "-"}
         </td>
 
         <td>
           ${escapeHTML(
-            purchase.date
+            p.productName || "-"
           )}
+        </td>
+
+        <td>
+          ${number(p.qty)}
+        </td>
+
+        <td>
+          ${money(p.unitCost)}
+        </td>
+
+        <td>
+          ${money(p.total)}
         </td>
 
         <td>
           ${escapeHTML(
-            purchase.productName
-          )}
-        </td>
-
-        <td>
-          ${escapeHTML(
-            purchase.supplierName ||
-            "-"
-          )}
-        </td>
-
-        <td>
-          ${number(
-            purchase.qty
-          )}
-        </td>
-
-        <td>
-          ${money(
-            purchase.cost
-          )}
-        </td>
-
-        <td>
-          ${money(
-            purchase.total
-          )}
-        </td>
-
-        <td>
-          ${escapeHTML(
-            purchase.paymentStatus ||
-            "paid"
+            p.paymentMethod || "cash"
           )}
         </td>
 
@@ -2613,22 +1811,254 @@ function renderPurchases() {
 }
 
 
+function purchaseForm() {
+  const productOptions =
+    DATA.products.map(
+      p => `
+        <option value="${p.id}">
+          ${escapeHTML(p.name)}
+        </option>
+      `
+    ).join("");
+
+  const supplierOptions =
+    DATA.suppliers.map(
+      s => `
+        <option value="${s.id}">
+          ${escapeHTML(s.name)}
+        </option>
+      `
+    ).join("");
+
+  return `
+    <form id="purchaseForm">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Product</label>
+
+          <select id="f_purchaseProduct">
+            ${productOptions}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Supplier</label>
+
+          <select id="f_purchaseSupplier">
+
+            <option value="">
+              Select Supplier
+            </option>
+
+            ${supplierOptions}
+
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Quantity</label>
+
+          <input
+            id="f_purchaseQty"
+            type="number"
+            min="1"
+            value="1">
+        </div>
+
+        <div class="form-group">
+          <label>Buy Cost / Unit</label>
+
+          <input
+            id="f_purchaseCost"
+            type="number"
+            min="0">
+        </div>
+
+        <div class="form-group">
+          <label>Payment</label>
+
+          <select id="f_purchasePayment">
+
+            <option value="cash">
+              Cash
+            </option>
+
+            <option value="credit">
+              Credit
+            </option>
+
+          </select>
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn"
+          onclick="closeModal()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn primary">
+          Save Purchase
+        </button>
+
+      </div>
+
+    </form>
+  `;
+}
+
+
+function addPurchase() {
+  if (!DATA.products.length) {
+    showToast(
+      "အရင် Product ထည့်ပါ",
+      "error"
+    );
+
+    return;
+  }
+
+  openModal(
+    "New Purchase",
+    "Record inventory purchase",
+    purchaseForm()
+  );
+
+  const form =
+    el("purchaseForm");
+
+  if (!form) return;
+
+  form.addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+      const product =
+        DATA.products.find(
+          p =>
+            p.id ===
+            getValue("f_purchaseProduct")
+        );
+
+      if (!product) {
+        showToast(
+          "Product ရွေးပါ",
+          "error"
+        );
+
+        return;
+      }
+
+      const qty =
+        number(
+          getValue("f_purchaseQty")
+        );
+
+      const cost =
+        number(
+          getValue("f_purchaseCost")
+        );
+
+      if (qty <= 0) {
+        showToast(
+          "Quantity မှန်ကန်စွာထည့်ပါ",
+          "error"
+        );
+
+        return;
+      }
+
+      const supplier =
+        DATA.suppliers.find(
+          s =>
+            s.id ===
+            getValue("f_purchaseSupplier")
+        );
+
+      const total =
+        qty * cost;
+
+      DATA.purchases.push({
+        id: uid("purchase"),
+        invoice:
+          "PUR-" +
+          Date.now(),
+        date: now(),
+        productId: product.id,
+        productName: product.name,
+        supplierId:
+          supplier?.id || "",
+        supplierName:
+          supplier?.name || "",
+        qty,
+        unitCost: cost,
+        total,
+        paymentMethod:
+          getValue("f_purchasePayment")
+      });
+
+      product.stock =
+        number(product.stock) + qty;
+
+      product.buyPrice = cost;
+
+      if (
+        getValue("f_purchasePayment") ===
+          "credit" &&
+        supplier
+      ) {
+        supplier.payable =
+          number(supplier.payable) +
+          total;
+      }
+
+      saveData();
+
+      closeModal();
+
+      renderPurchases();
+      renderProducts();
+      renderStock();
+      renderSalesProducts();
+      updateDashboard();
+      renderDebts();
+
+      showToast(
+        "Purchase သိမ်းပြီးပါပြီ"
+      );
+    }
+  );
+}
+
+
 /* =========================================================
    STOCK
    ========================================================= */
 
 function renderStock() {
-  const body =
-    $("stockTableBody");
+  const node =
+    el("stockTableBody");
 
-  if (!body) {
-    return;
-  }
+  if (!node) return;
 
-  const totalProducts =
-    DATA.products.length;
+  const low =
+    DATA.products.filter(
+      p =>
+        number(p.stock) <=
+        number(p.lowStock || 5)
+    );
 
-  const totalUnits =
+  const stockUnits =
     DATA.products.reduce(
       (sum, p) =>
         sum + number(p.stock),
@@ -2640,28 +2070,18 @@ function renderStock() {
       (sum, p) =>
         sum +
         number(p.stock) *
-        number(p.cost),
+        number(p.buyPrice),
       0
     );
 
-  const lowStock =
-    DATA.products.filter(
-      p =>
-        number(p.stock) <=
-        number(
-          p.lowStock ??
-          DATA.settings.lowStockLimit
-        )
-    ).length;
-
   setText(
     "stockProductCount",
-    totalProducts
+    DATA.products.length
   );
 
   setText(
     "stockUnitCount",
-    totalUnits
+    stockUnits
   );
 
   setText(
@@ -2671,11 +2091,11 @@ function renderStock() {
 
   setText(
     "stockLowCount",
-    lowStock
+    low.length
   );
 
   if (!DATA.products.length) {
-    body.innerHTML = `
+    node.innerHTML = `
       <tr>
         <td colspan="8">
           <div class="empty-state">
@@ -2688,144 +2108,104 @@ function renderStock() {
     return;
   }
 
-  body.innerHTML =
-    DATA.products.map(product => {
+  node.innerHTML =
+    DATA.products.map(p => `
+      <tr>
 
-      const qty =
-        number(product.stock);
+        <td>
+          ${escapeHTML(p.name)}
+        </td>
 
-      const costValue =
-        qty * number(product.cost);
+        <td>
+          ${number(p.stock)}
+        </td>
 
-      const retailValue =
-        qty * number(product.retail);
+        <td>
+          ${escapeHTML(p.unit || "pcs")}
+        </td>
 
-      const wholesaleValue =
-        qty *
-        number(product.wholesale);
+        <td>
+          ${money(
+            number(p.stock) *
+            number(p.buyPrice)
+          )}
+        </td>
 
-      const low =
-        qty <=
-        number(
-          product.lowStock ??
-          DATA.settings.lowStockLimit
-        );
+        <td>
+          ${money(
+            number(p.stock) *
+            number(p.retailPrice)
+          )}
+        </td>
 
-      return `
-        <tr>
+        <td>
+          ${money(
+            number(p.stock) *
+            number(p.wholesalePrice)
+          )}
+        </td>
 
-          <td>
-            ${escapeHTML(
-              product.name
-            )}
-          </td>
+        <td>
+          ${
+            number(p.stock) <=
+            number(p.lowStock || 5)
+            ? "LOW"
+            : "OK"
+          }
+        </td>
 
-          <td>
-            ${escapeHTML(
-              product.unit || "pcs"
-            )}
-          </td>
+        <td>
 
-          <td>
-            <strong>
-              ${qty}
-            </strong>
-          </td>
+          <button
+            class="btn small"
+            onclick="adjustStock('${p.id}')">
+            Adjust
+          </button>
 
-          <td>
-            ${money(costValue)}
-          </td>
+        </td>
 
-          <td>
-            ${money(retailValue)}
-          </td>
-
-          <td>
-            ${money(wholesaleValue)}
-          </td>
-
-          <td>
-            ${
-              low
-                ? `<span class="status-danger">
-                    Low
-                  </span>`
-                : `<span class="status-success">
-                    OK
-                  </span>`
-            }
-          </td>
-
-          <td>
-
-            <button
-              class="btn btn-sm btn-secondary"
-              data-stock-adjust="${product.id}"
-            >
-              Adjust
-            </button>
-
-          </td>
-
-        </tr>
-      `;
-    }).join("");
+      </tr>
+    `).join("");
 }
 
 
-function openStockAdjustment(productId) {
+function adjustStock(id) {
   const product =
     DATA.products.find(
-      p => p.id === productId
+      p => p.id === id
     );
 
-  if (!product) {
-    return;
-  }
+  if (!product) return;
 
   openModal(
     "Stock Adjustment",
-
+    product.name,
     `
-      <form id="stockAdjustmentForm">
-
-        <p>
-          <strong>
-            ${escapeHTML(
-              product.name
-            )}
-          </strong>
-        </p>
-
-        <p>
-          Current Stock:
-          ${number(product.stock)}
-        </p>
+      <form id="stockForm">
 
         <div class="form-group">
 
-          <label>New Stock</label>
+          <label>
+            Current Stock
+          </label>
 
           <input
-            id="newStockValue"
-            type="number"
-            min="0"
-            value="${number(
-              product.stock
-            )}"
-            required
-          >
+            value="${number(product.stock)}"
+            disabled>
 
         </div>
 
         <div class="form-group">
 
-          <label>Reason</label>
+          <label>
+            New Stock
+          </label>
 
           <input
-            id="stockAdjustmentReason"
-            placeholder="Damage / Count correction / etc."
-          >
+            id="newStock"
+            type="number"
+            min="0"
+            value="${number(product.stock)}">
 
         </div>
 
@@ -2833,16 +2213,14 @@ function openStockAdjustment(productId) {
 
           <button
             type="button"
-            class="btn btn-secondary"
-            id="stockCancelBtn"
-          >
+            class="btn"
+            onclick="closeModal()">
             Cancel
           </button>
 
           <button
             type="submit"
-            class="btn btn-primary"
-          >
+            class="btn primary">
             Save
           </button>
 
@@ -2853,46 +2231,33 @@ function openStockAdjustment(productId) {
   );
 
   const form =
-    $("stockAdjustmentForm");
+    el("stockForm");
 
-  if (form) {
-    form.addEventListener(
-      "submit",
-      function(event) {
-        event.preventDefault();
+  if (!form) return;
 
-        product.stock =
-          number(
-            valueOf(
-              "newStockValue"
-            )
-          );
+  form.addEventListener(
+    "submit",
+    function(event) {
 
-        saveData();
+      event.preventDefault();
 
-        closeModal();
+      product.stock =
+        number(getValue("newStock"));
 
-        renderStock();
-        renderProducts();
-        renderPOSProducts();
-        updateDashboard();
+      saveData();
 
-        showToast(
-          "Stock updated"
-        );
-      }
-    );
-  }
+      closeModal();
 
-  const cancel =
-    $("stockCancelBtn");
+      renderStock();
+      renderProducts();
+      renderSalesProducts();
+      updateDashboard();
 
-  if (cancel) {
-    cancel.addEventListener(
-      "click",
-      closeModal
-    );
-  }
+      showToast(
+        "Stock updated"
+      );
+    }
+  );
 }
 
 
@@ -2900,238 +2265,11 @@ function openStockAdjustment(productId) {
    CUSTOMERS
    ========================================================= */
 
-function openCustomerForm(customerId = null) {
-  const customer =
-    customerId
-      ? DATA.customers.find(
-          c => c.id === customerId
-        )
-      : null;
-
-  openModal(
-    customer
-      ? "Edit Customer"
-      : "Add Customer",
-
-    `
-      <form id="customerForm">
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label>Name</label>
-
-            <input
-              id="customerName"
-              required
-              value="${escapeHTML(
-                customer?.name || ""
-              )}"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Phone</label>
-
-            <input
-              id="customerPhone"
-              value="${escapeHTML(
-                customer?.phone || ""
-              )}"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Address</label>
-
-            <input
-              id="customerAddress"
-              value="${escapeHTML(
-                customer?.address || ""
-              )}"
-            >
-
-          </div>
-
-        </div>
-
-        <div class="modal-actions">
-
-          <button
-            type="button"
-            class="btn btn-secondary"
-            id="customerCancelBtn"
-          >
-            Cancel
-          </button>
-
-          <button
-            type="submit"
-            class="btn btn-primary"
-          >
-            Save Customer
-          </button>
-
-        </div>
-
-      </form>
-    `
-  );
-
-  const form =
-    $("customerForm");
-
-  if (form) {
-    form.addEventListener(
-      "submit",
-      function(event) {
-        event.preventDefault();
-
-        saveCustomer(customerId);
-      }
-    );
-  }
-
-  const cancel =
-    $("customerCancelBtn");
-
-  if (cancel) {
-    cancel.addEventListener(
-      "click",
-      closeModal
-    );
-  }
-}
-
-
-function saveCustomer(customerId) {
-  const name =
-    valueOf("customerName")
-      .trim();
-
-  if (!name) {
-    showToast(
-      "Customer name ထည့်ပါ",
-      "warning"
-    );
-
-    return;
-  }
-
-  const data = {
-    name,
-
-    phone:
-      valueOf(
-        "customerPhone"
-      ).trim(),
-
-    address:
-      valueOf(
-        "customerAddress"
-      ).trim()
-  };
-
-  if (customerId) {
-    const customer =
-      DATA.customers.find(
-        c => c.id === customerId
-      );
-
-    if (customer) {
-      Object.assign(
-        customer,
-        data
-      );
-    }
-
-    showToast(
-      "Customer updated"
-    );
-  } else {
-    DATA.customers.push({
-      id: uid("cus"),
-      balance: 0,
-      createdAt: now(),
-      ...data
-    });
-
-    showToast(
-      "Customer added"
-    );
-  }
-
-  saveData();
-
-  closeModal();
-
-  renderCustomers();
-  updateCustomerSelect();
-  renderDebts();
-}
-
-
-function deleteCustomer(customerId) {
-  if (
-    !confirm(
-      "Delete customer?"
-    )
-  ) {
-    return;
-  }
-
-  DATA.customers =
-    DATA.customers.filter(
-      c => c.id !== customerId
-    );
-
-  saveData();
-
-  renderCustomers();
-  updateCustomerSelect();
-  renderDebts();
-
-  showToast(
-    "Customer deleted"
-  );
-}
-
-
 function renderCustomers() {
-  const body =
-    $("customerTableBody");
+  const node =
+    el("customerTableBody");
 
-  if (!body) {
-    return;
-  }
-
-  const search =
-    valueOf("customerSearch")
-      .trim()
-      .toLowerCase();
-
-  let customers =
-    [...DATA.customers];
-
-  if (search) {
-    customers =
-      customers.filter(
-        customer =>
-          [
-            customer.name,
-            customer.phone,
-            customer.address
-          ]
-            .join(" ")
-            .toLowerCase()
-            .includes(search)
-      );
-  }
+  if (!node) return;
 
   setText(
     "customerCount",
@@ -3141,7 +2279,7 @@ function renderCustomers() {
   const receivable =
     DATA.customers.reduce(
       (sum, c) =>
-        sum + number(c.balance),
+        sum + number(c.receivable),
       0
     );
 
@@ -3150,10 +2288,26 @@ function renderCustomers() {
     money(receivable)
   );
 
+  const search =
+    getValue("customerSearch")
+      .trim()
+      .toLowerCase();
+
+  const customers =
+    DATA.customers.filter(c =>
+      !search ||
+      String(c.name || "")
+        .toLowerCase()
+        .includes(search) ||
+      String(c.phone || "")
+        .toLowerCase()
+        .includes(search)
+    );
+
   if (!customers.length) {
-    body.innerHTML = `
+    node.innerHTML = `
       <tr>
-        <td colspan="6">
+        <td colspan="7">
           <div class="empty-state">
             No customers
           </div>
@@ -3164,95 +2318,245 @@ function renderCustomers() {
     return;
   }
 
-  body.innerHTML =
-    customers.map(customer => `
+  node.innerHTML =
+    customers.map(c => `
       <tr>
 
         <td>
-          <strong>
-            ${escapeHTML(
-              customer.name
-            )}
-          </strong>
+          ${escapeHTML(c.name)}
         </td>
 
         <td>
-          ${escapeHTML(
-            customer.phone || "-"
-          )}
+          ${escapeHTML(c.phone || "-")}
         </td>
 
         <td>
-          ${escapeHTML(
-            customer.address || "-"
-          )}
+          ${escapeHTML(c.address || "-")}
         </td>
 
         <td>
-          ${money(
-            customer.balance
-          )}
+          ${money(c.receivable)}
         </td>
 
         <td>
-          ${escapeHTML(
-            customer.createdAt || ""
-          )}
+          ${c.createdAt
+            ? new Date(c.createdAt)
+                .toLocaleDateString()
+            : "-"}
         </td>
 
         <td>
 
-          <div class="table-actions">
+          <button
+            class="btn small"
+            onclick="editCustomer('${c.id}')">
+            Edit
+          </button>
 
-            <button
-              class="btn btn-sm btn-secondary"
-              data-edit-customer="${customer.id}"
-            >
-              Edit
-            </button>
-
-            <button
-              class="btn btn-sm btn-danger"
-              data-delete-customer="${customer.id}"
-            >
-              Delete
-            </button>
-
-          </div>
+          <button
+            class="btn small danger"
+            onclick="deleteCustomer('${c.id}')">
+            Delete
+          </button>
 
         </td>
 
       </tr>
     `).join("");
-
-  updateCustomerSelect();
 }
 
 
-function updateCustomerSelect() {
-  const select =
-    $("saleCustomer");
+function customerForm(customer = {}) {
+  return `
+    <form id="customerForm">
 
-  if (!select) {
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Name *</label>
+
+          <input
+            id="f_customerName"
+            value="${escapeHTML(customer.name || "")}"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+
+          <input
+            id="f_customerPhone"
+            value="${escapeHTML(customer.phone || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Address</label>
+
+          <textarea id="f_customerAddress">${escapeHTML(
+            customer.address || ""
+          )}</textarea>
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn"
+          onclick="closeModal()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn primary">
+          Save
+        </button>
+
+      </div>
+
+    </form>
+  `;
+}
+
+
+function addCustomer() {
+  openModal(
+    "Add Customer",
+    "Customer information",
+    customerForm()
+  );
+
+  const form =
+    el("customerForm");
+
+  if (!form) return;
+
+  form.addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+      const name =
+        getValue("f_customerName")
+          .trim();
+
+      if (!name) {
+        showToast(
+          "Customer Name ထည့်ပါ",
+          "error"
+        );
+
+        return;
+      }
+
+      DATA.customers.push({
+        id: uid("customer"),
+        name,
+        phone:
+          getValue("f_customerPhone"),
+        address:
+          getValue("f_customerAddress"),
+        receivable: 0,
+        createdAt: now()
+      });
+
+      saveData();
+
+      closeModal();
+
+      renderCustomers();
+      renderDebts();
+
+      showToast(
+        "Customer ထည့်ပြီးပါပြီ"
+      );
+    }
+  );
+}
+
+
+function editCustomer(id) {
+  const customer =
+    DATA.customers.find(
+      c => c.id === id
+    );
+
+  if (!customer) return;
+
+  openModal(
+    "Edit Customer",
+    "Update customer",
+    customerForm(customer)
+  );
+
+  const form =
+    el("customerForm");
+
+  if (!form) return;
+
+  form.addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+      customer.name =
+        getValue("f_customerName")
+          .trim();
+
+      customer.phone =
+        getValue("f_customerPhone");
+
+      customer.address =
+        getValue("f_customerAddress");
+
+      saveData();
+
+      closeModal();
+
+      renderCustomers();
+      renderDebts();
+
+      showToast(
+        "Customer ပြင်ပြီးပါပြီ"
+      );
+    }
+  );
+}
+
+
+function deleteCustomer(id) {
+  const customer =
+    DATA.customers.find(
+      c => c.id === id
+    );
+
+  if (!customer) return;
+
+  if (
+    !confirm(
+      `"${customer.name}" ကို ဖျက်မလား?`
+    )
+  ) {
     return;
   }
 
-  const current =
-    select.value;
+  DATA.customers =
+    DATA.customers.filter(
+      c => c.id !== id
+    );
 
-  select.innerHTML =
-    `<option value="">
-      Walk-in Customer
-    </option>` +
-    DATA.customers.map(customer =>
-      `<option value="${customer.id}">
-        ${escapeHTML(
-          customer.name
-        )}
-      </option>`
-    ).join("");
+  saveData();
 
-  select.value = current;
+  renderCustomers();
+  renderDebts();
+
+  showToast(
+    "Customer ဖျက်ပြီးပါပြီ"
+  );
 }
 
 
@@ -3260,219 +2564,16 @@ function updateCustomerSelect() {
    SUPPLIERS
    ========================================================= */
 
-function openSupplierForm(supplierId = null) {
-  const supplier =
-    supplierId
-      ? DATA.suppliers.find(
-          s => s.id === supplierId
-        )
-      : null;
-
-  openModal(
-    supplier
-      ? "Edit Supplier"
-      : "Add Supplier",
-
-    `
-      <form id="supplierForm">
-
-        <div class="form-grid">
-
-          <div class="form-group">
-
-            <label>Supplier Name</label>
-
-            <input
-              id="supplierName"
-              required
-              value="${escapeHTML(
-                supplier?.name || ""
-              )}"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Phone</label>
-
-            <input
-              id="supplierPhone"
-              value="${escapeHTML(
-                supplier?.phone || ""
-              )}"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Address</label>
-
-            <input
-              id="supplierAddress"
-              value="${escapeHTML(
-                supplier?.address || ""
-              )}"
-            >
-
-          </div>
-
-        </div>
-
-        <div class="modal-actions">
-
-          <button
-            type="button"
-            class="btn btn-secondary"
-            id="supplierCancelBtn"
-          >
-            Cancel
-          </button>
-
-          <button
-            type="submit"
-            class="btn btn-primary"
-          >
-            Save Supplier
-          </button>
-
-        </div>
-
-      </form>
-    `
-  );
-
-  const form =
-    $("supplierForm");
-
-  if (form) {
-    form.addEventListener(
-      "submit",
-      function(event) {
-        event.preventDefault();
-
-        saveSupplier(supplierId);
-      }
-    );
-  }
-
-  const cancel =
-    $("supplierCancelBtn");
-
-  if (cancel) {
-    cancel.addEventListener(
-      "click",
-      closeModal
-    );
-  }
-}
-
-
-function saveSupplier(supplierId) {
-  const name =
-    valueOf("supplierName")
-      .trim();
-
-  if (!name) {
-    showToast(
-      "Supplier name ထည့်ပါ",
-      "warning"
-    );
-
-    return;
-  }
-
-  const data = {
-    name,
-
-    phone:
-      valueOf(
-        "supplierPhone"
-      ).trim(),
-
-    address:
-      valueOf(
-        "supplierAddress"
-      ).trim()
-  };
-
-  if (supplierId) {
-    const supplier =
-      DATA.suppliers.find(
-        s => s.id === supplierId
-      );
-
-    if (supplier) {
-      Object.assign(
-        supplier,
-        data
-      );
-    }
-
-    showToast(
-      "Supplier updated"
-    );
-  } else {
-    DATA.suppliers.push({
-      id: uid("sup"),
-      balance: 0,
-      createdAt: now(),
-      ...data
-    });
-
-    showToast(
-      "Supplier added"
-    );
-  }
-
-  saveData();
-
-  closeModal();
-
-  renderSuppliers();
-  renderPurchases();
-  renderDebts();
-}
-
-
-function deleteSupplier(supplierId) {
-  if (
-    !confirm(
-      "Delete supplier?"
-    )
-  ) {
-    return;
-  }
-
-  DATA.suppliers =
-    DATA.suppliers.filter(
-      s => s.id !== supplierId
-    );
-
-  saveData();
-
-  renderSuppliers();
-  renderDebts();
-
-  showToast(
-    "Supplier deleted"
-  );
-}
-
-
 function renderSuppliers() {
-  const body =
-    $("supplierTableBody");
+  const node =
+    el("supplierTableBody");
 
-  if (!body) {
-    return;
-  }
+  if (!node) return;
 
   if (!DATA.suppliers.length) {
-    body.innerHTML = `
+    node.innerHTML = `
       <tr>
-        <td colspan="6">
+        <td colspan="7">
           <div class="empty-state">
             No suppliers
           </div>
@@ -3483,68 +2584,248 @@ function renderSuppliers() {
     return;
   }
 
-  body.innerHTML =
-    DATA.suppliers.map(
-      supplier => `
-        <tr>
+  node.innerHTML =
+    DATA.suppliers.map(s => `
+      <tr>
 
-          <td>
-            <strong>
-              ${escapeHTML(
-                supplier.name
-              )}
-            </strong>
-          </td>
+        <td>
+          ${escapeHTML(s.name)}
+        </td>
 
-          <td>
-            ${escapeHTML(
-              supplier.phone || "-"
-            )}
-          </td>
+        <td>
+          ${escapeHTML(s.phone || "-")}
+        </td>
 
-          <td>
-            ${escapeHTML(
-              supplier.address || "-"
-            )}
-          </td>
+        <td>
+          ${escapeHTML(s.address || "-")}
+        </td>
 
-          <td>
-            ${money(
-              supplier.balance
-            )}
-          </td>
+        <td>
+          ${money(s.payable)}
+        </td>
 
-          <td>
-            ${escapeHTML(
-              supplier.createdAt || ""
-            )}
-          </td>
+        <td>
+          ${s.createdAt
+            ? new Date(s.createdAt)
+                .toLocaleDateString()
+            : "-"}
+        </td>
 
-          <td>
+        <td>
 
-            <div class="table-actions">
+          <button
+            class="btn small"
+            onclick="editSupplier('${s.id}')">
+            Edit
+          </button>
 
-              <button
-                class="btn btn-sm btn-secondary"
-                data-edit-supplier="${supplier.id}"
-              >
-                Edit
-              </button>
+          <button
+            class="btn small danger"
+            onclick="deleteSupplier('${s.id}')">
+            Delete
+          </button>
 
-              <button
-                class="btn btn-sm btn-danger"
-                data-delete-supplier="${supplier.id}"
-              >
-                Delete
-              </button>
+        </td>
 
-            </div>
+      </tr>
+    `).join("");
+}
 
-          </td>
 
-        </tr>
-      `
-    ).join("");
+function supplierForm(supplier = {}) {
+  return `
+    <form id="supplierForm">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Supplier Name *</label>
+
+          <input
+            id="f_supplierName"
+            value="${escapeHTML(supplier.name || "")}"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+
+          <input
+            id="f_supplierPhone"
+            value="${escapeHTML(supplier.phone || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Address</label>
+
+          <textarea id="f_supplierAddress">${escapeHTML(
+            supplier.address || ""
+          )}</textarea>
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn"
+          onclick="closeModal()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn primary">
+          Save
+        </button>
+
+      </div>
+
+    </form>
+  `;
+}
+
+
+function addSupplier() {
+  openModal(
+    "Add Supplier",
+    "Supplier information",
+    supplierForm()
+  );
+
+  const form =
+    el("supplierForm");
+
+  if (!form) return;
+
+  form.addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+      const name =
+        getValue("f_supplierName")
+          .trim();
+
+      if (!name) {
+        showToast(
+          "Supplier Name ထည့်ပါ",
+          "error"
+        );
+
+        return;
+      }
+
+      DATA.suppliers.push({
+        id: uid("supplier"),
+        name,
+        phone:
+          getValue("f_supplierPhone"),
+        address:
+          getValue("f_supplierAddress"),
+        payable: 0,
+        createdAt: now()
+      });
+
+      saveData();
+
+      closeModal();
+
+      renderSuppliers();
+      renderPurchases();
+      renderDebts();
+
+      showToast(
+        "Supplier ထည့်ပြီးပါပြီ"
+      );
+    }
+  );
+}
+
+
+function editSupplier(id) {
+  const supplier =
+    DATA.suppliers.find(
+      s => s.id === id
+    );
+
+  if (!supplier) return;
+
+  openModal(
+    "Edit Supplier",
+    "Update supplier",
+    supplierForm(supplier)
+  );
+
+  const form =
+    el("supplierForm");
+
+  if (!form) return;
+
+  form.addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+      supplier.name =
+        getValue("f_supplierName")
+          .trim();
+
+      supplier.phone =
+        getValue("f_supplierPhone");
+
+      supplier.address =
+        getValue("f_supplierAddress");
+
+      saveData();
+
+      closeModal();
+
+      renderSuppliers();
+      renderPurchases();
+      renderDebts();
+
+      showToast(
+        "Supplier ပြင်ပြီးပါပြီ"
+      );
+    }
+  );
+}
+
+
+function deleteSupplier(id) {
+  const supplier =
+    DATA.suppliers.find(
+      s => s.id === id
+    );
+
+  if (!supplier) return;
+
+  if (
+    !confirm(
+      `"${supplier.name}" ကို ဖျက်မလား?`
+    )
+  ) {
+    return;
+  }
+
+  DATA.suppliers =
+    DATA.suppliers.filter(
+      s => s.id !== id
+    );
+
+  saveData();
+
+  renderSuppliers();
+  renderPurchases();
+  renderDebts();
+
+  showToast(
+    "Supplier ဖျက်ပြီးပါပြီ"
+  );
 }
 
 
@@ -3555,23 +2836,15 @@ function renderSuppliers() {
 function renderDebts() {
   const receivable =
     DATA.customers.reduce(
-      (sum, customer) =>
-        sum +
-        Math.max(
-          0,
-          number(customer.balance)
-        ),
+      (sum, c) =>
+        sum + number(c.receivable),
       0
     );
 
   const payable =
     DATA.suppliers.reduce(
-      (sum, supplier) =>
-        sum +
-        Math.max(
-          0,
-          number(supplier.balance)
-        ),
+      (sum, s) =>
+        sum + number(s.payable),
       0
     );
 
@@ -3586,79 +2859,59 @@ function renderDebts() {
   );
 
   const receivableNode =
-    $("receivableList");
+    el("receivableList");
 
   if (receivableNode) {
+
     const customers =
       DATA.customers.filter(
-        c =>
-          number(c.balance) > 0
+        c => number(c.receivable) > 0
       );
 
     receivableNode.innerHTML =
       customers.length
-        ? customers.map(
-            customer => `
-              <div class="debt-item">
+        ? customers.map(c => `
+          <div class="debt-item">
+            <strong>
+              ${escapeHTML(c.name)}
+            </strong>
 
-                <span>
-                  ${escapeHTML(
-                    customer.name
-                  )}
-                </span>
-
-                <strong>
-                  ${money(
-                    customer.balance
-                  )}
-                </strong>
-
-              </div>
-            `
-          ).join("")
-        : `
-          <div class="empty-state">
-            No receivable
+            <span>
+              ${money(c.receivable)}
+            </span>
           </div>
-        `;
+        `).join("")
+        : `<div class="empty-state">
+            No receivables
+           </div>`;
   }
 
   const payableNode =
-    $("payableList");
+    el("payableList");
 
   if (payableNode) {
+
     const suppliers =
       DATA.suppliers.filter(
-        s =>
-          number(s.balance) > 0
+        s => number(s.payable) > 0
       );
 
     payableNode.innerHTML =
       suppliers.length
-        ? suppliers.map(
-            supplier => `
-              <div class="debt-item">
+        ? suppliers.map(s => `
+          <div class="debt-item">
+            <strong>
+              ${escapeHTML(s.name)}
+            </strong>
 
-                <span>
-                  ${escapeHTML(
-                    supplier.name
-                  )}
-                </span>
-
-                <strong>
-                  ${money(
-                    supplier.balance
-                  )}
-                </strong>
-
-              </div>
-            `
-          ).join("")
-        : `
-          <div class="empty-state">
-            No payable
+            <span>
+              ${money(s.payable)}
+            </span>
           </div>
-        `;
+        `).join("")
+        : `<div class="empty-state">
+            No payables
+           </div>`;
   }
 }
 
@@ -3667,161 +2920,241 @@ function renderDebts() {
    EXPENSES
    ========================================================= */
 
-function openExpenseForm() {
-  openModal(
-    "Add Expense",
+function renderExpenses() {
+  const node =
+    el("expenseTableBody");
 
-    `
-      <form id="expenseForm">
+  const todayExpenses =
+    DATA.expenses.filter(
+      e => sameDay(e.date)
+    );
 
-        <div class="form-grid">
+  const monthExpenses =
+    DATA.expenses.filter(
+      e => sameMonth(e.date)
+    );
 
-          <div class="form-group">
+  const yearExpenses =
+    DATA.expenses.filter(
+      e => sameYear(e.date)
+    );
 
-            <label>Expense Name</label>
-
-            <input
-              id="expenseName"
-              required
-              placeholder="Rent / Transport / Utility"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Amount</label>
-
-            <input
-              id="expenseAmount"
-              type="number"
-              min="0"
-              required
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Category</label>
-
-            <input
-              id="expenseCategory"
-              placeholder="Operating Expense"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Note</label>
-
-            <input
-              id="expenseNote"
-            >
-
-          </div>
-
-        </div>
-
-        <div class="modal-actions">
-
-          <button
-            type="button"
-            class="btn btn-secondary"
-            id="expenseCancelBtn"
-          >
-            Cancel
-          </button>
-
-          <button
-            type="submit"
-            class="btn btn-primary"
-          >
-            Save Expense
-          </button>
-
-        </div>
-
-      </form>
-    `
+  setText(
+    "expenseToday",
+    money(
+      todayExpenses.reduce(
+        (sum, e) =>
+          sum + number(e.amount),
+        0
+      )
+    )
   );
 
-  const form =
-    $("expenseForm");
+  setText(
+    "expenseMonth",
+    money(
+      monthExpenses.reduce(
+        (sum, e) =>
+          sum + number(e.amount),
+        0
+      )
+    )
+  );
 
-  if (form) {
-    form.addEventListener(
-      "submit",
-      function(event) {
-        event.preventDefault();
+  setText(
+    "expenseYear",
+    money(
+      yearExpenses.reduce(
+        (sum, e) =>
+          sum + number(e.amount),
+        0
+      )
+    )
+  );
 
-        saveExpense();
-      }
-    );
-  }
+  if (!node) return;
 
-  const cancel =
-    $("expenseCancelBtn");
-
-  if (cancel) {
-    cancel.addEventListener(
-      "click",
-      closeModal
-    );
-  }
-}
-
-
-function saveExpense() {
-  const name =
-    valueOf("expenseName")
-      .trim();
-
-  const amount =
-    number(
-      valueOf("expenseAmount")
-    );
-
-  if (!name || amount <= 0) {
-    showToast(
-      "Expense information ပြည့်စုံအောင်ထည့်ပါ",
-      "warning"
-    );
+  if (!DATA.expenses.length) {
+    node.innerHTML = `
+      <tr>
+        <td colspan="6">
+          <div class="empty-state">
+            No expenses
+          </div>
+        </td>
+      </tr>
+    `;
 
     return;
   }
 
-  DATA.expenses.push({
-    id: uid("exp"),
+  node.innerHTML =
+    DATA.expenses
+      .slice()
+      .sort(
+        (a,b) =>
+          new Date(b.date) -
+          new Date(a.date)
+      )
+      .map(e => `
+        <tr>
 
-    date: now(),
+          <td>
+            ${e.date
+              ? new Date(e.date)
+                  .toLocaleDateString()
+              : "-"}
+          </td>
 
-    name,
+          <td>
+            ${escapeHTML(e.category || "-")}
+          </td>
 
-    amount,
+          <td>
+            ${escapeHTML(e.description || "-")}
+          </td>
 
-    category:
-      valueOf(
-        "expenseCategory"
-      ).trim(),
+          <td>
+            ${money(e.amount)}
+          </td>
 
-    note:
-      valueOf(
-        "expenseNote"
-      ).trim()
-  });
+          <td>
+            ${escapeHTML(e.employee || "-")}
+          </td>
 
-  saveData();
+          <td>
 
-  closeModal();
+            <button
+              class="btn small danger"
+              onclick="deleteExpense('${e.id}')">
+              Delete
+            </button>
 
-  renderExpenses();
-  updateDashboard();
-  renderReports();
+          </td>
 
-  showToast(
-    "Expense saved"
+        </tr>
+      `).join("");
+}
+
+
+function expenseForm() {
+  return `
+    <form id="expenseForm">
+
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Category</label>
+
+          <input
+            id="f_expenseCategory"
+            placeholder="Rent / Transport / Salary">
+        </div>
+
+        <div class="form-group">
+          <label>Amount *</label>
+
+          <input
+            id="f_expenseAmount"
+            type="number"
+            min="0"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+
+          <textarea
+            id="f_expenseDescription"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Employee</label>
+
+          <input
+            id="f_expenseEmployee">
+        </div>
+
+      </div>
+
+      <div class="modal-actions">
+
+        <button
+          type="button"
+          class="btn"
+          onclick="closeModal()">
+          Cancel
+        </button>
+
+        <button
+          type="submit"
+          class="btn primary">
+          Save Expense
+        </button>
+
+      </div>
+
+    </form>
+  `;
+}
+
+
+function addExpense() {
+  openModal(
+    "Add Expense",
+    "Record business expense",
+    expenseForm()
+  );
+
+  const form =
+    el("expenseForm");
+
+  if (!form) return;
+
+  form.addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+      const amount =
+        number(
+          getValue("f_expenseAmount")
+        );
+
+      if (amount <= 0) {
+        showToast(
+          "Amount ထည့်ပါ",
+          "error"
+        );
+
+        return;
+      }
+
+      DATA.expenses.push({
+        id: uid("expense"),
+        date: now(),
+        category:
+          getValue("f_expenseCategory"),
+        amount,
+        description:
+          getValue("f_expenseDescription"),
+        employee:
+          getValue("f_expenseEmployee")
+      });
+
+      saveData();
+
+      closeModal();
+
+      renderExpenses();
+      updateDashboard();
+      renderReports();
+
+      showToast(
+        "Expense သိမ်းပြီးပါပြီ"
+      );
+    }
   );
 }
 
@@ -3829,7 +3162,7 @@ function saveExpense() {
 function deleteExpense(id) {
   if (
     !confirm(
-      "Delete expense?"
+      "ဒီ Expense ကို ဖျက်မလား?"
     )
   ) {
     return;
@@ -3847,75 +3180,27 @@ function deleteExpense(id) {
   renderReports();
 
   showToast(
-    "Expense deleted"
+    "Expense ဖျက်ပြီးပါပြီ"
   );
 }
 
 
-function renderExpenses() {
-  const body =
-    $("expenseTableBody");
+/* =========================================================
+   EMPLOYEES
+   ========================================================= */
 
-  if (!body) {
-    return;
-  }
+function renderEmployees() {
+  const node =
+    el("employeeTableBody");
 
-  const todayExpense =
-    DATA.expenses
-      .filter(e => sameDay(e.date))
-      .reduce(
-        (sum, e) =>
-          sum + number(e.amount),
-        0
-      );
+  if (!node) return;
 
-  const monthExpense =
-    DATA.expenses
-      .filter(e => sameMonth(e.date))
-      .reduce(
-        (sum, e) =>
-          sum + number(e.amount),
-        0
-      );
-
-  const yearExpense =
-    DATA.expenses
-      .filter(e => sameYear(e.date))
-      .reduce(
-        (sum, e) =>
-          sum + number(e.amount),
-        0
-      );
-
-  setText(
-    "expenseToday",
-    money(todayExpense)
-  );
-
-  setText(
-    "expenseMonth",
-    money(monthExpense)
-  );
-
-  setText(
-    "expenseYear",
-    money(yearExpense)
-  );
-
-  const expenses =
-    [...DATA.expenses]
-      .sort(
-        (a, b) =>
-          new Date(b.date || 0) -
-          new Date(a.date || 0)
-      );
-
-  if (!expenses.length) {
-    body.innerHTML = `
+  if (!DATA.employees.length) {
+    node.innerHTML = `
       <tr>
-        <td colspan="6">
+        <td colspan="7">
           <div class="empty-state">
-            No expenses
+            No employees
           </div>
         </td>
       </tr>
@@ -3924,48 +3209,41 @@ function renderExpenses() {
     return;
   }
 
-  body.innerHTML =
-    expenses.map(expense => `
+  node.innerHTML =
+    DATA.employees.map(e => `
       <tr>
 
         <td>
-          ${escapeHTML(
-            expense.date
-          )}
+          ${escapeHTML(e.name)}
         </td>
 
         <td>
-          ${escapeHTML(
-            expense.name
-          )}
+          ${escapeHTML(e.position || "-")}
         </td>
 
         <td>
-          ${escapeHTML(
-            expense.category ||
-            "-"
-          )}
+          ${escapeHTML(e.phone || "-")}
         </td>
 
         <td>
-          ${money(
-            expense.amount
-          )}
+          ${money(e.salary)}
         </td>
 
         <td>
-          ${escapeHTML(
-            expense.note ||
-            "-"
-          )}
+          ${escapeHTML(e.status || "Active")}
         </td>
 
         <td>
 
           <button
-            class="btn btn-sm btn-danger"
-            data-delete-expense="${expense.id}"
-          >
+            class="btn small"
+            onclick="editEmployee('${e.id}')">
+            Edit
+          </button>
+
+          <button
+            class="btn small danger"
+            onclick="deleteEmployee('${e.id}')">
             Delete
           </button>
 
@@ -3976,210 +3254,214 @@ function renderExpenses() {
 }
 
 
-/* =========================================================
-   EMPLOYEES
-   ========================================================= */
+function employeeForm(employee = {}) {
+  return `
+    <form id="employeeForm">
 
-function openEmployeeForm(employeeId = null) {
-  const employee =
-    employeeId
-      ? DATA.employees.find(
-          e => e.id === employeeId
-        )
-      : null;
+      <div class="form-grid">
 
-  openModal(
-    employee
-      ? "Edit Employee"
-      : "Add Employee",
+        <div class="form-group">
+          <label>Name *</label>
 
-    `
-      <form id="employeeForm">
+          <input
+            id="f_employeeName"
+            value="${escapeHTML(employee.name || "")}"
+            required>
+        </div>
 
-        <div class="form-grid">
+        <div class="form-group">
+          <label>Position</label>
 
-          <div class="form-group">
+          <input
+            id="f_employeePosition"
+            value="${escapeHTML(employee.position || "")}">
+        </div>
 
-            <label>Name</label>
+        <div class="form-group">
+          <label>Phone</label>
 
-            <input
-              id="employeeName"
-              required
-              value="${escapeHTML(
-                employee?.name || ""
-              )}"
-            >
+          <input
+            id="f_employeePhone"
+            value="${escapeHTML(employee.phone || "")}">
+        </div>
 
-          </div>
+        <div class="form-group">
+          <label>Monthly Salary</label>
 
-          <div class="form-group">
+          <input
+            id="f_employeeSalary"
+            type="number"
+            value="${number(employee.salary)}">
+        </div>
 
-            <label>Position</label>
+        <div class="form-group">
+          <label>Status</label>
 
-            <input
-              id="employeePosition"
-              value="${escapeHTML(
-                employee?.position || ""
-              )}"
-            >
+          <select id="f_employeeStatus">
 
-          </div>
+            <option value="Active">
+              Active
+            </option>
 
-          <div class="form-group">
+            <option value="Inactive">
+              Inactive
+            </option>
 
-            <label>Salary</label>
-
-            <input
-              id="employeeSalary"
-              type="number"
-              min="0"
-              value="${number(
-                employee?.salary
-              )}"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Phone</label>
-
-            <input
-              id="employeePhone"
-              value="${escapeHTML(
-                employee?.phone || ""
-              )}"
-            >
-
-          </div>
+          </select>
 
         </div>
 
-        <div class="modal-actions">
+      </div>
 
-          <button
-            type="button"
-            class="btn btn-secondary"
-            id="employeeCancelBtn"
-          >
-            Cancel
-          </button>
+      <div class="modal-actions">
 
-          <button
-            type="submit"
-            class="btn btn-primary"
-          >
-            Save Employee
-          </button>
+        <button
+          type="button"
+          class="btn"
+          onclick="closeModal()">
+          Cancel
+        </button>
 
-        </div>
+        <button
+          type="submit"
+          class="btn primary">
+          Save
+        </button>
 
-      </form>
-    `
-  );
+      </div>
 
-  const form =
-    $("employeeForm");
-
-  if (form) {
-    form.addEventListener(
-      "submit",
-      function(event) {
-        event.preventDefault();
-
-        saveEmployee(employeeId);
-      }
-    );
-  }
-
-  const cancel =
-    $("employeeCancelBtn");
-
-  if (cancel) {
-    cancel.addEventListener(
-      "click",
-      closeModal
-    );
-  }
+    </form>
+  `;
 }
 
 
-function saveEmployee(employeeId) {
-  const name =
-    valueOf("employeeName")
-      .trim();
+function addEmployee() {
+  openModal(
+    "Add Employee",
+    "Employee information",
+    employeeForm()
+  );
 
-  if (!name) {
-    showToast(
-      "Employee name ထည့်ပါ",
-      "warning"
-    );
+  const form =
+    el("employeeForm");
 
-    return;
-  }
+  if (!form) return;
 
-  const data = {
-    name,
+  form.addEventListener(
+    "submit",
+    function(event) {
 
-    position:
-      valueOf(
-        "employeePosition"
-      ).trim(),
+      event.preventDefault();
 
-    salary:
-      number(
-        valueOf("employeeSalary")
-      ),
+      const name =
+        getValue("f_employeeName")
+          .trim();
 
-    phone:
-      valueOf(
-        "employeePhone"
-      ).trim()
-  };
+      if (!name) {
+        showToast(
+          "Employee Name ထည့်ပါ",
+          "error"
+        );
 
-  if (employeeId) {
-    const employee =
-      DATA.employees.find(
-        e => e.id === employeeId
-      );
+        return;
+      }
 
-    if (employee) {
-      Object.assign(
-        employee,
-        data
+      DATA.employees.push({
+        id: uid("employee"),
+        name,
+        position:
+          getValue("f_employeePosition"),
+        phone:
+          getValue("f_employeePhone"),
+        salary:
+          number(
+            getValue("f_employeeSalary")
+          ),
+        status:
+          getValue("f_employeeStatus"),
+        createdAt: now()
+      });
+
+      saveData();
+
+      closeModal();
+
+      renderEmployees();
+
+      showToast(
+        "Employee ထည့်ပြီးပါပြီ"
       );
     }
+  );
+}
 
-    showToast(
-      "Employee updated"
+
+function editEmployee(id) {
+  const employee =
+    DATA.employees.find(
+      e => e.id === id
     );
-  } else {
-    DATA.employees.push({
-      id: uid("emp"),
-      createdAt: now(),
-      payments: [],
-      ...data
-    });
 
-    showToast(
-      "Employee added"
-    );
-  }
+  if (!employee) return;
 
-  saveData();
+  openModal(
+    "Edit Employee",
+    "Update employee",
+    employeeForm(employee)
+  );
 
-  closeModal();
+  setValue(
+    "f_employeeStatus",
+    employee.status || "Active"
+  );
 
-  renderEmployees();
-  renderExpenses();
-  updateDashboard();
+  const form =
+    el("employeeForm");
+
+  if (!form) return;
+
+  form.addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+      employee.name =
+        getValue("f_employeeName")
+          .trim();
+
+      employee.position =
+        getValue("f_employeePosition");
+
+      employee.phone =
+        getValue("f_employeePhone");
+
+      employee.salary =
+        number(
+          getValue("f_employeeSalary")
+        );
+
+      employee.status =
+        getValue("f_employeeStatus");
+
+      saveData();
+
+      closeModal();
+
+      renderEmployees();
+
+      showToast(
+        "Employee ပြင်ပြီးပါပြီ"
+      );
+    }
+  );
 }
 
 
 function deleteEmployee(id) {
   if (
     !confirm(
-      "Delete employee?"
+      "Employee ကို ဖျက်မလား?"
     )
   ) {
     return;
@@ -4195,98 +3477,8 @@ function deleteEmployee(id) {
   renderEmployees();
 
   showToast(
-    "Employee deleted"
+    "Employee ဖျက်ပြီးပါပြီ"
   );
-}
-
-
-function renderEmployees() {
-  const body =
-    $("employeeTableBody");
-
-  if (!body) {
-    return;
-  }
-
-  if (!DATA.employees.length) {
-    body.innerHTML = `
-      <tr>
-        <td colspan="6">
-          <div class="empty-state">
-            No employees
-          </div>
-        </td>
-      </tr>
-    `;
-
-    return;
-  }
-
-  body.innerHTML =
-    DATA.employees.map(
-      employee => `
-        <tr>
-
-          <td>
-            <strong>
-              ${escapeHTML(
-                employee.name
-              )}
-            </strong>
-          </td>
-
-          <td>
-            ${escapeHTML(
-              employee.position ||
-              "-"
-            )}
-          </td>
-
-          <td>
-            ${money(
-              employee.salary
-            )}
-          </td>
-
-          <td>
-            ${escapeHTML(
-              employee.phone ||
-              "-"
-            )}
-          </td>
-
-          <td>
-            ${escapeHTML(
-              employee.createdAt ||
-              ""
-            )}
-          </td>
-
-          <td>
-
-            <div class="table-actions">
-
-              <button
-                class="btn btn-sm btn-secondary"
-                data-edit-employee="${employee.id}"
-              >
-                Edit
-              </button>
-
-              <button
-                class="btn btn-sm btn-danger"
-                data-delete-employee="${employee.id}"
-              >
-                Delete
-              </button>
-
-            </div>
-
-          </td>
-
-        </tr>
-      `
-    ).join("");
 }
 
 
@@ -4294,117 +3486,101 @@ function renderEmployees() {
    REPORTS
    ========================================================= */
 
-function getReportRange(period) {
-  const todayDate =
-    new Date();
+function renderReports() {
+  const period =
+    getValue("reportPeriod") ||
+    "month";
 
-  const start =
-    new Date(todayDate);
+  let sales =
+    DATA.sales;
+
+  let purchases =
+    DATA.purchases;
+
+  let expenses =
+    DATA.expenses;
+
+  if (period === "today") {
+
+    sales =
+      sales.filter(
+        s => sameDay(s.date)
+      );
+
+    purchases =
+      purchases.filter(
+        p => sameDay(p.date)
+      );
+
+    expenses =
+      expenses.filter(
+        e => sameDay(e.date)
+      );
+
+  }
 
   if (period === "month") {
-    start.setDate(1);
+
+    sales =
+      sales.filter(
+        s => sameMonth(s.date)
+      );
+
+    purchases =
+      purchases.filter(
+        p => sameMonth(p.date)
+      );
+
+    expenses =
+      expenses.filter(
+        e => sameMonth(e.date)
+      );
+
   }
 
   if (period === "year") {
-    start.setMonth(0);
-    start.setDate(1);
+
+    sales =
+      sales.filter(
+        s => sameYear(s.date)
+      );
+
+    purchases =
+      purchases.filter(
+        p => sameYear(p.date)
+      );
+
+    expenses =
+      expenses.filter(
+        e => sameYear(e.date)
+      );
   }
-
-  start.setHours(
-    0, 0, 0, 0
-  );
-
-  return {
-    start,
-    end: todayDate
-  };
-}
-
-
-function renderReports() {
-  const period =
-    valueOf(
-      "reportPeriod",
-      "today"
-    );
-
-  const range =
-    getReportRange(period);
-
-  const sales =
-    DATA.sales.filter(
-      sale => {
-        const date =
-          new Date(
-            sale.date
-          );
-
-        return (
-          date >= range.start &&
-          date <= range.end
-        );
-      }
-    );
-
-  const purchases =
-    DATA.purchases.filter(
-      purchase => {
-        const date =
-          new Date(
-            purchase.date
-          );
-
-        return (
-          date >= range.start &&
-          date <= range.end
-        );
-      }
-    );
-
-  const expenses =
-    DATA.expenses.filter(
-      expense => {
-        const date =
-          new Date(
-            expense.date
-          );
-
-        return (
-          date >= range.start &&
-          date <= range.end
-        );
-      }
-    );
 
   const salesTotal =
     sales.reduce(
-      (sum, sale) =>
-        sum +
-        calculateSaleTotal(sale),
+      (sum, s) =>
+        sum + number(s.total),
       0
     );
 
   const purchaseTotal =
     purchases.reduce(
-      (sum, purchase) =>
-        sum +
-        number(purchase.total),
+      (sum, p) =>
+        sum + number(p.total),
       0
     );
 
   const expenseTotal =
     expenses.reduce(
-      (sum, expense) =>
-        sum +
-        number(expense.amount),
+      (sum, e) =>
+        sum + number(e.amount),
       0
     );
 
   const grossProfit =
     sales.reduce(
-      (sum, sale) =>
-        sum +
-        calculateSaleProfit(sale),
+      (sum, s) =>
+        sum + number(s.profit),
       0
     );
 
@@ -4432,61 +3608,50 @@ function renderReports() {
     money(netProfit)
   );
 
-  const salesSummary =
-    $("salesReportSummary");
-
-  if (salesSummary) {
-    salesSummary.innerHTML = `
-      <div class="report-row">
-        <span>Transactions</span>
-        <strong>
-          ${sales.length}
-        </strong>
-      </div>
-
-      <div class="report-row">
-        <span>Sales</span>
+  setHTML(
+    "salesReportSummary",
+    `
+      <div class="report-line">
+        <span>Total Sales</span>
         <strong>
           ${money(salesTotal)}
         </strong>
       </div>
 
-      <div class="report-row">
+      <div class="report-line">
+        <span>Transactions</span>
+        <strong>
+          ${sales.length}
+        </strong>
+      </div>
+    `
+  );
+
+  setHTML(
+    "profitReportSummary",
+    `
+      <div class="report-line">
         <span>Gross Profit</span>
         <strong>
           ${money(grossProfit)}
         </strong>
       </div>
-    `;
-  }
 
-  const profitSummary =
-    $("profitReportSummary");
-
-  if (profitSummary) {
-    profitSummary.innerHTML = `
-      <div class="report-row">
-        <span>Gross Profit</span>
-        <strong>
-          ${money(grossProfit)}
-        </strong>
-      </div>
-
-      <div class="report-row">
-        <span>Operating Expenses</span>
+      <div class="report-line">
+        <span>Expenses</span>
         <strong>
           ${money(expenseTotal)}
         </strong>
       </div>
 
-      <div class="report-row">
+      <div class="report-line">
         <span>Net Profit</span>
         <strong>
           ${money(netProfit)}
         </strong>
       </div>
-    `;
-  }
+    `
+  );
 }
 
 
@@ -4494,96 +3659,52 @@ function renderReports() {
    SETTINGS
    ========================================================= */
 
-function openShopSettings() {
+function shopSettings() {
   openModal(
     "Shop Settings",
-
+    "Business information",
     `
       <form id="shopSettingsForm">
 
         <div class="form-grid">
 
           <div class="form-group">
-
             <label>Shop Name</label>
 
             <input
-              id="shopNameSetting"
+              id="f_shopName"
               value="${escapeHTML(
                 DATA.settings.shopName
-              )}"
-              required
-            >
-
+              )}">
           </div>
 
           <div class="form-group">
-
             <label>Phone</label>
 
             <input
-              id="shopPhoneSetting"
+              id="f_shopPhone"
               value="${escapeHTML(
                 DATA.settings.phone
-              )}"
-            >
-
+              )}">
           </div>
 
           <div class="form-group">
-
             <label>Address</label>
 
-            <input
-              id="shopAddressSetting"
-              value="${escapeHTML(
+            <textarea
+              id="f_shopAddress">${escapeHTML(
                 DATA.settings.address
-              )}"
-            >
-
+              )}</textarea>
           </div>
 
           <div class="form-group">
-
             <label>Receipt Footer</label>
 
             <input
-              id="shopFooterSetting"
+              id="f_shopFooter"
               value="${escapeHTML(
                 DATA.settings.footer
-              )}"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Low Stock Alert</label>
-
-            <input
-              id="lowStockSetting"
-              type="number"
-              min="0"
-              value="${number(
-                DATA.settings.lowStockLimit
-              )}"
-            >
-
-          </div>
-
-          <div class="form-group">
-
-            <label>Expiry Warning Days</label>
-
-            <input
-              id="expiryWarningSetting"
-              type="number"
-              min="0"
-              value="${number(
-                DATA.settings.expiryWarningDays
-              )}"
-            >
-
+              )}">
           </div>
 
         </div>
@@ -4592,16 +3713,14 @@ function openShopSettings() {
 
           <button
             type="button"
-            class="btn btn-secondary"
-            id="shopSettingsCancel"
-          >
+            class="btn"
+            onclick="closeModal()">
             Cancel
           </button>
 
           <button
             type="submit"
-            class="btn btn-primary"
-          >
+            class="btn primary">
             Save Settings
           </button>
 
@@ -4612,156 +3731,146 @@ function openShopSettings() {
   );
 
   const form =
-    $("shopSettingsForm");
+    el("shopSettingsForm");
 
-  if (form) {
-    form.addEventListener(
-      "submit",
-      function(event) {
-        event.preventDefault();
+  if (!form) return;
 
-        DATA.settings.shopName =
-          valueOf(
-            "shopNameSetting"
-          ).trim() ||
-          "Aung POS Shop";
+  form.addEventListener(
+    "submit",
+    function(event) {
 
-        DATA.settings.phone =
-          valueOf(
-            "shopPhoneSetting"
-          ).trim();
+      event.preventDefault();
 
-        DATA.settings.address =
-          valueOf(
-            "shopAddressSetting"
-          ).trim();
+      DATA.settings.shopName =
+        getValue("f_shopName")
+          .trim() ||
+        "Aung POS";
 
-        DATA.settings.footer =
-          valueOf(
-            "shopFooterSetting"
-          ).trim();
+      DATA.settings.phone =
+        getValue("f_shopPhone");
 
-        DATA.settings.lowStockLimit =
-          number(
-            valueOf(
-              "lowStockSetting"
-            )
-          );
+      DATA.settings.address =
+        getValue("f_shopAddress");
 
-        DATA.settings.expiryWarningDays =
-          number(
-            valueOf(
-              "expiryWarningSetting"
-            )
-          );
+      DATA.settings.footer =
+        getValue("f_shopFooter");
 
-        saveData();
+      saveData();
 
-        closeModal();
+      closeModal();
 
-        updateDashboard();
-        renderProducts();
-        renderStock();
+      updateDashboard();
 
-        showToast(
-          "Shop settings saved"
-        );
-      }
-    );
-  }
-
-  const cancel =
-    $("shopSettingsCancel");
-
-  if (cancel) {
-    cancel.addEventListener(
-      "click",
-      closeModal
-    );
-  }
+      showToast(
+        "Shop Settings သိမ်းပြီးပါပြီ"
+      );
+    }
+  );
 }
 
 
-function openReceiptSettings() {
+function receiptSettings() {
   openModal(
     "Receipt Settings",
-
+    "Customize receipt",
     `
-      <div class="form-group">
+      <form id="receiptSettingsForm">
 
-        <label>
-          Receipt Font Size
-        </label>
+        <div class="form-group">
 
-        <input
-          id="receiptFontSize"
-          type="number"
-          min="8"
-          max="30"
-          value="${number(
-            DATA.settings.receiptFontSize
-          )}"
-        >
+          <label>
+            Receipt Font Size
+          </label>
+
+          <input
+            id="f_receiptFont"
+            type="number"
+            min="8"
+            max="30"
+            value="${number(
+              DATA.settings.receiptFontSize
+            ) || 14}">
+
+        </div>
+
+        <div class="modal-actions">
+
+          <button
+            type="button"
+            class="btn"
+            onclick="closeModal()">
+            Cancel
+          </button>
+
+          <button
+            type="submit"
+            class="btn primary">
+            Save
+          </button>
+
+        </div>
+
+      </form>
+    `
+  );
+
+  const form =
+    el("receiptSettingsForm");
+
+  if (!form) return;
+
+  form.addEventListener(
+    "submit",
+    function(event) {
+
+      event.preventDefault();
+
+      DATA.settings.receiptFontSize =
+        number(
+          getValue("f_receiptFont")
+        ) || 14;
+
+      saveData();
+
+      closeModal();
+
+      showToast(
+        "Receipt Settings သိမ်းပြီးပါပြီ"
+      );
+    }
+  );
+}
+
+
+function userSettings() {
+  openModal(
+    "User Settings",
+    "POS account settings",
+    `
+      <div class="settings-info">
+
+        <h3>
+          Aung POS
+        </h3>
+
+        <p>
+          Current local user
+        </p>
+
+        <p>
+          Data is stored securely
+          in this device browser.
+        </p>
 
       </div>
 
       <div class="modal-actions">
 
         <button
-          class="btn btn-primary"
-          id="saveReceiptSettings"
-        >
-          Save
+          class="btn primary"
+          onclick="closeModal()">
+          Close
         </button>
-
-      </div>
-    `
-  );
-
-  const button =
-    $("saveReceiptSettings");
-
-  if (button) {
-    button.addEventListener(
-      "click",
-      function() {
-
-        DATA.settings.receiptFontSize =
-          number(
-            valueOf(
-              "receiptFontSize"
-            )
-          ) || 14;
-
-        saveData();
-
-        closeModal();
-
-        showToast(
-          "Receipt settings saved"
-        );
-      }
-    );
-  }
-}
-
-
-function openUserSettings() {
-  openModal(
-    "User Settings",
-
-    `
-      <div class="empty-state">
-
-        <h3>
-          Aung POS User
-        </h3>
-
-        <p>
-          User account management
-          will be connected in the
-          next version.
-        </p>
 
       </div>
     `
@@ -4775,7 +3884,8 @@ function openUserSettings() {
 
 function backupData() {
   try {
-    const json =
+
+    const backup =
       JSON.stringify(
         DATA,
         null,
@@ -4784,7 +3894,7 @@ function backupData() {
 
     const blob =
       new Blob(
-        [json],
+        [backup],
         {
           type:
             "application/json"
@@ -4792,44 +3902,36 @@ function backupData() {
       );
 
     const url =
-      URL.createObjectURL(
-        blob
-      );
+      URL.createObjectURL(blob);
 
     const link =
-      document.createElement(
-        "a"
-      );
+      document.createElement("a");
 
     link.href = url;
 
     link.download =
-      `aung-pos-backup-${today()}.json`;
+      "aung-pos-backup-" +
+      today() +
+      ".json";
 
-    document.body.appendChild(
-      link
-    );
+    document.body.appendChild(link);
 
     link.click();
 
     link.remove();
 
-    URL.revokeObjectURL(
-      url
-    );
+    URL.revokeObjectURL(url);
 
     showToast(
-      "Backup downloaded"
+      "Backup file ထုတ်ပြီးပါပြီ"
     );
 
   } catch (error) {
-    console.error(
-      "Backup Error:",
-      error
-    );
+
+    console.error(error);
 
     showToast(
-      "Backup Error",
+      "Backup မလုပ်နိုင်ပါ",
       "error"
     );
   }
@@ -4841,21 +3943,21 @@ function backupData() {
    ========================================================= */
 
 function clearAllData() {
+
+  const answer =
+    prompt(
+      "Data အားလုံးဖျက်ရန် DELETE ဟုရေးပါ"
+    );
+
   if (
-    !confirm(
-      "WARNING!\n\nAll POS data will be deleted.\n\nContinue?"
-    )
+    answer !== "DELETE"
   ) {
     return;
   }
 
-  if (
-    !confirm(
-      "Are you REALLY sure?"
-    )
-  ) {
-    return;
-  }
+  localStorage.removeItem(
+    STORAGE_KEY
+  );
 
   DATA =
     structuredClone(
@@ -4864,14 +3966,10 @@ function clearAllData() {
 
   saveData();
 
-  renderAll();
-
-  showPage(
-    "dashboard"
-  );
+  refreshAll();
 
   showToast(
-    "All data cleared"
+    "Data အားလုံး reset လုပ်ပြီးပါပြီ"
   );
 }
 
@@ -4883,414 +3981,581 @@ function clearAllData() {
 function newSale() {
   DATA.cart = [];
 
-  DATA.paymentMethod =
-    "cash";
+  DATA.paymentMethod = "cash";
 
   saveData();
 
-  renderCart();
-
   setValue(
     "saleDiscount",
-    "0"
+    ""
   );
 
-  updateCustomerSelect();
-
-  renderPOSProducts();
-
-  setPaymentMethod(
-    "cash"
+  setValue(
+    "saleCustomer",
+    ""
   );
 
-  showPage(
-    "sales"
+  setValue(
+    "saleCustomerId",
+    ""
   );
-}
-
-
-/* =========================================================
-   EVENT DELEGATION
-   ========================================================= */
-
-document.addEventListener(
-  "click",
-  function(event) {
-
-    const target =
-      event.target.closest(
-        "[data-page]"
-      );
-
-    if (
-      target &&
-      target.hasAttribute(
-        "data-page"
-      )
-    ) {
-      event.preventDefault();
-
-      const page =
-        target.getAttribute(
-          "data-page"
-        );
-
-      if (page) {
-        showPage(page);
-      }
-
-      return;
-    }
-
-    const addCart =
-      event.target.closest(
-        "[data-add-to-cart]"
-      );
-
-    if (addCart) {
-      event.preventDefault();
-
-      addToCart(
-        addCart.getAttribute(
-          "data-add-to-cart"
-        )
-      );
-
-      return;
-    }
-
-    const cartMinus =
-      event.target.closest(
-        "[data-cart-minus]"
-      );
-
-    if (cartMinus) {
-      event.preventDefault();
-
-      changeCartQty(
-        cartMinus.getAttribute(
-          "data-cart-minus"
-        ),
-        -1
-      );
-
-      return;
-    }
-
-    const cartPlus =
-      event.target.closest(
-        "[data-cart-plus]"
-      );
-
-    if (cartPlus) {
-      event.preventDefault();
-
-      changeCartQty(
-        cartPlus.getAttribute(
-          "data-cart-plus"
-        ),
-        1
-      );
-
-      return;
-    }
-
-    const cartRemove =
-      event.target.closest(
-        "[data-cart-remove]"
-      );
-
-    if (cartRemove) {
-      event.preventDefault();
-
-      removeFromCart(
-        cartRemove.getAttribute(
-          "data-cart-remove"
-        )
-      );
-
-      return;
-    }
-
-    const editProduct =
-      event.target.closest(
-        "[data-edit-product]"
-      );
-
-    if (editProduct) {
-      openProductForm(
-        editProduct.getAttribute(
-          "data-edit-product"
-        )
-      );
-
-      return;
-    }
-
-    const deleteProductBtn =
-      event.target.closest(
-        "[data-delete-product]"
-      );
-
-    if (deleteProductBtn) {
-      deleteProduct(
-        deleteProductBtn.getAttribute(
-          "data-delete-product"
-        )
-      );
-
-      return;
-    }
-
-    const stockAdjust =
-      event.target.closest(
-        "[data-stock-adjust]"
-      );
-
-    if (stockAdjust) {
-      openStockAdjustment(
-        stockAdjust.getAttribute(
-          "data-stock-adjust"
-        )
-      );
-
-      return;
-    }
-
-    const editCustomer =
-      event.target.closest(
-        "[data-edit-customer]"
-      );
-
-    if (editCustomer) {
-      openCustomerForm(
-        editCustomer.getAttribute(
-          "data-edit-customer"
-        )
-      );
-
-      return;
-    }
-
-    const deleteCustomerBtn =
-      event.target.closest(
-        "[data-delete-customer]"
-      );
-
-    if (deleteCustomerBtn) {
-      deleteCustomer(
-        deleteCustomerBtn.getAttribute(
-          "data-delete-customer"
-        )
-      );
-
-      return;
-    }
-
-    const editSupplier =
-      event.target.closest(
-        "[data-edit-supplier]"
-      );
-
-    if (editSupplier) {
-      openSupplierForm(
-        editSupplier.getAttribute(
-          "data-edit-supplier"
-        )
-      );
-
-      return;
-    }
-
-    const deleteSupplierBtn =
-      event.target.closest(
-        "[data-delete-supplier]"
-      );
-
-    if (deleteSupplierBtn) {
-      deleteSupplier(
-        deleteSupplierBtn.getAttribute(
-          "data-delete-supplier"
-        )
-      );
-
-      return;
-    }
-
-    const deleteExpenseBtn =
-      event.target.closest(
-        "[data-delete-expense]"
-      );
-
-    if (deleteExpenseBtn) {
-      deleteExpense(
-        deleteExpenseBtn.getAttribute(
-          "data-delete-expense"
-        )
-      );
-
-      return;
-    }
-
-    const editEmployee =
-      event.target.closest(
-        "[data-edit-employee]"
-      );
-
-    if (editEmployee) {
-      openEmployeeForm(
-        editEmployee.getAttribute(
-          "data-edit-employee"
-        )
-      );
-
-      return;
-    }
-
-    const deleteEmployeeBtn =
-      event.target.closest(
-        "[data-delete-employee]"
-      );
-
-    if (deleteEmployeeBtn) {
-      deleteEmployee(
-        deleteEmployeeBtn.getAttribute(
-          "data-delete-employee"
-        )
-      );
-
-      return;
-    }
-
-    const payment =
-      event.target.closest(
-        "[data-payment]"
-      );
-
-    if (payment) {
-      event.preventDefault();
-
-      setPaymentMethod(
-        payment.getAttribute(
-          "data-payment"
-        )
-      );
-
-      return;
-    }
-
-  }
-);
-
-
-/* =========================================================
-   BUTTON LISTENERS
-   ========================================================= */
-
-function setupButton(id, callback) {
-  const button = $(id);
-
-  if (!button) {
-    return;
-  }
-
-  button.addEventListener(
-    "click",
-    function(event) {
-      event.preventDefault();
-
-      try {
-        callback();
-      } catch (error) {
-        console.error(
-          `${id} Error:`,
-          error
-        );
-
-        showToast(
-          "Action Error",
-          "error"
-        );
-      }
-    }
-  );
-}
-
-
-/* =========================================================
-   SEARCH / FILTER LISTENERS
-   ========================================================= */
-
-function setupInput(id, callback) {
-  const node = $(id);
-
-  if (!node) {
-    return;
-  }
-
-  node.addEventListener(
-    "input",
-    callback
-  );
-
-  node.addEventListener(
-    "change",
-    callback
-  );
-}
-
-
-/* =========================================================
-   RENDER ALL
-   ========================================================= */
-
-function renderAll() {
-  updateDashboard();
-
-  renderProducts();
-
-  renderPOSProducts();
 
   renderCart();
 
-  renderPurchases();
-
-  renderStock();
-
-  renderCustomers();
-
-  renderSuppliers();
-
-  renderDebts();
-
-  renderExpenses();
-
-  renderEmployees();
-
-  renderReports();
-
-  updateCustomerSelect();
-
-  updateProductCategories();
-
-  updateSalesCategories();
+  showPage("sales");
 }
 
 
-function refreshPage(page) {
-  switch (page) {
+/* =========================================================
+   PAYMENT
+   ========================================================= */
+
+function setupPaymentButtons() {
+
+  const buttons =
+    $$("[data-payment]");
+
+  buttons.forEach(button => {
+
+    button.addEventListener(
+      "click",
+      function() {
+
+        buttons.forEach(b =>
+          b.classList.remove(
+            "active"
+          )
+        );
+
+        button.classList.add(
+          "active"
+        );
+
+        DATA.paymentMethod =
+          button.dataset.payment;
+
+        saveData();
+      }
+    );
+
+  });
+}
+
+
+/* =========================================================
+   EVENT LISTENERS
+   ========================================================= */
+
+function setupEvents() {
+
+  /* Navigation */
+
+  $$(
+    ".nav-item, .menu-item, .nav-btn, [data-page]"
+  ).forEach(button => {
+
+    button.addEventListener(
+      "click",
+      function(event) {
+
+        event.preventDefault();
+
+        const page =
+          button.dataset.page;
+
+        if (page) {
+          showPage(page);
+        }
+      }
+    );
+
+  });
+
+
+  /* Modal */
+
+  const closeButton =
+    el("modalClose");
+
+  if (closeButton) {
+    closeButton.addEventListener(
+      "click",
+      closeModal
+    );
+  }
+
+  const overlay =
+    el("modalOverlay");
+
+  if (overlay) {
+
+    overlay.addEventListener(
+      "click",
+      function(event) {
+
+        if (
+          event.target ===
+          overlay
+        ) {
+          closeModal();
+        }
+
+      }
+    );
+
+  }
+
+
+  /* Add buttons */
+
+  const addProductBtn =
+    el("addProductBtn");
+
+  if (addProductBtn) {
+    addProductBtn.addEventListener(
+      "click",
+      addProduct
+    );
+  }
+
+
+  const addCustomerBtn =
+    el("addCustomerBtn");
+
+  if (addCustomerBtn) {
+    addCustomerBtn.addEventListener(
+      "click",
+      addCustomer
+    );
+  }
+
+
+  const addSupplierBtn =
+    el("addSupplierBtn");
+
+  if (addSupplierBtn) {
+    addSupplierBtn.addEventListener(
+      "click",
+      addSupplier
+    );
+  }
+
+
+  const addExpenseBtn =
+    el("addExpenseBtn");
+
+  if (addExpenseBtn) {
+    addExpenseBtn.addEventListener(
+      "click",
+      addExpense
+    );
+  }
+
+
+  const addEmployeeBtn =
+    el("addEmployeeBtn");
+
+  if (addEmployeeBtn) {
+    addEmployeeBtn.addEventListener(
+      "click",
+      addEmployee
+    );
+  }
+
+
+  const newPurchaseBtn =
+    el("newPurchaseBtn");
+
+  if (newPurchaseBtn) {
+    newPurchaseBtn.addEventListener(
+      "click",
+      addPurchase
+    );
+  }
+
+
+  const stockAdjustmentBtn =
+    el("stockAdjustmentBtn");
+
+  if (stockAdjustmentBtn) {
+    stockAdjustmentBtn.addEventListener(
+      "click",
+      function() {
+
+        if (!DATA.products.length) {
+          showToast(
+            "Product မရှိသေးပါ",
+            "error"
+          );
+
+          return;
+        }
+
+        adjustStock(
+          DATA.products[0].id
+        );
+      }
+    );
+  }
+
+
+  /* Settings */
+
+  const shopSettingsBtn =
+    el("shopSettingsBtn");
+
+  if (shopSettingsBtn) {
+    shopSettingsBtn.addEventListener(
+      "click",
+      shopSettings
+    );
+  }
+
+
+  const receiptSettingsBtn =
+    el("receiptSettingsBtn");
+
+  if (receiptSettingsBtn) {
+    receiptSettingsBtn.addEventListener(
+      "click",
+      receiptSettings
+    );
+  }
+
+
+  const userSettingsBtn =
+    el("userSettingsBtn");
+
+  if (userSettingsBtn) {
+    userSettingsBtn.addEventListener(
+      "click",
+      userSettings
+    );
+  }
+
+
+  const backupBtn =
+    el("backupBtn");
+
+  if (backupBtn) {
+    backupBtn.addEventListener(
+      "click",
+      backupData
+    );
+  }
+
+
+  const clearDataBtn =
+    el("clearDataBtn");
+
+  if (clearDataBtn) {
+    clearDataBtn.addEventListener(
+      "click",
+      clearAllData
+    );
+  }
+
+
+  /* New Sale */
+
+  const newSaleBtn =
+    el("newSaleBtn");
+
+  if (newSaleBtn) {
+    newSaleBtn.addEventListener(
+      "click",
+      newSale
+    );
+  }
+
+
+  /* Clear Cart */
+
+  const clearCartBtn =
+    el("clearCartBtn");
+
+  if (clearCartBtn) {
+    clearCartBtn.addEventListener(
+      "click",
+      clearCart
+    );
+  }
+
+
+  /* Checkout */
+
+  const checkoutBtn =
+    el("checkoutBtn");
+
+  if (checkoutBtn) {
+    checkoutBtn.addEventListener(
+      "click",
+      checkout
+    );
+  }
+
+
+  /* Search */
+
+  const productSearch =
+    el("productSearch");
+
+  if (productSearch) {
+
+    productSearch.addEventListener(
+      "input",
+      renderProducts
+    );
+
+  }
+
+
+  const productCategoryFilter =
+    el("productCategoryFilter");
+
+  if (productCategoryFilter) {
+
+    productCategoryFilter.addEventListener(
+      "change",
+      renderProducts
+    );
+
+  }
+
+
+  const stockFilter =
+    el("stockFilter");
+
+  if (stockFilter) {
+
+    stockFilter.addEventListener(
+      "change",
+      renderProducts
+    );
+
+  }
+
+
+  const salesSearch =
+    el("salesSearch");
+
+  if (salesSearch) {
+
+    salesSearch.addEventListener(
+      "input",
+      renderSalesProducts
+    );
+
+  }
+
+
+  const salesCategory =
+    el("salesCategory");
+
+  if (salesCategory) {
+
+    salesCategory.addEventListener(
+      "change",
+      renderSalesProducts
+    );
+
+  }
+
+
+  const customerSearch =
+    el("customerSearch");
+
+  if (customerSearch) {
+
+    customerSearch.addEventListener(
+      "input",
+      renderCustomers
+    );
+
+  }
+
+
+  const saleDiscount =
+    el("saleDiscount");
+
+  if (saleDiscount) {
+
+    saleDiscount.addEventListener(
+      "input",
+      renderCart
+    );
+
+  }
+
+
+  /* Reports */
+
+  const reportPeriod =
+    el("reportPeriod");
+
+  if (reportPeriod) {
+
+    reportPeriod.addEventListener(
+      "change",
+      renderReports
+    );
+
+  }
+
+
+  setupPaymentButtons();
+
+  setupMobileMenu();
+}
+
+
+/* =========================================================
+   CATEGORY OPTIONS
+   ========================================================= */
+
+function populateCategories() {
+
+  const categories =
+    [
+      ...new Set(
+        DATA.products
+          .map(p => p.category)
+          .filter(Boolean)
+      )
+    ];
+
+  const selects =
+    [
+      el("productCategoryFilter"),
+      el("salesCategory")
+    ];
+
+  selects.forEach(select => {
+
+    if (!select) return;
+
+    const current =
+      select.value;
+
+    select.innerHTML =
+      `<option value="">
+        All Categories
+       </option>` +
+      categories.map(
+        category =>
+          `<option value="${escapeHTML(
+            category
+          )}">
+            ${escapeHTML(category)}
+           </option>`
+      ).join("");
+
+    select.value =
+      current;
+  });
+}
+
+
+/* =========================================================
+   CUSTOMER SALES SELECT
+   ========================================================= */
+
+function populateSalesCustomers() {
+
+  const select =
+    el("saleCustomer");
+
+  if (!select) return;
+
+  if (
+    select.tagName !==
+    "SELECT"
+  ) {
+    return;
+  }
+
+  select.innerHTML =
+    `
+      <option value="">
+        Walk-in Customer
+      </option>
+    ` +
+    DATA.customers.map(
+      customer =>
+        `
+        <option
+          value="${customer.id}">
+          ${escapeHTML(customer.name)}
+        </option>
+        `
+    ).join("");
+}
+
+
+/* =========================================================
+   REFRESH
+   ========================================================= */
+
+function refreshAll() {
+
+  try {
+
+    populateCategories();
+
+    populateSalesCustomers();
+
+    updateDashboard();
+
+    renderProducts();
+
+    renderSalesProducts();
+
+    renderCart();
+
+    renderPurchases();
+
+    renderStock();
+
+    renderCustomers();
+
+    renderSuppliers();
+
+    renderDebts();
+
+    renderExpenses();
+
+    renderEmployees();
+
+    renderReports();
+
+  } catch (error) {
+
+    console.error(
+      "Refresh error:",
+      error
+    );
+
+  }
+}
+
+
+function refreshPage(pageName) {
+
+  switch (pageName) {
 
     case "dashboard":
       updateDashboard();
       break;
 
     case "sales":
-      renderPOSProducts();
+      populateCategories();
+      populateSalesCustomers();
+      renderSalesProducts();
       renderCart();
-      updateCustomerSelect();
       break;
 
     case "products":
+      populateCategories();
       renderProducts();
       break;
 
@@ -5330,311 +4595,107 @@ function refreshPage(page) {
       updateDashboard();
       break;
 
+    default:
+      refreshAll();
   }
 }
 
 
 /* =========================================================
-   INITIALIZATION
+   START APP
    ========================================================= */
 
-function initializeAungPOS() {
+document.addEventListener(
+  "DOMContentLoaded",
+  function() {
 
-  console.log(
-    "Aung POS starting..."
-  );
-
-  /* Modal close */
-  setupButton(
-    "modalClose",
-    closeModal
-  );
-
-  const overlay =
-    $("modalOverlay");
-
-  if (overlay) {
-    overlay.addEventListener(
-      "click",
-      function(event) {
-        if (
-          event.target === overlay
-        ) {
-          closeModal();
-        }
-      }
+    console.log(
+      "Aung POS V2.0 Loaded"
     );
-  }
 
-  /* Mobile menu */
-  setupButton(
-    "mobileMenu",
-    toggleMobileMenu
-  );
+    try {
 
-  setupButton(
-    "menuToggle",
-    toggleMobileMenu
-  );
+      setupEvents();
 
-  /* Product */
-  setupButton(
-    "addProductBtn",
-    () =>
-      openProductForm()
-  );
+      refreshAll();
 
-  /* Purchase */
-  setupButton(
-    "newPurchaseBtn",
-    openPurchaseForm
-  );
+      showPage("dashboard");
 
-  /* Stock */
-  setupButton(
-    "stockAdjustmentBtn",
-    function() {
+      console.log(
+        "Aung POS Ready"
+      );
 
-      if (!DATA.products.length) {
-        showToast(
-          "Product မရှိသေးပါ",
-          "warning"
-        );
+    } catch (error) {
 
-        return;
-      }
+      console.error(
+        "Aung POS Startup Error:",
+        error
+      );
 
-      openStockAdjustment(
-        DATA.products[0].id
+      showToast(
+        "App စတင်ရာတွင် Error ဖြစ်နေပါသည်",
+        "error"
       );
     }
-  );
 
-  /* Customer */
-  setupButton(
-    "addCustomerBtn",
-    () =>
-      openCustomerForm()
-  );
-
-  /* Supplier */
-  setupButton(
-    "addSupplierBtn",
-    () =>
-      openSupplierForm()
-  );
-
-  /* Expense */
-  setupButton(
-    "addExpenseBtn",
-    openExpenseForm
-  );
-
-  /* Employee */
-  setupButton(
-    "addEmployeeBtn",
-    () =>
-      openEmployeeForm()
-  );
-
-  /* Shop settings */
-  setupButton(
-    "shopSettingsBtn",
-    openShopSettings
-  );
-
-  setupButton(
-    "receiptSettingsBtn",
-    openReceiptSettings
-  );
-
-  setupButton(
-    "userSettingsBtn",
-    openUserSettings
-  );
-
-  setupButton(
-    "backupBtn",
-    backupData
-  );
-
-  setupButton(
-    "clearDataBtn",
-    clearAllData
-  );
-
-  /* Sales */
-  setupButton(
-    "checkoutBtn",
-    checkout
-  );
-
-  setupButton(
-    "clearCartBtn",
-    clearCart
-  );
-
-  setupButton(
-    "newSaleBtn",
-    newSale
-  );
-
-  /* Search */
-  setupInput(
-    "productSearch",
-    renderProducts
-  );
-
-  setupInput(
-    "productCategoryFilter",
-    renderProducts
-  );
-
-  setupInput(
-    "stockFilter",
-    renderProducts
-  );
-
-  setupInput(
-    "salesSearch",
-    renderPOSProducts
-  );
-
-  setupInput(
-    "salesCategory",
-    renderPOSProducts
-  );
-
-  setupInput(
-    "customerSearch",
-    renderCustomers
-  );
-
-  setupInput(
-    "saleDiscount",
-    renderCart
-  );
-
-  setupInput(
-    "reportPeriod",
-    renderReports
-  );
-
-  /* Initial rendering */
-  renderAll();
-
-  /* Default page */
-  showPage(
-    "dashboard"
-  );
-
-  console.log(
-    "Aung POS ready."
-  );
-}
-
-
-/* =========================================================
-   START
-   ========================================================= */
-
-if (
-  document.readyState ===
-  "loading"
-) {
-
-  document.addEventListener(
-    "DOMContentLoaded",
-    function() {
-
-      try {
-        initializeAungPOS();
-
-      } catch (error) {
-
-        console.error(
-          "Aung POS Startup Error:",
-          error
-        );
-
-        showToast(
-          "Aung POS စတင်ရာတွင် Error ဖြစ်နေပါသည်",
-          "error"
-        );
-      }
-
-    }
-  );
-
-} else {
-
-  try {
-    initializeAungPOS();
-
-  } catch (error) {
-
-    console.error(
-      "Aung POS Startup Error:",
-      error
-    );
-
-    showToast(
-      "Aung POS စတင်ရာတွင် Error ဖြစ်နေပါသည်",
-      "error"
-    );
   }
-}
+);
 
 
 /* =========================================================
-   DEBUG / GLOBAL API
+   GLOBAL API
    ========================================================= */
 
 window.AungPOS = {
 
-  data: DATA,
+  data: () => DATA,
 
   save: saveData,
 
-  reload: function() {
-    DATA = loadData();
-    renderAll();
-  },
+  refresh: refreshAll,
 
-  reset: function() {
-    DATA =
-      structuredClone(
-        DEFAULT_DATA
-      );
+  page: showPage,
 
-    saveData();
+  addProduct,
 
-    renderAll();
+  editProduct,
 
-    showPage(
-      "dashboard"
-    );
-  },
+  deleteProduct,
 
-  showPage,
+  addCustomer,
 
-  addProduct:
-    openProductForm,
+  editCustomer,
 
-  addCustomer:
-    openCustomerForm,
+  deleteCustomer,
 
-  addSupplier:
-    openSupplierForm,
+  addSupplier,
 
-  addExpense:
-    openExpenseForm,
+  editSupplier,
 
-  addEmployee:
-    openEmployeeForm
+  deleteSupplier,
+
+  addExpense,
+
+  deleteExpense,
+
+  addEmployee,
+
+  editEmployee,
+
+  deleteEmployee,
+
+  addPurchase,
+
+  adjustStock,
+
+  newSale,
+
+  clearCart,
+
+  checkout,
+
+  backupData,
+
+  clearAllData
 
 };
-
-console.log(
-  "Aung POS app.js loaded successfully."
-);
