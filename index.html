@@ -2,773 +2,1709 @@
 <html lang="my">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<meta name="theme-color" content="#0f172a">
-<title>Aung POS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#111827">
+<title>Aung POS Professional V2</title>
 
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+:root{
+  --primary:#111827;
+  --secondary:#2563eb;
+  --success:#16a34a;
+  --danger:#dc2626;
+  --warning:#d97706;
+  --bg:#f3f4f6;
+  --card:#ffffff;
+  --text:#111827;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+}
+
 body{
   font-family:Arial,"Noto Sans Myanmar",sans-serif;
-  background:#f1f5f9;color:#0f172a;
+  background:var(--bg);
+  color:var(--text);
 }
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-.app{display:flex;min-height:100vh}
+
+button,input,select,textarea{
+  font:inherit;
+}
+
+button{
+  cursor:pointer;
+}
+
+.app{
+  display:flex;
+  min-height:100vh;
+}
 
 /* SIDEBAR */
 .sidebar{
-  width:245px;background:#0f172a;color:#fff;
-  position:fixed;left:0;top:0;bottom:0;
-  overflow-y:auto;z-index:100;
+  width:250px;
+  background:#111827;
+  color:white;
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  overflow-y:auto;
+  z-index:1000;
 }
+
 .logo{
-  padding:22px 18px;border-bottom:1px solid #263449;
+  padding:22px 18px;
+  border-bottom:1px solid rgba(255,255,255,.1);
 }
-.logo h1{font-size:23px}
-.logo p{font-size:12px;color:#94a3b8;margin-top:5px}
-.nav{padding:12px}
-.nav button{
-  width:100%;border:0;background:transparent;color:#cbd5e1;
-  padding:12px 14px;border-radius:9px;text-align:left;
-  margin-bottom:4px;font-size:14px;
+
+.logo h1{
+  font-size:22px;
 }
-.nav button:hover,.nav button.active{
-  background:#2563eb;color:#fff;
+
+.logo p{
+  color:#9ca3af;
+  font-size:12px;
+  margin-top:5px;
 }
+
+.user-box{
+  padding:16px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+
+.user-name{
+  font-weight:bold;
+}
+
+.user-role{
+  font-size:12px;
+  color:#9ca3af;
+  margin-top:4px;
+}
+
 .nav-title{
-  color:#64748b;font-size:11px;font-weight:bold;
-  padding:16px 12px 7px;text-transform:uppercase;
+  color:#6b7280;
+  font-size:11px;
+  padding:18px 16px 7px;
+  text-transform:uppercase;
+}
+
+.nav-btn{
+  width:100%;
+  border:0;
+  background:transparent;
+  color:#d1d5db;
+  text-align:left;
+  padding:12px 17px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-size:14px;
+}
+
+.nav-btn:hover,
+.nav-btn.active{
+  background:#1f2937;
+  color:white;
+}
+
+.nav-icon{
+  width:22px;
+  text-align:center;
 }
 
 /* MAIN */
-.main{margin-left:245px;width:calc(100% - 245px);min-height:100vh}
-.topbar{
-  height:68px;background:#fff;border-bottom:1px solid #e2e8f0;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:0 25px;position:sticky;top:0;z-index:50;
+.main{
+  margin-left:250px;
+  width:calc(100% - 250px);
+  min-height:100vh;
 }
-.topbar h2{font-size:20px}
-.shop-badge{
-  background:#eff6ff;color:#2563eb;padding:8px 12px;
-  border-radius:20px;font-size:13px;
-}
-.content{padding:24px}
 
-/* PAGES */
-.page{display:none}
-.page.active{display:block}
-.page-head{
-  display:flex;justify-content:space-between;align-items:center;
-  margin-bottom:20px;gap:12px;flex-wrap:wrap;
+.topbar{
+  height:65px;
+  background:white;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 25px;
+  position:sticky;
+  top:0;
+  z-index:500;
 }
-.page-head h2{font-size:23px}
-.page-head p{color:#64748b;font-size:13px;margin-top:5px}
+
+.topbar h2{
+  font-size:20px;
+}
+
+.menu-btn{
+  display:none;
+  border:0;
+  background:#111827;
+  color:white;
+  padding:9px 12px;
+  border-radius:8px;
+}
+
+.content{
+  padding:24px;
+}
+
+/* SECTIONS */
+.section{
+  display:none;
+}
+
+.section.active{
+  display:block;
+}
+
+/* CARDS */
+.stats-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px;
+}
+
+.stat-card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+  box-shadow:0 2px 8px rgba(0,0,0,.03);
+}
+
+.stat-label{
+  color:var(--muted);
+  font-size:13px;
+}
+
+.stat-value{
+  font-size:24px;
+  font-weight:bold;
+  margin-top:9px;
+}
+
+.stat-icon{
+  font-size:25px;
+  float:right;
+}
+
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:1.4fr 1fr;
+  gap:20px;
+}
+
+.card{
+  background:white;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:20px;
+  margin-bottom:20px;
+}
+
+.card-title{
+  font-size:17px;
+  font-weight:bold;
+  margin-bottom:15px;
+}
+
+.toolbar{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+}
+
+input,
+select,
+textarea{
+  width:100%;
+  border:1px solid #d1d5db;
+  border-radius:8px;
+  padding:10px 12px;
+  outline:none;
+  background:white;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+  border-color:var(--secondary);
+}
+
+.search-box{
+  flex:1;
+  min-width:200px;
+}
 
 /* BUTTONS */
 .btn{
-  border:0;border-radius:8px;padding:10px 15px;
-  background:#e2e8f0;color:#0f172a;
+  border:0;
+  border-radius:8px;
+  padding:10px 15px;
+  font-weight:bold;
 }
-.btn-primary{background:#2563eb;color:#fff}
-.btn-success{background:#16a34a;color:#fff}
-.btn-danger{background:#dc2626;color:#fff}
-.btn-warning{background:#f59e0b;color:#fff}
-.btn-sm{padding:7px 10px;font-size:12px}
 
-/* CARDS */
-.cards{
-  display:grid;grid-template-columns:repeat(4,1fr);
-  gap:15px;margin-bottom:22px;
+.btn-primary{
+  background:#2563eb;
+  color:white;
 }
-.card{
-  background:#fff;border:1px solid #e2e8f0;border-radius:12px;
-  padding:18px;box-shadow:0 2px 8px #00000008;
-}
-.card-label{color:#64748b;font-size:13px}
-.card-value{font-size:25px;font-weight:bold;margin-top:8px}
-.card-note{font-size:12px;color:#94a3b8;margin-top:5px}
 
-/* GRID */
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
-.panel{
-  background:#fff;border:1px solid #e2e8f0;border-radius:12px;
-  padding:18px;margin-bottom:18px;
+.btn-success{
+  background:#16a34a;
+  color:white;
 }
-.panel h3{font-size:16px;margin-bottom:15px}
+
+.btn-danger{
+  background:#dc2626;
+  color:white;
+}
+
+.btn-warning{
+  background:#d97706;
+  color:white;
+}
+
+.btn-dark{
+  background:#111827;
+  color:white;
+}
+
+.btn-light{
+  background:#f3f4f6;
+  color:#111827;
+}
+
+.btn-sm{
+  padding:6px 9px;
+  font-size:12px;
+}
 
 /* TABLE */
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:650px}
-th,td{
-  padding:11px 10px;border-bottom:1px solid #e2e8f0;
-  text-align:left;font-size:13px;
+.table-wrap{
+  overflow-x:auto;
 }
-th{background:#f8fafc;color:#475569}
-.empty{text-align:center;color:#94a3b8;padding:30px}
 
-/* FORM */
-.form-grid{
-  display:grid;grid-template-columns:repeat(2,1fr);gap:12px;
+table{
+  width:100%;
+  border-collapse:collapse;
+  min-width:700px;
 }
-.field{margin-bottom:4px}
-.field label{
-  display:block;font-size:12px;font-weight:bold;
-  color:#475569;margin-bottom:5px;
+
+th,td{
+  padding:11px 9px;
+  border-bottom:1px solid var(--border);
+  text-align:left;
+  font-size:13px;
 }
-.field input,.field select,.field textarea{
-  width:100%;border:1px solid #cbd5e1;border-radius:8px;
-  padding:10px;background:#fff;outline:none;
+
+th{
+  background:#f9fafb;
+  font-weight:bold;
 }
-.field input:focus,.field select:focus,.field textarea:focus{
-  border-color:#2563eb;
+
+.badge{
+  display:inline-block;
+  padding:4px 8px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:bold;
 }
-.filters{
-  display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px;
+
+.badge-success{
+  background:#dcfce7;
+  color:#166534;
 }
-.filters input,.filters select{
-  padding:9px;border:1px solid #cbd5e1;border-radius:8px;
+
+.badge-danger{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.badge-warning{
+  background:#fef3c7;
+  color:#92400e;
 }
 
 /* POS */
 .pos-layout{
-  display:grid;grid-template-columns:1fr 380px;gap:18px;
+  display:grid;
+  grid-template-columns:1.5fr .8fr;
+  gap:20px;
 }
+
 .product-grid{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:12px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+  max-height:650px;
+  overflow-y:auto;
 }
+
 .product-card{
-  background:#fff;border:1px solid #e2e8f0;border-radius:10px;
-  padding:14px;text-align:left;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:13px;
+  background:white;
+  cursor:pointer;
+  transition:.15s;
 }
-.product-card:hover{border-color:#2563eb}
-.product-name{font-weight:bold;font-size:14px}
-.product-price{color:#2563eb;font-weight:bold;margin-top:7px}
-.product-stock{font-size:11px;color:#64748b;margin-top:5px}
+
+.product-card:hover{
+  border-color:#2563eb;
+  transform:translateY(-2px);
+}
+
+.product-card h4{
+  font-size:14px;
+  margin-bottom:7px;
+}
+
+.product-card .price{
+  font-weight:bold;
+  color:#2563eb;
+}
+
+.product-card .stock{
+  font-size:11px;
+  color:var(--muted);
+  margin-top:5px;
+}
+
 .cart{
-  background:#fff;border:1px solid #e2e8f0;border-radius:12px;
-  padding:18px;position:sticky;top:85px;height:max-content;
+  background:white;
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:18px;
+  position:sticky;
+  top:85px;
+  height:max-content;
 }
-.cart-row{
-  display:flex;justify-content:space-between;gap:8px;
-  padding:10px 0;border-bottom:1px solid #e2e8f0;font-size:13px;
-}
-.qty{
-  display:flex;align-items:center;gap:5px;margin-top:5px;
-}
-.qty button{
-  width:25px;height:25px;border:0;border-radius:5px;
-  background:#e2e8f0;
-}
-.cart-total{
-  display:flex;justify-content:space-between;
-  padding:10px 0;font-weight:bold;
-}
-.payment-buttons{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
-.payment-buttons button.active{background:#2563eb;color:#fff}
 
-/* ALERT */
-.alert{
-  padding:11px 13px;border-radius:8px;margin-bottom:8px;
-  font-size:13px;
+.cart-items{
+  max-height:390px;
+  overflow-y:auto;
 }
-.alert-warning{background:#fff7ed;color:#9a3412}
-.alert-danger{background:#fef2f2;color:#b91c1c}
-.alert-success{background:#f0fdf4;color:#166534}
 
-/* BADGE */
-.badge{
-  display:inline-block;padding:4px 8px;border-radius:15px;
-  font-size:11px;background:#e2e8f0;
+.cart-item{
+  padding:10px 0;
+  border-bottom:1px solid var(--border);
 }
-.badge-green{background:#dcfce7;color:#166534}
-.badge-red{background:#fee2e2;color:#991b1b}
-.badge-blue{background:#dbeafe;color:#1d4ed8}
+
+.cart-item-top{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+}
+
+.qty-controls{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  margin-top:7px;
+}
+
+.qty-btn{
+  width:26px;
+  height:26px;
+  border:0;
+  border-radius:6px;
+  background:#e5e7eb;
+}
+
+.cart-summary{
+  margin-top:15px;
+  padding-top:15px;
+  border-top:2px solid #111827;
+}
+
+.summary-row{
+  display:flex;
+  justify-content:space-between;
+  margin:8px 0;
+}
+
+.summary-total{
+  font-size:20px;
+  font-weight:bold;
+}
+
+.payment-buttons{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:7px;
+  margin:12px 0;
+}
+
+.payment-btn{
+  border:1px solid #d1d5db;
+  background:white;
+  border-radius:8px;
+  padding:9px;
+}
+
+.payment-btn.active{
+  background:#111827;
+  color:white;
+}
+
+/* FORMS */
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:13px;
+}
+
+.form-group{
+  margin-bottom:4px;
+}
+
+.form-group label{
+  display:block;
+  font-size:12px;
+  font-weight:bold;
+  margin-bottom:6px;
+}
+
+.full{
+  grid-column:1/-1;
+}
 
 /* MODAL */
 .modal-overlay{
-  display:none;position:fixed;inset:0;background:#0008;
-  z-index:500;align-items:center;justify-content:center;padding:15px;
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.55);
+  z-index:3000;
+  align-items:center;
+  justify-content:center;
+  padding:15px;
 }
-.modal-overlay.show{display:flex}
+
+.modal-overlay.show{
+  display:flex;
+}
+
 .modal{
-  background:#fff;border-radius:14px;width:min(650px,100%);
-  max-height:90vh;overflow-y:auto;
+  width:100%;
+  max-width:650px;
+  max-height:90vh;
+  overflow-y:auto;
+  background:white;
+  border-radius:15px;
 }
-.modal-head{
-  padding:18px;border-bottom:1px solid #e2e8f0;
-  display:flex;justify-content:space-between;
+
+.modal-header{
+  padding:18px 20px;
+  border-bottom:1px solid var(--border);
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
-.modal-body{padding:18px}
-.modal-foot{
-  padding:15px 18px;border-top:1px solid #e2e8f0;
-  display:flex;justify-content:flex-end;gap:8px;
+
+.modal-close{
+  border:0;
+  background:#f3f4f6;
+  width:32px;
+  height:32px;
+  border-radius:50%;
 }
-.close{border:0;background:none;font-size:22px}
+
+.modal-body{
+  padding:20px;
+}
+
+.modal-footer{
+  padding:15px 20px;
+  border-top:1px solid var(--border);
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+}
+
+/* ALERT */
+.alert{
+  padding:11px 13px;
+  border-radius:9px;
+  margin-bottom:9px;
+  font-size:13px;
+}
+
+.alert-danger{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.alert-warning{
+  background:#fef3c7;
+  color:#92400e;
+}
+
+.alert-success{
+  background:#dcfce7;
+  color:#166534;
+}
+
+/* EMPTY */
+.empty{
+  text-align:center;
+  color:#9ca3af;
+  padding:30px;
+}
+
+/* LOGIN */
+.login-screen{
+  position:fixed;
+  inset:0;
+  background:#111827;
+  z-index:5000;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.login-box{
+  background:white;
+  width:100%;
+  max-width:400px;
+  padding:30px;
+  border-radius:18px;
+}
+
+.login-box h1{
+  text-align:center;
+  margin-bottom:7px;
+}
+
+.login-box p{
+  text-align:center;
+  color:#6b7280;
+  margin-bottom:25px;
+  font-size:13px;
+}
+
+.login-box label{
+  display:block;
+  font-size:13px;
+  font-weight:bold;
+  margin-bottom:6px;
+}
+
+.login-box .form-group{
+  margin-bottom:15px;
+}
 
 /* TOAST */
-.toast{
-  position:fixed;right:20px;bottom:20px;background:#0f172a;
-  color:#fff;padding:12px 16px;border-radius:8px;
-  z-index:1000;box-shadow:0 5px 20px #0003;
+.toast-container{
+  position:fixed;
+  right:20px;
+  bottom:20px;
+  z-index:6000;
 }
 
-/* MOBILE */
-.mobile-menu{display:none;border:0;background:#e2e8f0;padding:8px 11px;border-radius:7px}
-@media(max-width:1100px){
-  .cards{grid-template-columns:repeat(2,1fr)}
-  .pos-layout{grid-template-columns:1fr}
-  .cart{position:static}
+.toast{
+  background:#111827;
+  color:white;
+  padding:12px 17px;
+  border-radius:9px;
+  margin-top:8px;
+  box-shadow:0 5px 20px rgba(0,0,0,.2);
 }
-@media(max-width:768px){
-  .sidebar{
-    transform:translateX(-100%);transition:.25s;
-    box-shadow:5px 0 20px #0004;
+
+/* PRINT */
+@media print{
+  body *{
+    visibility:hidden;
   }
-  .sidebar.open{transform:translateX(0)}
-  .main{margin-left:0;width:100%}
-  .mobile-menu{display:block}
-  .topbar{padding:0 15px}
-  .content{padding:15px}
-  .grid-2,.grid-3{grid-template-columns:1fr}
-  .product-grid{grid-template-columns:repeat(2,1fr)}
-  .form-grid{grid-template-columns:1fr}
+
+  #printArea,
+  #printArea *{
+    visibility:visible;
+  }
+
+  #printArea{
+    position:absolute;
+    left:0;
+    top:0;
+    width:100%;
+  }
 }
-@media(max-width:430px){
-  .cards{grid-template-columns:1fr 1fr;gap:8px}
-  .card{padding:12px}
-  .card-value{font-size:19px}
-  .product-grid{grid-template-columns:1fr 1fr}
-  .page-head h2{font-size:19px}
+
+/* RESPONSIVE */
+@media(max-width:1100px){
+  .stats-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .dashboard-grid,
+  .pos-layout{
+    grid-template-columns:1fr;
+  }
+
+  .cart{
+    position:static;
+  }
+}
+
+@media(max-width:800px){
+  .sidebar{
+    transform:translateX(-100%);
+    transition:.25s;
+  }
+
+  .sidebar.open{
+    transform:translateX(0);
+  }
+
+  .main{
+    margin-left:0;
+    width:100%;
+  }
+
+  .menu-btn{
+    display:block;
+  }
+
+  .content{
+    padding:14px;
+  }
+
+  .topbar{
+    padding:0 14px;
+  }
+
+  .topbar h2{
+    font-size:16px;
+  }
+
+  .product-grid{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .full{
+    grid-column:auto;
+  }
+}
+
+@media(max-width:500px){
+  .stats-grid{
+    grid-template-columns:1fr 1fr;
+    gap:8px;
+  }
+
+  .stat-card{
+    padding:12px;
+  }
+
+  .stat-value{
+    font-size:18px;
+  }
+
+  .product-grid{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .toolbar{
+    flex-direction:column;
+  }
+
+  .toolbar .btn,
+  .toolbar select,
+  .toolbar input{
+    width:100%;
+  }
 }
 </style>
 </head>
 
 <body>
 
+<!-- LOGIN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h1>🧾 Aung POS</h1>
+    <p>Professional Point of Sale System</p>
+
+    <div class="form-group">
+      <label>User</label>
+      <select id="loginUser"></select>
+    </div>
+
+    <div class="form-group">
+      <label>PIN</label>
+      <input id="loginPin" type="password" placeholder="PIN ထည့်ပါ">
+    </div>
+
+    <button class="btn btn-primary" style="width:100%" id="loginBtn">
+      Login
+    </button>
+
+    <p style="margin-top:15px;margin-bottom:0">
+      Default PIN: 1234
+    </p>
+  </div>
+</div>
+
 <div class="app">
 
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar">
+
   <div class="logo">
     <h1>🧾 Aung POS</h1>
     <p>Professional Business POS</p>
   </div>
 
-  <nav class="nav">
-    <div class="nav-title">Main</div>
+  <div class="user-box">
+    <div class="user-name" id="sideUserName">Aung Zar Ni Win</div>
+    <div class="user-role" id="sideUserRole">Administrator</div>
+  </div>
 
-    <button class="nav-btn active" data-page="dashboard">📊 Dashboard</button>
-    <button class="nav-btn" data-page="sales">🛒 Sales</button>
-    <button class="nav-btn" data-page="products">📦 Products</button>
-    <button class="nav-btn" data-page="purchases">🚚 Purchases</button>
-    <button class="nav-btn" data-page="stock">📋 Stock</button>
+  <div class="nav-title">Workspace</div>
 
-    <div class="nav-title">People</div>
+  <button class="nav-btn active" data-section="dashboard">
+    <span class="nav-icon">🏠</span> Dashboard
+  </button>
 
-    <button class="nav-btn" data-page="customers">👥 Customers</button>
-    <button class="nav-btn" data-page="suppliers">🏢 Suppliers</button>
-    <button class="nav-btn" data-page="debts">💳 Debts</button>
-    <button class="nav-btn" data-page="employees">👨‍💼 Employees</button>
+  <button class="nav-btn" data-section="sales">
+    <span class="nav-icon">🛒</span> Sales / POS
+  </button>
 
-    <div class="nav-title">Finance</div>
+  <button class="nav-btn" data-section="products">
+    <span class="nav-icon">📦</span> Products
+  </button>
 
-    <button class="nav-btn" data-page="expenses">💸 Expenses</button>
-    <button class="nav-btn" data-page="reports">📈 Reports</button>
+  <button class="nav-btn" data-section="purchases">
+    <span class="nav-icon">🚚</span> Purchases
+  </button>
 
-    <div class="nav-title">System</div>
+  <button class="nav-btn" data-section="stock">
+    <span class="nav-icon">📋</span> Stock
+  </button>
 
-    <button class="nav-btn" data-page="settings">⚙️ Settings</button>
-  </nav>
+  <div class="nav-title">Customers</div>
+
+  <button class="nav-btn" data-section="customers">
+    <span class="nav-icon">👥</span> Customers
+  </button>
+
+  <button class="nav-btn" data-section="suppliers">
+    <span class="nav-icon">🏭</span> Suppliers
+  </button>
+
+  <button class="nav-btn" data-section="debts">
+    <span class="nav-icon">💳</span> Debts
+  </button>
+
+  <div class="nav-title">Finance</div>
+
+  <button class="nav-btn" data-section="expenses">
+    <span class="nav-icon">💸</span> Expenses
+  </button>
+
+  <button class="nav-btn" data-section="employees">
+    <span class="nav-icon">👔</span> Employees
+  </button>
+
+  <button class="nav-btn" data-section="reports">
+    <span class="nav-icon">📈</span> Reports
+  </button>
+
+  <div class="nav-title">System</div>
+
+  <button class="nav-btn" data-section="users">
+    <span class="nav-icon">🔐</span> Users
+  </button>
+
+  <button class="nav-btn" data-section="settings">
+    <span class="nav-icon">⚙️</span> Settings
+  </button>
+
+  <button class="nav-btn" id="logoutBtn">
+    <span class="nav-icon">🚪</span> Logout
+  </button>
+
 </aside>
 
 <!-- MAIN -->
 <main class="main">
 
-<header class="topbar">
-  <div style="display:flex;align-items:center;gap:10px">
-    <button class="mobile-menu" id="mobileMenu">☰</button>
-    <div>
-      <h2 id="pageTitle">Dashboard</h2>
-    </div>
-  </div>
-  <div class="shop-badge" id="shopBadge">My Shop</div>
-</header>
+  <header class="topbar">
+    <button class="menu-btn" id="menuBtn">☰</button>
+    <h2 id="pageTitle">Dashboard</h2>
+    <div id="topDate"></div>
+  </header>
 
-<div class="content">
+  <div class="content">
 
-<!-- DASHBOARD -->
-<section class="page active" id="page-dashboard">
-  <div class="page-head">
-    <div>
-      <h2>Dashboard</h2>
-      <p>သင့်လုပ်ငန်းရဲ့ အခြေအနေကို တစ်နေရာတည်းမှာ ကြည့်နိုင်ပါတယ်။</p>
-    </div>
-    <button class="btn btn-primary" data-page="sales">+ New Sale</button>
-  </div>
+    <!-- DASHBOARD -->
+    <section class="section active" id="dashboard">
 
-  <div class="cards">
-    <div class="card">
-      <div class="card-label">ယနေ့ရောင်းအား</div>
-      <div class="card-value" id="todaySales">0 Ks</div>
-      <div class="card-note" id="todaySalesCount">0 sales</div>
-    </div>
-    <div class="card">
-      <div class="card-label">ယနေ့အမြတ်</div>
-      <div class="card-value" id="todayProfit">0 Ks</div>
-      <div class="card-note">Gross Profit</div>
-    </div>
-    <div class="card">
-      <div class="card-label">ယနေ့ဝယ်ယူမှု</div>
-      <div class="card-value" id="todayPurchase">0 Ks</div>
-      <div class="card-note">Purchases</div>
-    </div>
-    <div class="card">
-      <div class="card-label">ယနေ့ကုန်ကျစရိတ်</div>
-      <div class="card-value" id="todayExpense">0 Ks</div>
-      <div class="card-note">Expenses</div>
-    </div>
-  </div>
-
-  <div class="cards">
-    <div class="card">
-      <div class="card-label">Products</div>
-      <div class="card-value" id="totalProducts">0</div>
-      <div class="card-note">Total products</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Low Stock</div>
-      <div class="card-value" id="lowStockCount">0</div>
-      <div class="card-note">Need attention</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Expiry</div>
-      <div class="card-value" id="expiryCount">0</div>
-      <div class="card-note">Expiring soon</div>
-    </div>
-    <div class="card">
-      <div class="card-label">Customers</div>
-      <div class="card-value" id="totalCustomers">0</div>
-      <div class="card-note">Customers</div>
-    </div>
-  </div>
-
-  <div class="grid-2">
-    <div class="panel">
-      <h3>⚠️ Alerts</h3>
-      <div id="dashboardAlerts"></div>
-    </div>
-
-    <div class="panel">
-      <h3>🧾 Recent Sales</h3>
-      <div id="recentSales"></div>
-    </div>
-  </div>
-</section>
-
-<!-- SALES -->
-<section class="page" id="page-sales">
-  <div class="page-head">
-    <div>
-      <h2>Sales / POS</h2>
-      <p>ပစ္စည်းရွေးပြီး အရောင်းဘောင်ထဲထည့်ပါ။</p>
-    </div>
-    <button class="btn btn-warning" id="clearCartBtn">Clear Cart</button>
-  </div>
-
-  <div class="pos-layout">
-    <div>
-      <div class="filters">
-        <input id="salesSearch" placeholder="🔍 ပစ္စည်းရှာရန်">
-        <select id="salesCategory">
-          <option value="">All Categories</option>
-        </select>
-      </div>
-      <div class="product-grid" id="salesProducts"></div>
-    </div>
-
-    <div class="cart">
-      <h3 style="margin-bottom:12px">🛒 Cart <span id="cartCount">(0)</span></h3>
-
-      <div id="cartItems">
-        <div class="empty">ပစ္စည်းမရှိသေးပါ</div>
+      <div class="card">
+        <h2 id="welcomeShopName">Aung POS</h2>
+        <p style="color:#6b7280;margin-top:5px">
+          Business Dashboard
+        </p>
       </div>
 
-      <div class="field" style="margin-top:12px">
-        <label>Customer</label>
-        <select id="saleCustomer">
-          <option value="">Walk-in Customer</option>
-        </select>
-      </div>
+      <div class="stats-grid">
 
-      <div class="field" style="margin-top:8px">
-        <label>Discount</label>
-        <input id="saleDiscount" type="number" value="0" min="0">
-      </div>
-
-      <div class="cart-total">
-        <span>Subtotal</span>
-        <span id="cartSubtotal">0 Ks</span>
-      </div>
-      <div class="cart-total">
-        <span>Total</span>
-        <strong id="cartTotal">0 Ks</strong>
-      </div>
-
-      <div style="margin:10px 0">
-        <div style="font-size:12px;margin-bottom:6px">Payment</div>
-        <div class="payment-buttons">
-          <button class="btn active" data-payment="Cash">Cash</button>
-          <button class="btn" data-payment="Credit">Credit</button>
-          <button class="btn" data-payment="Other">Other</button>
+        <div class="stat-card">
+          <span class="stat-icon">💰</span>
+          <div class="stat-label">ယနေ့ရောင်းအား</div>
+          <div class="stat-value" id="todaySales">0 Ks</div>
         </div>
+
+        <div class="stat-card">
+          <span class="stat-icon">📈</span>
+          <div class="stat-label">ယနေ့ Gross Profit</div>
+          <div class="stat-value" id="todayProfit">0 Ks</div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-icon">🚚</span>
+          <div class="stat-label">ယနေ့ Purchase</div>
+          <div class="stat-value" id="todayPurchase">0 Ks</div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-icon">💸</span>
+          <div class="stat-label">ယနေ့ Expense</div>
+          <div class="stat-value" id="todayExpense">0 Ks</div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-icon">📦</span>
+          <div class="stat-label">Products</div>
+          <div class="stat-value" id="totalProducts">0</div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-icon">⚠️</span>
+          <div class="stat-label">Low Stock</div>
+          <div class="stat-value" id="lowStockCount">0</div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-icon">⏳</span>
+          <div class="stat-label">Expiry Alert</div>
+          <div class="stat-value" id="expiryCount">0</div>
+        </div>
+
+        <div class="stat-card">
+          <span class="stat-icon">👥</span>
+          <div class="stat-label">Customers</div>
+          <div class="stat-value" id="totalCustomers">0</div>
+        </div>
+
       </div>
 
-      <button class="btn btn-success" id="checkoutBtn"
-        style="width:100%;margin-top:8px">
-        Complete Sale
-      </button>
-    </div>
-  </div>
-</section>
+      <div class="dashboard-grid">
 
-<!-- PRODUCTS -->
-<section class="page" id="page-products">
-  <div class="page-head">
-    <div>
-      <h2>Products</h2>
-      <p>ပစ္စည်း၊ ဈေးနှုန်း၊ stock နဲ့ expiry ကို စီမံပါ။</p>
-    </div>
-    <button class="btn btn-primary" id="addProductBtn">+ Add Product</button>
-  </div>
-
-  <div class="panel">
-    <div class="filters">
-      <input id="productSearch" placeholder="🔍 Product ရှာရန်">
-      <select id="productCategoryFilter">
-        <option value="">All Categories</option>
-      </select>
-      <select id="stockFilter">
-        <option value="">All Stock</option>
-        <option value="low">Low Stock</option>
-        <option value="out">Out of Stock</option>
-      </select>
-    </div>
-
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>Product</th>
-            <th>Category</th>
-            <th>Unit</th>
-            <th>Cost</th>
-            <th>Retail</th>
-            <th>Wholesale</th>
-            <th>Stock</th>
-            <th>Expiry</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="productsTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- PURCHASES -->
-<section class="page" id="page-purchases">
-  <div class="page-head">
-    <div>
-      <h2>Purchases</h2>
-      <p>Supplier ဆီက ဝယ်ယူမှုတွေကို မှတ်တမ်းတင်ပါ။</p>
-    </div>
-    <button class="btn btn-primary" id="newPurchaseBtn">+ New Purchase</button>
-  </div>
-
-  <div class="cards">
-    <div class="card"><div class="card-label">Today Purchase</div><div class="card-value" id="purchaseTodayTotal">0 Ks</div></div>
-    <div class="card"><div class="card-label">Invoices</div><div class="card-value" id="purchaseInvoiceCount">0</div></div>
-    <div class="card"><div class="card-label">Supplier Payable</div><div class="card-value" id="supplierPayable">0 Ks</div></div>
-  </div>
-
-  <div class="panel">
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Date</th><th>Invoice</th><th>Supplier</th><th>Total</th><th>Payment</th></tr>
-        </thead>
-        <tbody id="purchaseTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- STOCK -->
-<section class="page" id="page-stock">
-  <div class="page-head">
-    <div>
-      <h2>Stock Management</h2>
-      <p>လက်ကျန် stock ကို စောင့်ကြည့်ပါ။</p>
-    </div>
-    <button class="btn btn-primary" id="stockAdjustmentBtn">+ Stock Adjustment</button>
-  </div>
-
-  <div class="cards">
-    <div class="card"><div class="card-label">Products</div><div class="card-value" id="stockProductCount">0</div></div>
-    <div class="card"><div class="card-label">Units</div><div class="card-value" id="stockUnitCount">0</div></div>
-    <div class="card"><div class="card-label">Cost Value</div><div class="card-value" id="stockCostValue">0 Ks</div></div>
-    <div class="card"><div class="card-label">Low Stock</div><div class="card-value" id="stockLowCount">0</div></div>
-  </div>
-
-  <div class="panel">
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Product</th><th>Category</th><th>Stock</th><th>Unit</th><th>Cost Value</th><th>Retail Value</th><th>Status</th></tr>
-        </thead>
-        <tbody id="stockTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- CUSTOMERS -->
-<section class="page" id="page-customers">
-  <div class="page-head">
-    <div>
-      <h2>Customers</h2>
-      <p>Customer information နဲ့ receivable ကို စီမံပါ။</p>
-    </div>
-    <button class="btn btn-primary" id="addCustomerBtn">+ Add Customer</button>
-  </div>
-
-  <div class="cards">
-    <div class="card"><div class="card-label">Customers</div><div class="card-value" id="customerCount">0</div></div>
-    <div class="card"><div class="card-label">Receivable</div><div class="card-value" id="customerReceivable">0 Ks</div></div>
-  </div>
-
-  <div class="panel">
-    <input id="customerSearch" placeholder="🔍 Customer ရှာရန်"
-      style="padding:10px;width:100%;max-width:350px;border:1px solid #cbd5e1;border-radius:8px;margin-bottom:15px">
-
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Name</th><th>Phone</th><th>Address</th><th>Due</th><th>Action</th></tr></thead>
-        <tbody id="customerTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- SUPPLIERS -->
-<section class="page" id="page-suppliers">
-  <div class="page-head">
-    <div>
-      <h2>Suppliers</h2>
-      <p>Supplier information နဲ့ payable ကို စီမံပါ။</p>
-    </div>
-    <button class="btn btn-primary" id="addSupplierBtn">+ Add Supplier</button>
-  </div>
-
-  <div class="panel">
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Name</th><th>Phone</th><th>Address</th><th>Payable</th><th>Action</th></tr></thead>
-        <tbody id="supplierTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- DEBTS -->
-<section class="page" id="page-debts">
-  <div class="page-head">
-    <div>
-      <h2>Debts / Ledger</h2>
-      <p>Customer receivable နှင့် supplier payable ကို စီမံပါ။</p>
-    </div>
-  </div>
-
-  <div class="cards">
-    <div class="card"><div class="card-label">Customer Receivable</div><div class="card-value" id="totalReceivable">0 Ks</div></div>
-    <div class="card"><div class="card-label">Supplier Payable</div><div class="card-value" id="totalPayable">0 Ks</div></div>
-  </div>
-
-  <div class="grid-2">
-    <div class="panel">
-      <h3>Customer Receivable</h3>
-      <div id="receivableList"></div>
-    </div>
-    <div class="panel">
-      <h3>Supplier Payable</h3>
-      <div id="payableList"></div>
-    </div>
-  </div>
-</section>
-
-<!-- EXPENSES -->
-<section class="page" id="page-expenses">
-  <div class="page-head">
-    <div>
-      <h2>Expenses</h2>
-      <p>နေ့စဉ်၊ လစဉ်၊ နှစ်စဉ်ကုန်ကျစရိတ်များ။</p>
-    </div>
-    <button class="btn btn-primary" id="addExpenseBtn">+ Add Expense</button>
-  </div>
-
-  <div class="cards">
-    <div class="card"><div class="card-label">Today</div><div class="card-value" id="expenseToday">0 Ks</div></div>
-    <div class="card"><div class="card-label">This Month</div><div class="card-value" id="expenseMonth">0 Ks</div></div>
-    <div class="card"><div class="card-label">This Year</div><div class="card-value" id="expenseYear">0 Ks</div></div>
-  </div>
-
-  <div class="panel">
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Action</th></tr></thead>
-        <tbody id="expenseTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- EMPLOYEES -->
-<section class="page" id="page-employees">
-  <div class="page-head">
-    <div>
-      <h2>Employees</h2>
-      <p>ဝန်ထမ်းစာရင်းနှင့် လစာ/ပေးချေမှုများ။</p>
-    </div>
-    <button class="btn btn-primary" id="addEmployeeBtn">+ Add Employee</button>
-  </div>
-
-  <div class="panel">
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Name</th><th>Position</th><th>Phone</th><th>Salary</th><th>Action</th></tr></thead>
-        <tbody id="employeeTableBody"></tbody>
-      </table>
-    </div>
-  </div>
-</section>
-
-<!-- REPORTS -->
-<section class="page" id="page-reports">
-  <div class="page-head">
-    <div>
-      <h2>Reports & P&L</h2>
-      <p>လုပ်ငန်းရဲ့ Sales, Purchase, Expense နဲ့ Profit ကိုကြည့်ပါ။</p>
-    </div>
-    <select id="reportPeriod" class="btn">
-      <option value="today">Today</option>
-      <option value="month" selected>This Month</option>
-      <option value="year">This Year</option>
-      <option value="all">All Time</option>
-    </select>
-  </div>
-
-  <div class="cards">
-    <div class="card"><div class="card-label">Sales</div><div class="card-value" id="reportSales">0 Ks</div></div>
-    <div class="card"><div class="card-label">Purchase</div><div class="card-value" id="reportPurchase">0 Ks</div></div>
-    <div class="card"><div class="card-label">Expenses</div><div class="card-value" id="reportExpenses">0 Ks</div></div>
-    <div class="card"><div class="card-label">Net Profit</div><div class="card-value" id="reportProfit">0 Ks</div></div>
-  </div>
-
-  <div class="grid-2">
-    <div class="panel">
-      <h3>Sales Report</h3>
-      <div id="salesReportSummary"></div>
-    </div>
-    <div class="panel">
-      <h3>Profit & Loss</h3>
-      <div id="profitReportSummary"></div>
-    </div>
-  </div>
-</section>
-
-<!-- SETTINGS -->
-<section class="page" id="page-settings">
-  <div class="page-head">
-    <div>
-      <h2>Settings</h2>
-      <p>Shop information နှင့် data management။</p>
-    </div>
-  </div>
-
-  <div class="grid-2">
-    <div class="panel">
-      <h3>🏪 Shop Settings</h3>
-      <div class="form-grid">
-        <div class="field">
-          <label>Shop Name</label>
-          <input id="settingShopName">
+        <div class="card">
+          <div class="card-title">🧾 Recent Sales</div>
+          <div id="recentSales"></div>
         </div>
-        <div class="field">
-          <label>Phone</label>
-          <input id="settingPhone">
+
+        <div class="card">
+          <div class="card-title">⚠️ Alerts</div>
+          <div id="dashboardAlerts"></div>
         </div>
-        <div class="field">
-          <label>Address</label>
-          <input id="settingAddress">
-        </div>
-        <div class="field">
-          <label>Receipt Footer</label>
-          <input id="settingFooter">
-        </div>
+
       </div>
-      <button class="btn btn-primary" id="saveShopBtn" style="margin-top:12px">
-        Save Settings
-      </button>
-    </div>
 
-    <div class="panel">
-      <h3>💾 Data Management</h3>
-      <button class="btn btn-success" id="backupBtn" style="width:100%;margin-bottom:8px">
-        Export Backup
-      </button>
-      <button class="btn btn-danger" id="clearDataBtn" style="width:100%">
-        Clear All Data
-      </button>
-    </div>
+    </section>
+
+    <!-- SALES -->
+    <section class="section" id="sales">
+
+      <div class="pos-layout">
+
+        <div>
+
+          <div class="card">
+
+            <div class="toolbar">
+
+              <input
+                id="salesSearch"
+                class="search-box"
+                placeholder="🔎 Product name / Barcode"
+              >
+
+              <select id="salesCategory">
+                <option value="">All Categories</option>
+              </select>
+
+              <button class="btn btn-dark" id="scanBarcodeBtn">
+                📷 Barcode
+              </button>
+
+            </div>
+
+            <div class="product-grid" id="salesProducts"></div>
+
+          </div>
+
+        </div>
+
+        <div class="cart">
+
+          <div class="card-title">
+            🛒 Current Sale
+          </div>
+
+          <div class="form-group">
+            <label>Customer</label>
+            <select id="saleCustomer">
+              <option value="">Walk-in Customer</option>
+            </select>
+          </div>
+
+          <div class="cart-items" id="cartItems">
+            <div class="empty">Cart ထဲမှာ ပစ္စည်းမရှိသေးပါ</div>
+          </div>
+
+          <div class="cart-summary">
+
+            <div class="summary-row">
+              <span>Subtotal</span>
+              <strong id="cartSubtotal">0 Ks</strong>
+            </div>
+
+            <div class="form-group">
+              <label>Discount</label>
+              <input id="saleDiscount" type="number" min="0" value="0">
+            </div>
+
+            <div class="summary-row">
+              <span>Total</span>
+              <strong class="summary-total" id="cartTotal">
+                0 Ks
+              </strong>
+            </div>
+
+            <div class="form-group">
+              <label>Payment Method</label>
+            </div>
+
+            <div class="payment-buttons">
+
+              <button class="payment-btn active" data-payment="Cash">
+                💵 Cash
+              </button>
+
+              <button class="payment-btn" data-payment="KBZ Pay">
+                📱 KBZ Pay
+              </button>
+
+              <button class="payment-btn" data-payment="Wave Pay">
+                📱 Wave Pay
+              </button>
+
+              <button class="payment-btn" data-payment="Bank">
+                🏦 Bank
+              </button>
+
+              <button class="payment-btn" data-payment="Credit-Due">
+                💳 Credit
+              </button>
+
+            </div>
+
+            <button
+              class="btn btn-success"
+              style="width:100%;margin-bottom:8px"
+              id="checkoutBtn"
+            >
+              ✅ Complete Sale
+            </button>
+
+            <button
+              class="btn btn-light"
+              style="width:100%"
+              id="clearCartBtn"
+            >
+              🗑️ Clear Cart
+            </button>
+
+          </div>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- PRODUCTS -->
+    <section class="section" id="products">
+
+      <div class="card">
+
+        <div class="toolbar">
+
+          <input
+            id="productSearch"
+            class="search-box"
+            placeholder="🔎 Search product..."
+          >
+
+          <select id="productCategoryFilter">
+            <option value="">All Categories</option>
+          </select>
+
+          <select id="stockFilter">
+            <option value="">All Stock</option>
+            <option value="low">Low Stock</option>
+            <option value="out">Out of Stock</option>
+          </select>
+
+          <button class="btn btn-primary" id="addProductBtn">
+            + Add Product
+          </button>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Barcode</th>
+                <th>Category</th>
+                <th>Unit</th>
+                <th>Buy</th>
+                <th>Retail</th>
+                <th>Wholesale</th>
+                <th>Stock</th>
+                <th>Expiry</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="productsTableBody"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- PURCHASES -->
+    <section class="section" id="purchases">
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <div class="stat-label">Today's Purchase</div>
+          <div class="stat-value" id="purchaseTodayTotal">0 Ks</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Invoices</div>
+          <div class="stat-value" id="purchaseInvoiceCount">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Supplier Payable</div>
+          <div class="stat-value" id="supplierPayable">0 Ks</div>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="toolbar">
+          <button class="btn btn-primary" id="newPurchaseBtn">
+            + New Purchase
+          </button>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Invoice</th>
+                <th>Supplier</th>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Price</th>
+                <th>Total</th>
+                <th>Payment</th>
+              </tr>
+            </thead>
+
+            <tbody id="purchaseTableBody"></tbody>
+
+          </table>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- STOCK -->
+    <section class="section" id="stock">
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <div class="stat-label">Products</div>
+          <div class="stat-value" id="stockProductCount">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Total Units</div>
+          <div class="stat-value" id="stockUnitCount">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Cost Value</div>
+          <div class="stat-value" id="stockCostValue">0 Ks</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Low Stock</div>
+          <div class="stat-value" id="stockLowCount">0</div>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="toolbar">
+
+          <input
+            id="stockSearch"
+            class="search-box"
+            placeholder="🔎 Search stock..."
+          >
+
+          <button class="btn btn-warning" id="stockAdjustmentBtn">
+            ± Stock Adjustment
+          </button>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Category</th>
+                <th>Stock</th>
+                <th>Min Stock</th>
+                <th>Buy Price</th>
+                <th>Cost Value</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+
+            <tbody id="stockTableBody"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- CUSTOMERS -->
+    <section class="section" id="customers">
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <div class="stat-label">Customers</div>
+          <div class="stat-value" id="customerCount">0</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Receivable</div>
+          <div class="stat-value" id="customerReceivable">0 Ks</div>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="toolbar">
+
+          <input
+            id="customerSearch"
+            class="search-box"
+            placeholder="🔎 Search customer..."
+          >
+
+          <button class="btn btn-primary" id="addCustomerBtn">
+            + Add Customer
+          </button>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Due</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="customerTableBody"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SUPPLIERS -->
+    <section class="section" id="suppliers">
+
+      <div class="card">
+
+        <div class="toolbar">
+
+          <input
+            id="supplierSearch"
+            class="search-box"
+            placeholder="🔎 Search supplier..."
+          >
+
+          <button class="btn btn-primary" id="addSupplierBtn">
+            + Add Supplier
+          </button>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Address</th>
+                <th>Payable</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="supplierTableBody"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- DEBTS -->
+    <section class="section" id="debts">
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <div class="stat-label">Customer Receivable</div>
+          <div class="stat-value" id="totalReceivable">0 Ks</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Supplier Payable</div>
+          <div class="stat-value" id="totalPayable">0 Ks</div>
+        </div>
+
+      </div>
+
+      <div class="dashboard-grid">
+
+        <div class="card">
+          <div class="card-title">👥 Customer Receivable</div>
+          <div id="receivableList"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">🏭 Supplier Payable</div>
+          <div id="payableList"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- EXPENSES -->
+    <section class="section" id="expenses">
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <div class="stat-label">Today</div>
+          <div class="stat-value" id="expenseToday">0 Ks</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">This Month</div>
+          <div class="stat-value" id="expenseMonth">0 Ks</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">This Year</div>
+          <div class="stat-value" id="expenseYear">0 Ks</div>
+        </div>
+
+      </div>
+
+      <div class="card">
+
+        <div class="toolbar">
+
+          <input
+            id="expenseSearch"
+            class="search-box"
+            placeholder="🔎 Search expense..."
+          >
+
+          <button class="btn btn-primary" id="addExpenseBtn">
+            + Add Expense
+          </button>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Category</th>
+                <th>Description</th>
+                <th>Amount</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="expenseTableBody"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- EMPLOYEES -->
+    <section class="section" id="employees">
+
+      <div class="card">
+
+        <div class="toolbar">
+
+          <input
+            id="employeeSearch"
+            class="search-box"
+            placeholder="🔎 Search employee..."
+          >
+
+          <button class="btn btn-primary" id="addEmployeeBtn">
+            + Add Employee
+          </button>
+
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Role</th>
+                <th>Phone</th>
+                <th>Salary</th>
+                <th>Total Paid</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="employeeTableBody"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- REPORTS -->
+    <section class="section" id="reports">
+
+      <div class="card">
+
+        <div class="toolbar">
+
+          <select id="reportPeriod">
+            <option value="today">Today</option>
+            <option value="month">This Month</option>
+            <option value="year">This Year</option>
+            <option value="all">All Time</option>
+          </select>
+
+          <button class="btn btn-primary" id="refreshReportBtn">
+            🔄 Refresh
+          </button>
+
+          <button class="btn btn-dark" id="printReportBtn">
+            🖨️ Print Report
+          </button>
+
+        </div>
+
+      </div>
+
+      <div class="stats-grid">
+
+        <div class="stat-card">
+          <div class="stat-label">Sales</div>
+          <div class="stat-value" id="reportSales">0 Ks</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Purchase / COGS</div>
+          <div class="stat-value" id="reportPurchase">0 Ks</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Expenses</div>
+          <div class="stat-value" id="reportExpenses">0 Ks</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-label">Net Profit</div>
+          <div class="stat-value" id="reportProfit">0 Ks</div>
+        </div>
+
+      </div>
+
+      <div class="dashboard-grid">
+
+        <div class="card">
+          <div class="card-title">📊 Sales Report</div>
+          <div id="salesReportSummary"></div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">💰 Profit & Loss</div>
+          <div id="profitReportSummary"></div>
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- USERS -->
+    <section class="section" id="users">
+
+      <div class="card">
+
+        <div class="toolbar">
+          <button class="btn btn-primary" id="addUserBtn">
+            + Add User
+          </button>
+        </div>
+
+        <div class="table-wrap">
+
+          <table>
+
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>PIN</th>
+                <th>Role</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+
+            <tbody id="usersTableBody"></tbody>
+
+          </table>
+
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="section" id="settings">
+
+      <div class="card">
+
+        <div class="card-title">🏪 Shop Information</div>
+
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label>Shop Name</label>
+            <input id="settingShopName">
+          </div>
+
+          <div class="form-group">
+            <label>Phone</label>
+            <input id="settingShopPhone">
+          </div>
+
+          <div class="form-group full">
+            <label>Address</label>
+            <input id="settingShopAddress">
+          </div>
+
+          <div class="form-group full">
+            <label>Receipt Footer</label>
+            <textarea id="settingReceiptFooter"></textarea>
+          </div>
+
+        </div>
+
+        <button
+          class="btn btn-primary"
+          id="saveShopSettingsBtn"
+          style="margin-top:15px"
+        >
+          💾 Save Settings
+        </button>
+
+      </div>
+
+      <div class="card">
+
+        <div class="card-title">💾 Data Management</div>
+
+        <div class="toolbar">
+
+          <button class="btn btn-dark" id="backupBtn">
+            ⬇️ Backup Data
+          </button>
+
+          <label class="btn btn-light" style="cursor:pointer">
+            ⬆️ Restore Data
+            <input
+              type="file"
+              id="restoreInput"
+              accept=".json"
+              style="display:none"
+            >
+          </label>
+
+          <button class="btn btn-danger" id="clearDataBtn">
+            ⚠️ Clear All Data
+          </button>
+
+        </div>
+
+        <p style="font-size:12px;color:#6b7280;margin-top:10px">
+          Data သည် ဒီ browser ရဲ့ Local Storage ထဲမှာ သိမ်းထားပါမယ်။
+        </p>
+
+      </div>
+
+    </section>
+
   </div>
-</section>
 
-</div>
 </main>
 </div>
 
 <!-- MODAL -->
 <div class="modal-overlay" id="modalOverlay">
+
   <div class="modal">
-    <div class="modal-head">
+
+    <div class="modal-header">
       <div>
-        <h3 id="modalTitle">Form</h3>
-        <div id="modalSubtitle" style="font-size:12px;color:#64748b;margin-top:3px"></div>
+        <h3 id="modalTitle">Modal</h3>
+        <p id="modalSubtitle" style="font-size:12px;color:#6b7280"></p>
       </div>
-      <button class="close" id="modalClose">×</button>
+
+      <button class="modal-close" id="modalClose">×</button>
     </div>
+
     <div class="modal-body" id="modalBody"></div>
-    <div class="modal-foot" id="modalFoot"></div>
+
+    <div class="modal-footer" id="modalFooter"></div>
+
   </div>
+
 </div>
 
+<div id="printArea" style="display:none"></div>
+
+<div class="toast-container" id="toastContainer"></div>
+
 <script>
+"use strict";
+
 /* =========================================================
-   AUNG POS - SINGLE FILE VERSION
-   No external JS / CSS required
+   AUNG POS PROFESSIONAL V2
+   LOCAL STORAGE DATABASE
 ========================================================= */
 
-const KEY="aung_pos_single_v1";
+const DB_KEY = "aung_pos_professional_v2";
 
-const defaultData={
-  settings:{
-    shopName:"My Shop",
+const defaultDB = {
+  shop:{
+    name:"Aung POS",
     phone:"",
     address:"",
-    footer:"Thank You!"
+    footer:"Thank you for your business!"
   },
+
+  users:[
+    {
+      id:"u1",
+      name:"Aung Zar Ni Win",
+      pin:"1234",
+      role:"Administrator"
+    }
+  ],
+
   products:[],
   sales:[],
   purchases:[],
@@ -776,1418 +1712,3987 @@ const defaultData={
   suppliers:[],
   expenses:[],
   employees:[],
-  stockMoves:[]
+  adjustments:[]
 };
 
-let data=loadData();
-let cart=[];
-let payment="Cash";
+let db = loadDB();
+let currentUser = null;
+let currentSection = "dashboard";
+let cart = [];
+let selectedPayment = "Cash";
+let editingId = null;
 
-function loadData(){
+/* =========================================================
+   DATABASE
+========================================================= */
+
+function loadDB(){
+
   try{
-    const x=localStorage.getItem(KEY);
-    return x?JSON.parse(x):JSON.parse(JSON.stringify(defaultData));
-  }catch(e){
-    return JSON.parse(JSON.stringify(defaultData));
+
+    const saved = localStorage.getItem(DB_KEY);
+
+    if(!saved){
+      return JSON.parse(JSON.stringify(defaultDB));
+    }
+
+    const data = JSON.parse(saved);
+
+    return {
+      ...defaultDB,
+      ...data,
+      shop:{...defaultDB.shop,...(data.shop || {})},
+      users:data.users || [],
+      products:data.products || [],
+      sales:data.sales || [],
+      purchases:data.purchases || [],
+      customers:data.customers || [],
+      suppliers:data.suppliers || [],
+      expenses:data.expenses || [],
+      employees:data.employees || [],
+      adjustments:data.adjustments || []
+    };
+
+  }catch(error){
+
+    console.error(error);
+
+    return JSON.parse(JSON.stringify(defaultDB));
   }
 }
 
-function saveData(){
-  localStorage.setItem(KEY,JSON.stringify(data));
+function saveDB(){
+
+  localStorage.setItem(DB_KEY,JSON.stringify(db));
+
 }
 
-function money(n){
-  return Number(n||0).toLocaleString("en-US")+" Ks";
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function uid(prefix){
+
+  return prefix + Date.now().toString(36) +
+    Math.random().toString(36).slice(2,7);
+
 }
 
 function today(){
-  return new Date().toISOString().slice(0,10);
+
+  const d = new Date();
+
+  const y = d.getFullYear();
+  const m = String(d.getMonth()+1).padStart(2,"0");
+  const day = String(d.getDate()).padStart(2,"0");
+
+  return `${y}-${m}-${day}`;
 }
 
-function month(){
-  return today().slice(0,7);
+function money(value){
+
+  return Number(value || 0).toLocaleString("en-US") + " Ks";
+
 }
 
-function year(){
-  return today().slice(0,4);
+function num(value){
+
+  return Number(value) || 0;
+
 }
 
-function esc(v){
-  return String(v??"")
+function escapeHTML(value){
+
+  return String(value ?? "")
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;");
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
 }
 
-function uid(prefix="ID"){
-  return prefix+"-"+Date.now()+"-"+Math.floor(Math.random()*999);
+function showToast(message){
+
+  const container =
+    document.getElementById("toastContainer");
+
+  const div=document.createElement("div");
+
+  div.className="toast";
+
+  div.textContent=message;
+
+  container.appendChild(div);
+
+  setTimeout(()=>{
+    div.remove();
+  },2500);
+
 }
 
-function $(id){
-  return document.getElementById(id);
+function openModal(title,subtitle="",body="",footer=""){
+
+  document.getElementById("modalTitle").textContent=title;
+  document.getElementById("modalSubtitle").textContent=subtitle;
+  document.getElementById("modalBody").innerHTML=body;
+  document.getElementById("modalFooter").innerHTML=footer;
+
+  document.getElementById("modalOverlay")
+    .classList.add("show");
+
 }
 
-function toast(msg){
-  const old=document.querySelector(".toast");
-  if(old)old.remove();
+function closeModal(){
 
-  const t=document.createElement("div");
-  t.className="toast";
-  t.textContent=msg;
-  document.body.appendChild(t);
+  document.getElementById("modalOverlay")
+    .classList.remove("show");
 
-  setTimeout(()=>t.remove(),2200);
+  editingId=null;
+
 }
 
-/* ================= NAVIGATION ================= */
+/* =========================================================
+   LOGIN
+========================================================= */
+
+function initLogin(){
+
+  const select=document.getElementById("loginUser");
+
+  select.innerHTML=db.users.map(user=>`
+    <option value="${escapeHTML(user.id)}">
+      ${escapeHTML(user.name)} — ${escapeHTML(user.role)}
+    </option>
+  `).join("");
+
+}
+
+function login(){
+
+  const userId=document.getElementById("loginUser").value;
+  const pin=document.getElementById("loginPin").value;
+
+  const user=db.users.find(u=>u.id===userId);
+
+  if(!user){
+
+    showToast("User မတွေ့ပါ");
+
+    return;
+  }
+
+  if(user.pin !== pin){
+
+    showToast("PIN မှားနေပါတယ်");
+
+    return;
+  }
+
+  currentUser=user;
+
+  document.getElementById("loginScreen").style.display="none";
+
+  document.getElementById("sideUserName").textContent=user.name;
+  document.getElementById("sideUserRole").textContent=user.role;
+
+  document.getElementById("loginPin").value="";
+
+  renderAll();
+
+}
+
+function logout(){
+
+  currentUser=null;
+
+  document.getElementById("loginScreen").style.display="flex";
+
+  initLogin();
+
+}
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
 const pageNames={
   dashboard:"Dashboard",
   sales:"Sales / POS",
   products:"Products",
   purchases:"Purchases",
-  stock:"Stock",
+  stock:"Stock Management",
   customers:"Customers",
   suppliers:"Suppliers",
-  debts:"Debts / Ledger",
+  debts:"Debts",
   expenses:"Expenses",
   employees:"Employees",
   reports:"Reports",
+  users:"Users",
   settings:"Settings"
 };
 
-function showPage(name){
-  document.querySelectorAll(".page").forEach(p=>{
-    p.classList.remove("active");
-  });
+function showSection(section){
 
-  const page=$("page-"+name);
-  if(page)page.classList.add("active");
+  currentSection=section;
 
-  document.querySelectorAll(".nav-btn").forEach(b=>{
-    b.classList.toggle("active",b.dataset.page===name);
-  });
+  document.querySelectorAll(".section")
+    .forEach(el=>{
+      el.classList.remove("active");
+    });
 
-  $("pageTitle").textContent=pageNames[name]||"Aung POS";
+  const target=document.getElementById(section);
 
-  if(window.innerWidth<=768){
-    $("sidebar").classList.remove("open");
+  if(target){
+    target.classList.add("active");
   }
 
-  refresh();
+  document.querySelectorAll(".nav-btn[data-section]")
+    .forEach(btn=>{
+      btn.classList.toggle(
+        "active",
+        btn.dataset.section===section
+      );
+    });
+
+  document.getElementById("pageTitle")
+    .textContent=pageNames[section] || section;
+
+  document.getElementById("sidebar")
+    .classList.remove("open");
+
+  if(section==="dashboard") renderDashboard();
+  if(section==="sales") renderSalesProducts();
+  if(section==="products") renderProducts();
+  if(section==="purchases") renderPurchases();
+  if(section==="stock") renderStock();
+  if(section==="customers") renderCustomers();
+  if(section==="suppliers") renderSuppliers();
+  if(section==="debts") renderDebts();
+  if(section==="expenses") renderExpenses();
+  if(section==="employees") renderEmployees();
+  if(section==="reports") renderReports();
+  if(section==="users") renderUsers();
+  if(section==="settings") renderSettings();
+
 }
 
-document.addEventListener("click",e=>{
-  const nav=e.target.closest("[data-page]");
-  if(nav){
-    e.preventDefault();
-    showPage(nav.dataset.page);
-    return;
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function salesForDate(date){
+
+  return db.sales.filter(s=>s.date===date);
+
+}
+
+function purchasesForDate(date){
+
+  return db.purchases.filter(p=>p.date===date);
+
+}
+
+function expensesForDate(date){
+
+  return db.expenses.filter(e=>e.date===date);
+
+}
+
+function saleGrossProfit(sale){
+
+  return num(sale.items.reduce(
+    (sum,item)=>{
+      return sum +
+        (num(item.price)-num(item.buyPrice))*num(item.qty);
+    },0
+  )) - num(sale.discount);
+
+}
+
+function renderDashboard(){
+
+  const date=today();
+
+  const sales=salesForDate(date);
+  const purchases=purchasesForDate(date);
+  const expenses=expensesForDate(date);
+
+  const salesTotal=
+    sales.reduce((sum,s)=>sum+num(s.total),0);
+
+  const purchaseTotal=
+    purchases.reduce((sum,p)=>sum+num(p.total),0);
+
+  const expenseTotal=
+    expenses.reduce((sum,e)=>sum+num(e.amount),0);
+
+  const grossProfit=
+    sales.reduce((sum,s)=>sum+saleGrossProfit(s),0);
+
+  document.getElementById("todaySales")
+    .textContent=money(salesTotal);
+
+  document.getElementById("todayProfit")
+    .textContent=money(grossProfit);
+
+  document.getElementById("todayPurchase")
+    .textContent=money(purchaseTotal);
+
+  document.getElementById("todayExpense")
+    .textContent=money(expenseTotal);
+
+  document.getElementById("totalProducts")
+    .textContent=db.products.length;
+
+  const lowStock=db.products.filter(p=>
+    num(p.stock)<=num(p.minStock)
+  );
+
+  document.getElementById("lowStockCount")
+    .textContent=lowStock.length;
+
+  const expiry=db.products.filter(p=>isExpirySoon(p.expiry));
+
+  document.getElementById("expiryCount")
+    .textContent=expiry.length;
+
+  document.getElementById("totalCustomers")
+    .textContent=db.customers.length;
+
+  document.getElementById("welcomeShopName")
+    .textContent=db.shop.name || "Aung POS";
+
+  document.getElementById("recentSales").innerHTML=
+    renderRecentSales();
+
+  document.getElementById("dashboardAlerts").innerHTML=
+    renderAlerts();
+
+}
+
+function renderRecentSales(){
+
+  const rows=[...db.sales]
+    .sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt))
+    .slice(0,8);
+
+  if(!rows.length){
+    return `<div class="empty">Sales မရှိသေးပါ</div>`;
   }
-});
 
-/* ================= MODAL ================= */
-
-function openModal(title,body,buttons=""){
-  $("modalTitle").textContent=title;
-  $("modalSubtitle").textContent="";
-  $("modalBody").innerHTML=body;
-  $("modalFoot").innerHTML=buttons;
-  $("modalOverlay").classList.add("show");
-}
-
-function closeModal(){
-  $("modalOverlay").classList.remove("show");
-  $("modalBody").innerHTML="";
-  $("modalFoot").innerHTML="";
-}
-
-$("modalClose").addEventListener("click",closeModal);
-
-$("modalOverlay").addEventListener("click",e=>{
-  if(e.target===$("modalOverlay"))closeModal();
-});
-
-/* ================= DASHBOARD ================= */
-
-function refreshDashboard(){
-  const td=today();
-
-  const sales=data.sales.filter(x=>x.date===td);
-
-  const salesTotal=sales.reduce((a,x)=>a+Number(x.total),0);
-  const profit=sales.reduce((a,x)=>a+Number(x.profit||0),0);
-
-  const purchases=data.purchases
-    .filter(x=>x.date===td)
-    .reduce((a,x)=>a+Number(x.total),0);
-
-  const expenses=data.expenses
-    .filter(x=>x.date===td)
-    .reduce((a,x)=>a+Number(x.amount),0);
-
-  $("todaySales").textContent=money(salesTotal);
-  $("todayProfit").textContent=money(profit);
-  $("todayPurchase").textContent=money(purchases);
-  $("todayExpense").textContent=money(expenses);
-  $("todaySalesCount").textContent=sales.length+" sales";
-
-  $("totalProducts").textContent=data.products.length;
-
-  const low=data.products.filter(p=>Number(p.stock)<=Number(p.minStock||5));
-  $("lowStockCount").textContent=low.length;
-
-  const exp=data.products.filter(p=>p.expiry && daysUntil(p.expiry)<=30);
-  $("expiryCount").textContent=exp.length;
-
-  $("totalCustomers").textContent=data.customers.length;
-
-  let alerts="";
-
-  if(low.length){
-    alerts+=`<div class="alert alert-warning">
-      ⚠️ Low Stock: ${low.length} product(s)
-    </div>`;
-  }
-
-  if(exp.length){
-    alerts+=`<div class="alert alert-danger">
-      ⏰ Expiry within 30 days: ${exp.length} product(s)
-    </div>`;
-  }
-
-  if(!alerts){
-    alerts=`<div class="alert alert-success">✓ လက်ရှိအရေးကြီး Alert မရှိပါ။</div>`;
-  }
-
-  $("dashboardAlerts").innerHTML=alerts;
-
-  if(!sales.length){
-    $("recentSales").innerHTML=`<div class="empty">ယနေ့အရောင်းမရှိသေးပါ။</div>`;
-  }else{
-    $("recentSales").innerHTML=sales.slice(-5).reverse().map(s=>`
-      <div class="cart-row">
-        <span>${esc(s.invoice)}</span>
-        <strong>${money(s.total)}</strong>
-      </div>
-    `).join("");
-  }
-
-  $("shopBadge").textContent=data.settings.shopName||"My Shop";
-}
-
-function daysUntil(date){
-  const a=new Date();
-  const b=new Date(date);
-  a.setHours(0,0,0,0);
-  b.setHours(0,0,0,0);
-  return Math.ceil((b-a)/86400000);
-}
-
-/* ================= PRODUCTS ================= */
-
-function categories(){
-  return [...new Set(data.products.map(p=>p.category).filter(Boolean))];
-}
-
-function populateCategories(){
-  const cats=categories();
-
-  ["salesCategory","productCategoryFilter"].forEach(id=>{
-    const el=$(id);
-    if(!el)return;
-
-    const current=el.value;
-
-    el.innerHTML=
-      `<option value="">All Categories</option>`+
-      cats.map(c=>`<option value="${esc(c)}">${esc(c)}</option>`).join("");
-
-    el.value=current;
-  });
-
-  const customer=$("saleCustomer");
-
-  if(customer){
-    const current=customer.value;
-
-    customer.innerHTML=
-      `<option value="">Walk-in Customer</option>`+
-      data.customers.map(c=>
-        `<option value="${c.id}">${esc(c.name)}</option>`
-      ).join("");
-
-    customer.value=current;
-  }
-}
-
-function renderProducts(){
-  const search=($("productSearch")?.value||"").toLowerCase();
-  const cat=$("productCategoryFilter")?.value||"";
-  const filter=$("stockFilter")?.value||"";
-
-  let list=data.products.filter(p=>{
-    const matchSearch=
-      p.name.toLowerCase().includes(search)||
-      String(p.barcode||"").includes(search);
-
-    const matchCat=!cat||p.category===cat;
-
-    let matchStock=true;
-
-    if(filter==="low")
-      matchStock=Number(p.stock)<=Number(p.minStock||5)&&Number(p.stock)>0;
-
-    if(filter==="out")
-      matchStock=Number(p.stock)<=0;
-
-    return matchSearch&&matchCat&&matchStock;
-  });
-
-  $("productsTableBody").innerHTML=list.length?list.map(p=>`
-    <tr>
-      <td><strong>${esc(p.name)}</strong><br>
-        <small>${esc(p.barcode||"")}</small>
-      </td>
-      <td>${esc(p.category||"-")}</td>
-      <td>${esc(p.unit||"pcs")}</td>
-      <td>${money(p.cost)}</td>
-      <td>${money(p.retail)}</td>
-      <td>${money(p.wholesale)}</td>
-      <td>
-        <span class="badge ${Number(p.stock)<=Number(p.minStock||5)?"badge-red":"badge-green"}">
-          ${p.stock}
-        </span>
-      </td>
-      <td>${p.expiry||"-"}</td>
-      <td>
-        <button class="btn btn-sm btn-primary edit-product" data-id="${p.id}">Edit</button>
-        <button class="btn btn-sm btn-danger delete-product" data-id="${p.id}">Delete</button>
-      </td>
-    </tr>
-  `).join(""):`<tr><td colspan="9" class="empty">Product မရှိသေးပါ။</td></tr>`;
-}
-
-function productForm(p={}){
   return `
-    <div class="form-grid">
-      <div class="field">
-        <label>Product Name *</label>
-        <input id="fName" value="${esc(p.name||"")}">
-      </div>
-
-      <div class="field">
-        <label>Barcode</label>
-        <input id="fBarcode" value="${esc(p.barcode||"")}">
-      </div>
-
-      <div class="field">
-        <label>Category</label>
-        <input id="fCategory" value="${esc(p.category||"")}">
-      </div>
-
-      <div class="field">
-        <label>Subcategory</label>
-        <input id="fSubcategory" value="${esc(p.subcategory||"")}">
-      </div>
-
-      <div class="field">
-        <label>Unit</label>
-        <select id="fUnit">
-          <option ${p.unit==="pcs"||!p.unit?"selected":""}>pcs</option>
-          <option ${p.unit==="pack"?"selected":""}>pack</option>
-          <option ${p.unit==="box"?"selected":""}>box</option>
-          <option ${p.unit==="kg"?"selected":""}>kg</option>
-          <option ${p.unit==="liter"?"selected":""}>liter</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Cost Price</label>
-        <input id="fCost" type="number" value="${p.cost||0}">
-      </div>
-
-      <div class="field">
-        <label>Retail Price</label>
-        <input id="fRetail" type="number" value="${p.retail||0}">
-      </div>
-
-      <div class="field">
-        <label>Wholesale Price</label>
-        <input id="fWholesale" type="number" value="${p.wholesale||0}">
-      </div>
-
-      <div class="field">
-        <label>Stock</label>
-        <input id="fStock" type="number" value="${p.stock||0}">
-      </div>
-
-      <div class="field">
-        <label>Minimum Stock Alert</label>
-        <input id="fMinStock" type="number" value="${p.minStock||5}">
-      </div>
-
-      <div class="field">
-        <label>Expiry Date</label>
-        <input id="fExpiry" type="date" value="${p.expiry||""}">
-      </div>
-
-      <div class="field">
-        <label>Variant / Size / Color</label>
-        <input id="fVariant" value="${esc(p.variant||"")}">
-      </div>
+    <div class="table-wrap">
+      <table style="min-width:500px">
+        <thead>
+          <tr>
+            <th>Invoice</th>
+            <th>Customer</th>
+            <th>Total</th>
+            <th>Payment</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${rows.map(s=>`
+            <tr>
+              <td>${escapeHTML(s.invoice)}</td>
+              <td>${escapeHTML(s.customerName || "Walk-in")}</td>
+              <td>${money(s.total)}</td>
+              <td>${escapeHTML(s.payment)}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
     </div>
   `;
+
 }
 
-function saveProduct(id=null){
-  const name=$("fName").value.trim();
+function renderAlerts(){
 
-  if(!name){
-    toast("Product Name ထည့်ပါ");
-    return;
-  }
+  const alerts=[];
 
-  const obj={
-    id:id||uid("P"),
-    name,
-    barcode:$("fBarcode").value.trim(),
-    category:$("fCategory").value.trim(),
-    subcategory:$("fSubcategory").value.trim(),
-    unit:$("fUnit").value,
-    cost:Number($("fCost").value||0),
-    retail:Number($("fRetail").value||0),
-    wholesale:Number($("fWholesale").value||0),
-    stock:Number($("fStock").value||0),
-    minStock:Number($("fMinStock").value||5),
-    expiry:$("fExpiry").value,
-    variant:$("fVariant").value.trim()
-  };
+  db.products.forEach(p=>{
 
-  const index=data.products.findIndex(p=>p.id===id);
+    if(num(p.stock)<=0){
 
-  if(index>=0)data.products[index]=obj;
-  else data.products.push(obj);
+      alerts.push(`
+        <div class="alert alert-danger">
+          ❌ <strong>${escapeHTML(p.name)}</strong>
+          — Stock ကုန်နေပါပြီ
+        </div>
+      `);
 
-  saveData();
-  closeModal();
-  toast(id?"Product updated":"Product added");
-  refresh();
-}
+    }else if(num(p.stock)<=num(p.minStock)){
 
-$("addProductBtn").addEventListener("click",()=>{
-  openModal(
-    "Add Product",
-    productForm(),
-    `<button class="btn" onclick="closeModal()">Cancel</button>
-     <button class="btn btn-primary" onclick="saveProduct()">Save Product</button>`
-  );
-});
+      alerts.push(`
+        <div class="alert alert-warning">
+          ⚠️ <strong>${escapeHTML(p.name)}</strong>
+          — Low Stock (${p.stock})
+        </div>
+      `);
 
-document.addEventListener("click",e=>{
-  const edit=e.target.closest(".edit-product");
-  if(edit){
-    const p=data.products.find(x=>x.id===edit.dataset.id);
-    if(!p)return;
-
-    openModal(
-      "Edit Product",
-      productForm(p),
-      `<button class="btn" onclick="closeModal()">Cancel</button>
-       <button class="btn btn-primary" onclick="saveProduct('${p.id}')">Update</button>`
-    );
-  }
-
-  const del=e.target.closest(".delete-product");
-  if(del){
-    if(confirm("ဒီ Product ကိုဖျက်မလား?")){
-      data.products=data.products.filter(p=>p.id!==del.dataset.id);
-      saveData();
-      refresh();
-      toast("Product deleted");
     }
-  }
-});
 
-/* ================= SALES POS ================= */
+    if(isExpirySoon(p.expiry)){
 
-function renderSalesProducts(){
-  const search=($("salesSearch").value||"").toLowerCase();
-  const cat=$("salesCategory").value||"";
+      alerts.push(`
+        <div class="alert alert-warning">
+          ⏳ <strong>${escapeHTML(p.name)}</strong>
+          — Expiry: ${escapeHTML(p.expiry)}
+        </div>
+      `);
 
-  const list=data.products.filter(p=>{
-    const a=p.name.toLowerCase().includes(search);
-    const b=String(p.barcode||"").includes(search);
-    const c=!cat||p.category===cat;
-    return (a||b)&&c;
+    }
+
   });
 
-  $("salesProducts").innerHTML=list.length?list.map(p=>`
-    <button class="product-card" data-add-product="${p.id}">
-      <div class="product-name">${esc(p.name)}</div>
-      <div class="product-price">${money(p.retail)}</div>
-      <div class="product-stock">Stock: ${p.stock} ${esc(p.unit||"pcs")}</div>
-    </button>
-  `).join(""):`<div class="empty">Product မရှိပါ။</div>`;
+  if(!alerts.length){
+
+    return `
+      <div class="alert alert-success">
+        ✅ လက်ရှိမှာ အရေးကြီး Alert မရှိပါ
+      </div>
+    `;
+
+  }
+
+  return alerts.slice(0,10).join("");
+
 }
 
-function addToCart(id){
-  const p=data.products.find(x=>x.id===id);
-  if(!p)return;
+function isExpirySoon(date){
 
-  if(Number(p.stock)<=0){
-    toast("Stock မရှိပါ");
+  if(!date) return false;
+
+  const expiry=new Date(date);
+  const now=new Date();
+
+  now.setHours(0,0,0,0);
+
+  const diff=
+    Math.ceil((expiry-now)/(1000*60*60*24));
+
+  return diff<=30;
+
+}
+
+/* =========================================================
+   CATEGORIES
+========================================================= */
+
+function getCategories(){
+
+  return [...new Set(
+    db.products
+      .map(p=>p.category)
+      .filter(Boolean)
+  )].sort();
+
+}
+
+function fillCategorySelects(){
+
+  const categories=getCategories();
+
+  const sales=document.getElementById("salesCategory");
+  const product=document.getElementById("productCategoryFilter");
+
+  const oldSales=sales.value;
+  const oldProduct=product.value;
+
+  sales.innerHTML=
+    `<option value="">All Categories</option>`+
+    categories.map(c=>
+      `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`
+    ).join("");
+
+  product.innerHTML=
+    `<option value="">All Categories</option>`+
+    categories.map(c=>
+      `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`
+    ).join("");
+
+  sales.value=oldSales;
+  product.value=oldProduct;
+
+}
+
+/* =========================================================
+   SALES POS
+========================================================= */
+
+function renderSalesProducts(){
+
+  fillCategorySelects();
+
+  const search=
+    document.getElementById("salesSearch").value
+      .trim().toLowerCase();
+
+  const category=
+    document.getElementById("salesCategory").value;
+
+  const products=db.products.filter(p=>{
+
+    const matchSearch=
+      !search ||
+      p.name.toLowerCase().includes(search) ||
+      String(p.barcode || "").toLowerCase().includes(search);
+
+    const matchCategory=
+      !category || p.category===category;
+
+    return matchSearch && matchCategory;
+
+  });
+
+  const container=
+    document.getElementById("salesProducts");
+
+  if(!products.length){
+
+    container.innerHTML=
+      `<div class="empty">Product မတွေ့ပါ</div>`;
+
     return;
   }
 
-  const item=cart.find(x=>x.productId===id);
+  container.innerHTML=products.map(p=>`
 
-  if(item){
-    if(item.qty>=p.stock){
-      toast("လက်ကျန် stock ထက်မကျော်နိုင်ပါ");
+    <div
+      class="product-card"
+      data-add-product="${escapeHTML(p.id)}"
+    >
+
+      <h4>${escapeHTML(p.name)}</h4>
+
+      <div class="price">
+        ${money(p.retailPrice)}
+      </div>
+
+      <div class="stock">
+        Stock: ${num(p.stock)} ${escapeHTML(p.unit || "")}
+      </div>
+
+      ${
+        p.barcode
+        ? `<div style="font-size:10px;color:#9ca3af">
+             ${escapeHTML(p.barcode)}
+           </div>`
+        : ""
+      }
+
+    </div>
+
+  `).join("");
+
+}
+
+function addToCart(productId){
+
+  const product=db.products.find(p=>p.id===productId);
+
+  if(!product) return;
+
+  if(num(product.stock)<=0){
+
+    showToast("Stock မရှိပါ");
+
+    return;
+  }
+
+  const existing=cart.find(i=>i.productId===productId);
+
+  if(existing){
+
+    if(existing.qty>=num(product.stock)){
+
+      showToast("လက်ကျန် Stock ထက် မကျော်နိုင်ပါ");
+
       return;
     }
-    item.qty++;
+
+    existing.qty++;
+
   }else{
+
     cart.push({
-      productId:id,
-      name:p.name,
+      productId:product.id,
+      name:product.name,
       qty:1,
-      price:Number(p.retail),
-      cost:Number(p.cost)
+      price:num(product.retailPrice),
+      buyPrice:num(product.buyPrice),
+      unit:product.unit || "pcs"
     });
+
   }
 
   renderCart();
+
+}
+
+function changeCartQty(productId,change){
+
+  const item=cart.find(i=>i.productId===productId);
+
+  const product=db.products.find(p=>p.id===productId);
+
+  if(!item || !product) return;
+
+  item.qty+=change;
+
+  if(item.qty<=0){
+
+    cart=cart.filter(i=>i.productId!==productId);
+
+  }else if(item.qty>num(product.stock)){
+
+    item.qty=num(product.stock);
+
+    showToast("Stock ထက်ပိုမရောင်းနိုင်ပါ");
+
+  }
+
+  renderCart();
+
+}
+
+function removeCartItem(productId){
+
+  cart=cart.filter(i=>i.productId!==productId);
+
+  renderCart();
+
+}
+
+function cartSubtotal(){
+
+  return cart.reduce(
+    (sum,item)=>sum+(num(item.price)*num(item.qty)),
+    0
+  );
+
+}
+
+function cartTotal(){
+
+  return Math.max(
+    0,
+    cartSubtotal()-
+    num(document.getElementById("saleDiscount").value)
+  );
+
 }
 
 function renderCart(){
-  const count=cart.reduce((a,x)=>a+x.qty,0);
-  const subtotal=cart.reduce((a,x)=>a+x.qty*x.price,0);
-  const discount=Number($("saleDiscount").value||0);
-  const total=Math.max(0,subtotal-discount);
 
-  $("cartCount").textContent="("+count+")";
-  $("cartSubtotal").textContent=money(subtotal);
-  $("cartTotal").textContent=money(total);
+  const container=document.getElementById("cartItems");
 
   if(!cart.length){
-    $("cartItems").innerHTML=`<div class="empty">ပစ္စည်းမရှိသေးပါ</div>`;
-    return;
+
+    container.innerHTML=
+      `<div class="empty">Cart ထဲမှာ ပစ္စည်းမရှိသေးပါ</div>`;
+
+  }else{
+
+    container.innerHTML=cart.map(item=>`
+
+      <div class="cart-item">
+
+        <div class="cart-item-top">
+
+          <div>
+            <strong>${escapeHTML(item.name)}</strong>
+            <div style="font-size:11px;color:#6b7280">
+              ${money(item.price)} × ${item.qty}
+            </div>
+          </div>
+
+          <strong>
+            ${money(item.price*item.qty)}
+          </strong>
+
+        </div>
+
+        <div class="qty-controls">
+
+          <button
+            class="qty-btn"
+            data-cart-minus="${escapeHTML(item.productId)}"
+          >−</button>
+
+          <strong>${item.qty}</strong>
+
+          <button
+            class="qty-btn"
+            data-cart-plus="${escapeHTML(item.productId)}"
+          >+</button>
+
+          <button
+            class="qty-btn"
+            data-cart-remove="${escapeHTML(item.productId)}"
+          >×</button>
+
+        </div>
+
+      </div>
+
+    `).join("");
+
   }
 
-  $("cartItems").innerHTML=cart.map(x=>`
-    <div class="cart-row">
-      <div style="flex:1">
-        <strong>${esc(x.name)}</strong>
-        <div>${money(x.price)} × ${x.qty}</div>
-        <div class="qty">
-          <button data-cart-minus="${x.productId}">−</button>
-          <span>${x.qty}</span>
-          <button data-cart-plus="${x.productId}">+</button>
-          <button class="btn btn-sm btn-danger" data-cart-remove="${x.productId}">×</button>
-        </div>
-      </div>
-      <strong>${money(x.price*x.qty)}</strong>
-    </div>
-  `).join("");
+  document.getElementById("cartSubtotal")
+    .textContent=money(cartSubtotal());
+
+  document.getElementById("cartTotal")
+    .textContent=money(cartTotal());
+
 }
 
-document.addEventListener("click",e=>{
-  const add=e.target.closest("[data-add-product]");
-  if(add){
-    addToCart(add.dataset.addProduct);
-    return;
-  }
+function renderSaleCustomers(){
 
-  const plus=e.target.closest("[data-cart-plus]");
-  if(plus){
-    const item=cart.find(x=>x.productId===plus.dataset.cartPlus);
-    const p=data.products.find(x=>x.id===plus.dataset.cartPlus);
+  const select=document.getElementById("saleCustomer");
 
-    if(item&&p&&item.qty<p.stock)item.qty++;
-    else toast("Stock မလုံလောက်ပါ");
+  const current=select.value;
 
-    renderCart();
-  }
+  select.innerHTML=
+    `<option value="">Walk-in Customer</option>`+
+    db.customers.map(c=>`
+      <option value="${escapeHTML(c.id)}">
+        ${escapeHTML(c.name)}
+      </option>
+    `).join("");
 
-  const minus=e.target.closest("[data-cart-minus]");
-  if(minus){
-    const item=cart.find(x=>x.productId===minus.dataset.cartMinus);
+  select.value=current;
 
-    if(item){
-      item.qty--;
+}
 
-      if(item.qty<=0)
-        cart=cart.filter(x=>x.productId!==minus.dataset.cartMinus);
-    }
+function checkout(){
 
-    renderCart();
-  }
-
-  const remove=e.target.closest("[data-cart-remove]");
-  if(remove){
-    cart=cart.filter(x=>x.productId!==remove.dataset.cartRemove);
-    renderCart();
-  }
-});
-
-$("clearCartBtn").addEventListener("click",()=>{
-  cart=[];
-  renderCart();
-});
-
-$("saleDiscount").addEventListener("input",renderCart);
-
-document.querySelectorAll("[data-payment]").forEach(btn=>{
-  btn.addEventListener("click",()=>{
-    payment=btn.dataset.payment;
-
-    document.querySelectorAll("[data-payment]").forEach(x=>
-      x.classList.remove("active")
-    );
-
-    btn.classList.add("active");
-  });
-});
-
-$("checkoutBtn").addEventListener("click",()=>{
   if(!cart.length){
-    toast("Cart ထဲမှာ Product ထည့်ပါ");
+
+    showToast("Cart ထဲမှာ Product ထည့်ပါ");
+
     return;
   }
 
-  const discount=Number($("saleDiscount").value||0);
-  const subtotal=cart.reduce((a,x)=>a+x.qty*x.price,0);
-  const total=Math.max(0,subtotal-discount);
-  const profit=cart.reduce((a,x)=>a+(x.price-x.cost)*x.qty,0)-discount;
+  const customerId=
+    document.getElementById("saleCustomer").value;
 
-  const customerId=$("saleCustomer").value;
-  const customer=data.customers.find(c=>c.id===customerId);
+  const customer=db.customers.find(
+    c=>c.id===customerId
+  );
+
+  const discount=
+    num(document.getElementById("saleDiscount").value);
+
+  const subtotal=cartSubtotal();
+  const total=cartTotal();
 
   const sale={
-    id:uid("S"),
-    invoice:"INV-"+Date.now().toString().slice(-7),
+    id:uid("sale_"),
+    invoice:"INV-"+Date.now(),
     date:today(),
-    customerId:customerId||"",
-    customerName:customer?.name||"Walk-in Customer",
-    items:cart.map(x=>({...x})),
+    createdAt:new Date().toISOString(),
+    customerId:customerId || "",
+    customerName:customer?.name || "Walk-in Customer",
+    items:cart.map(item=>({...item})),
     subtotal,
     discount,
     total,
-    profit,
-    payment
+    payment:selectedPayment,
+    userId:currentUser?.id || ""
   };
 
-  data.sales.push(sale);
+  /* STOCK DECREASE */
+  cart.forEach(item=>{
 
-  cart.forEach(x=>{
-    const p=data.products.find(p=>p.id===x.productId);
-    if(p)p.stock=Math.max(0,Number(p.stock)-x.qty);
+    const product=db.products.find(
+      p=>p.id===item.productId
+    );
+
+    if(product){
+
+      product.stock=
+        Math.max(
+          0,
+          num(product.stock)-num(item.qty)
+        );
+
+    }
+
   });
 
-  if(customerId&&payment==="Credit"){
-    const c=data.customers.find(x=>x.id===customerId);
-    if(c)c.due=Number(c.due||0)+total;
+  /* CUSTOMER DUE */
+  if(customer && selectedPayment==="Credit-Due"){
+
+    customer.due=
+      num(customer.due)+total;
+
   }
 
-  saveData();
+  db.sales.push(sale);
+
+  saveDB();
+
+  showReceipt(sale);
 
   cart=[];
-  $("saleDiscount").value=0;
+
+  document.getElementById("saleDiscount").value=0;
 
   renderCart();
-  refresh();
 
-  toast("Sale completed ✓");
-});
+  renderAll();
 
-/* ================= PURCHASE ================= */
-
-function purchaseForm(){
-  return `
-    <div class="form-grid">
-      <div class="field">
-        <label>Supplier</label>
-        <select id="purchaseSupplier">
-          <option value="">Select Supplier</option>
-          ${data.suppliers.map(s=>`<option value="${s.id}">${esc(s.name)}</option>`).join("")}
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Product</label>
-        <select id="purchaseProduct">
-          ${data.products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join("")}
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Quantity</label>
-        <input id="purchaseQty" type="number" value="1" min="1">
-      </div>
-
-      <div class="field">
-        <label>Cost Price</label>
-        <input id="purchaseCost" type="number" value="0">
-      </div>
-
-      <div class="field">
-        <label>Payment</label>
-        <select id="purchasePayment">
-          <option>Cash</option>
-          <option>Credit</option>
-        </select>
-      </div>
-    </div>
-  `;
 }
 
-$("newPurchaseBtn").addEventListener("click",()=>{
-  if(!data.products.length){
-    toast("အရင် Product ထည့်ပါ");
+function showReceipt(sale){
+
+  const html=`
+
+    <div style="
+      max-width:380px;
+      margin:auto;
+      font-family:Arial,sans-serif;
+      padding:20px;
+    ">
+
+      <h2 style="text-align:center">
+        ${escapeHTML(db.shop.name)}
+      </h2>
+
+      <p style="text-align:center">
+        ${escapeHTML(db.shop.address)}
+      </p>
+
+      <p style="text-align:center">
+        ${escapeHTML(db.shop.phone)}
+      </p>
+
+      <hr>
+
+      <p>
+        Invoice: ${escapeHTML(sale.invoice)}<br>
+        Date: ${escapeHTML(sale.date)}<br>
+        Customer: ${escapeHTML(sale.customerName)}
+      </p>
+
+      <hr>
+
+      ${sale.items.map(item=>`
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          margin:7px 0;
+        ">
+          <span>
+            ${escapeHTML(item.name)}
+            × ${item.qty}
+          </span>
+          <span>${money(item.price*item.qty)}</span>
+        </div>
+      `).join("")}
+
+      <hr>
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+      ">
+        <span>Subtotal</span>
+        <strong>${money(sale.subtotal)}</strong>
+      </div>
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+      ">
+        <span>Discount</span>
+        <strong>${money(sale.discount)}</strong>
+      </div>
+
+      <div style="
+        display:flex;
+        justify-content:space-between;
+        font-size:20px;
+        margin-top:10px;
+      ">
+        <strong>Total</strong>
+        <strong>${money(sale.total)}</strong>
+      </div>
+
+      <p style="margin-top:12px">
+        Payment: ${escapeHTML(sale.payment)}
+      </p>
+
+      <hr>
+
+      <p style="text-align:center">
+        ${escapeHTML(db.shop.footer)}
+      </p>
+
+    </div>
+  `;
+
+  document.getElementById("printArea").innerHTML=html;
+
+  const printWindow=window.open("","_blank");
+
+  if(!printWindow){
+
+    showToast("Popup blocked ဖြစ်နေပါတယ်");
+
+    return;
+  }
+
+  printWindow.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>${escapeHTML(sale.invoice)}</title>
+      <style>
+        body{
+          margin:0;
+          font-family:Arial,sans-serif;
+        }
+      </style>
+    </head>
+    <body>
+      ${html}
+      <script>
+        window.onload=function(){
+          window.print();
+        };
+      <\/script>
+    </body>
+    </html>
+  `);
+
+  printWindow.document.close();
+
+}
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+function renderProducts(){
+
+  fillCategorySelects();
+
+  const search=
+    document.getElementById("productSearch")
+      .value.trim().toLowerCase();
+
+  const category=
+    document.getElementById("productCategoryFilter").value;
+
+  const stockFilter=
+    document.getElementById("stockFilter").value;
+
+  let products=db.products.filter(p=>{
+
+    const searchMatch=
+      !search ||
+      p.name.toLowerCase().includes(search) ||
+      String(p.barcode || "").toLowerCase().includes(search);
+
+    const categoryMatch=
+      !category || p.category===category;
+
+    let stockMatch=true;
+
+    if(stockFilter==="low"){
+      stockMatch=num(p.stock)<=num(p.minStock);
+    }
+
+    if(stockFilter==="out"){
+      stockMatch=num(p.stock)<=0;
+    }
+
+    return searchMatch && categoryMatch && stockMatch;
+
+  });
+
+  const tbody=
+    document.getElementById("productsTableBody");
+
+  if(!products.length){
+
+    tbody.innerHTML=`
+      <tr>
+        <td colspan="10" class="empty">
+          Product မရှိသေးပါ
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tbody.innerHTML=products.map(p=>`
+
+    <tr>
+
+      <td>
+        <strong>${escapeHTML(p.name)}</strong>
+        ${
+          p.variant
+          ? `<div style="font-size:10px;color:#6b7280">
+              ${escapeHTML(p.variant)}
+             </div>`
+          : ""
+        }
+      </td>
+
+      <td>${escapeHTML(p.barcode || "-")}</td>
+
+      <td>${escapeHTML(p.category || "-")}</td>
+
+      <td>${escapeHTML(p.unit || "pcs")}</td>
+
+      <td>${money(p.buyPrice)}</td>
+
+      <td>${money(p.retailPrice)}</td>
+
+      <td>${money(p.wholesalePrice)}</td>
+
+      <td>
+        <span class="badge ${
+          num(p.stock)<=num(p.minStock)
+          ? "badge-danger"
+          : "badge-success"
+        }">
+          ${num(p.stock)}
+        </span>
+      </td>
+
+      <td>${escapeHTML(p.expiry || "-")}</td>
+
+      <td>
+
+        <button
+          class="btn btn-light btn-sm"
+          data-edit-product="${escapeHTML(p.id)}"
+        >
+          Edit
+        </button>
+
+        <button
+          class="btn btn-danger btn-sm"
+          data-delete-product="${escapeHTML(p.id)}"
+        >
+          Delete
+        </button>
+
+      </td>
+
+    </tr>
+
+  `).join("");
+
+}
+
+function openProductModal(productId=null){
+
+  editingId=productId;
+
+  const product=productId
+    ? db.products.find(p=>p.id===productId)
+    : null;
+
+  openModal(
+    product ? "Edit Product" : "Add Product",
+    "Product information",
+    `
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input id="mProductName"
+            value="${escapeHTML(product?.name || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Barcode</label>
+          <input id="mProductBarcode"
+            value="${escapeHTML(product?.barcode || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <input id="mProductCategory"
+            value="${escapeHTML(product?.category || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Subcategory</label>
+          <input id="mProductSubcategory"
+            value="${escapeHTML(product?.subcategory || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Unit</label>
+          <select id="mProductUnit">
+            ${["pcs","pack","box","bottle","kg","g","liter","other"]
+              .map(u=>`
+                <option
+                  value="${u}"
+                  ${product?.unit===u ? "selected":""}
+                >
+                  ${u}
+                </option>
+              `).join("")}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Stock</label>
+          <input id="mProductStock"
+            type="number"
+            min="0"
+            value="${num(product?.stock)}">
+        </div>
+
+        <div class="form-group">
+          <label>Minimum Stock</label>
+          <input id="mProductMinStock"
+            type="number"
+            min="0"
+            value="${num(product?.minStock || 5)}">
+        </div>
+
+        <div class="form-group">
+          <label>Buy Price</label>
+          <input id="mProductBuy"
+            type="number"
+            min="0"
+            value="${num(product?.buyPrice)}">
+        </div>
+
+        <div class="form-group">
+          <label>Retail Price</label>
+          <input id="mProductRetail"
+            type="number"
+            min="0"
+            value="${num(product?.retailPrice)}">
+        </div>
+
+        <div class="form-group">
+          <label>Wholesale Price</label>
+          <input id="mProductWholesale"
+            type="number"
+            min="0"
+            value="${num(product?.wholesalePrice)}">
+        </div>
+
+        <div class="form-group">
+          <label>Expiry Date</label>
+          <input id="mProductExpiry"
+            type="date"
+            value="${escapeHTML(product?.expiry || "")}">
+        </div>
+
+        <div class="form-group full">
+          <label>Variant (Color / Size)</label>
+          <input id="mProductVariant"
+            placeholder="ဥပမာ Red / XL"
+            value="${escapeHTML(product?.variant || "")}">
+        </div>
+
+      </div>
+    `,
+    `
+      <button class="btn btn-light" id="cancelModalBtn">
+        Cancel
+      </button>
+
+      <button class="btn btn-primary" id="saveProductBtn">
+        💾 Save Product
+      </button>
+    `
+  );
+
+}
+
+function saveProduct(){
+
+  const name=
+    document.getElementById("mProductName").value.trim();
+
+  if(!name){
+
+    showToast("Product Name ထည့်ပါ");
+
+    return;
+  }
+
+  const data={
+    name,
+    barcode:
+      document.getElementById("mProductBarcode").value.trim(),
+    category:
+      document.getElementById("mProductCategory").value.trim(),
+    subcategory:
+      document.getElementById("mProductSubcategory").value.trim(),
+    unit:
+      document.getElementById("mProductUnit").value,
+    stock:
+      num(document.getElementById("mProductStock").value),
+    minStock:
+      num(document.getElementById("mProductMinStock").value),
+    buyPrice:
+      num(document.getElementById("mProductBuy").value),
+    retailPrice:
+      num(document.getElementById("mProductRetail").value),
+    wholesalePrice:
+      num(document.getElementById("mProductWholesale").value),
+    expiry:
+      document.getElementById("mProductExpiry").value,
+    variant:
+      document.getElementById("mProductVariant").value.trim()
+  };
+
+  if(editingId){
+
+    const product=db.products.find(
+      p=>p.id===editingId
+    );
+
+    if(product){
+      Object.assign(product,data);
+    }
+
+    showToast("Product updated");
+
+  }else{
+
+    db.products.push({
+      id:uid("prd_"),
+      createdAt:new Date().toISOString(),
+      ...data
+    });
+
+    showToast("Product added");
+
+  }
+
+  saveDB();
+
+  closeModal();
+
+  renderAll();
+
+}
+
+function deleteProduct(id){
+
+  const product=db.products.find(p=>p.id===id);
+
+  if(!product) return;
+
+  if(!confirm(
+    `"${product.name}" ကို ဖျက်မလား?`
+  )) return;
+
+  db.products=db.products.filter(
+    p=>p.id!==id
+  );
+
+  saveDB();
+
+  renderAll();
+
+  showToast("Product deleted");
+
+}
+
+/* =========================================================
+   PURCHASES
+========================================================= */
+
+function renderPurchases(){
+
+  const date=today();
+
+  const purchases=purchasesForDate(date);
+
+  document.getElementById("purchaseTodayTotal")
+    .textContent=money(
+      purchases.reduce((s,p)=>s+num(p.total),0)
+    );
+
+  document.getElementById("purchaseInvoiceCount")
+    .textContent=new Set(
+      db.purchases.map(p=>p.invoice)
+    ).size;
+
+  document.getElementById("supplierPayable")
+    .textContent=money(
+      db.suppliers.reduce(
+        (s,p)=>s+num(p.payable),0
+      )
+    );
+
+  const rows=[...db.purchases]
+    .sort((a,b)=>new Date(b.createdAt)-new Date(a.createdAt));
+
+  const tbody=document.getElementById("purchaseTableBody");
+
+  if(!rows.length){
+
+    tbody.innerHTML=`
+      <tr>
+        <td colspan="8" class="empty">
+          Purchase မရှိသေးပါ
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tbody.innerHTML=rows.map(p=>`
+
+    <tr>
+      <td>${escapeHTML(p.date)}</td>
+      <td>${escapeHTML(p.invoice)}</td>
+      <td>${escapeHTML(p.supplierName)}</td>
+      <td>${escapeHTML(p.productName)}</td>
+      <td>${num(p.qty)}</td>
+      <td>${money(p.price)}</td>
+      <td>${money(p.total)}</td>
+      <td>${escapeHTML(p.payment)}</td>
+    </tr>
+
+  `).join("");
+
+}
+
+function openPurchaseModal(){
+
+  if(!db.products.length){
+
+    showToast("အရင် Product ထည့်ပါ");
+
+    showSection("products");
+
+    return;
+  }
+
+  if(!db.suppliers.length){
+
+    showToast("အရင် Supplier ထည့်ပါ");
+
+    showSection("suppliers");
+
     return;
   }
 
   openModal(
     "New Purchase",
-    purchaseForm(),
-    `<button class="btn" onclick="closeModal()">Cancel</button>
-     <button class="btn btn-primary" onclick="savePurchase()">Save Purchase</button>`
+    "Stock အလိုအလျောက် တိုးပါမယ်",
+    `
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Supplier</label>
+          <select id="mPurchaseSupplier">
+            ${db.suppliers.map(s=>`
+              <option value="${escapeHTML(s.id)}">
+                ${escapeHTML(s.name)}
+              </option>
+            `).join("")}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Product</label>
+          <select id="mPurchaseProduct">
+            ${db.products.map(p=>`
+              <option value="${escapeHTML(p.id)}">
+                ${escapeHTML(p.name)}
+              </option>
+            `).join("")}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Quantity</label>
+          <input id="mPurchaseQty" type="number" min="1" value="1">
+        </div>
+
+        <div class="form-group">
+          <label>Purchase Price</label>
+          <input id="mPurchasePrice" type="number" min="0" value="0">
+        </div>
+
+        <div class="form-group">
+          <label>Payment</label>
+          <select id="mPurchasePayment">
+            <option>Cash</option>
+            <option>KBZ Pay</option>
+            <option>Bank</option>
+            <option>Credit-Due</option>
+          </select>
+        </div>
+
+      </div>
+    `,
+    `
+      <button class="btn btn-light" id="cancelModalBtn">
+        Cancel
+      </button>
+
+      <button class="btn btn-primary" id="savePurchaseBtn">
+        Save Purchase
+      </button>
+    `
   );
-});
 
-function savePurchase(){
-  const productId=$("purchaseProduct").value;
-  const p=data.products.find(x=>x.id===productId);
+  const productSelect=
+    document.getElementById("mPurchaseProduct");
 
-  if(!p)return;
+  const priceInput=
+    document.getElementById("mPurchasePrice");
 
-  const qty=Number($("purchaseQty").value||0);
-  const cost=Number($("purchaseCost").value||0);
+  function updatePrice(){
 
-  if(qty<=0){
-    toast("Quantity မှန်အောင်ထည့်ပါ");
-    return;
+    const product=db.products.find(
+      p=>p.id===productSelect.value
+    );
+
+    priceInput.value=num(product?.buyPrice);
+
   }
 
-  const total=qty*cost;
+  productSelect.addEventListener(
+    "change",
+    updatePrice
+  );
 
-  data.purchases.push({
-    id:uid("PUR"),
-    invoice:"PUR-"+Date.now().toString().slice(-7),
-    date:today(),
-    supplierId:$("purchaseSupplier").value,
-    supplierName:data.suppliers.find(
-      s=>s.id===$("purchaseSupplier").value
-    )?.name||"Unknown Supplier",
-    productId,
-    productName:p.name,
-    qty,
-    cost,
-    total,
-    payment:$("purchasePayment").value
-  });
+  updatePrice();
 
-  p.stock=Number(p.stock||0)+qty;
-  p.cost=cost;
-
-  saveData();
-  closeModal();
-  refresh();
-  toast("Purchase saved ✓");
 }
 
-/* ================= STOCK ================= */
+function savePurchase(){
 
-$("stockAdjustmentBtn").addEventListener("click",()=>{
-  if(!data.products.length){
-    toast("Product မရှိသေးပါ");
+  const supplier=db.suppliers.find(
+    s=>s.id===
+    document.getElementById("mPurchaseSupplier").value
+  );
+
+  const product=db.products.find(
+    p=>p.id===
+    document.getElementById("mPurchaseProduct").value
+  );
+
+  if(!supplier || !product){
+
+    showToast("Supplier / Product ရွေးပါ");
+
     return;
   }
 
-  const body=`
-    <div class="field">
-      <label>Product</label>
-      <select id="adjustProduct">
-        ${data.products.map(p=>`<option value="${p.id}">${esc(p.name)} — ${p.stock}</option>`).join("")}
-      </select>
-    </div>
+  const qty=
+    num(document.getElementById("mPurchaseQty").value);
 
-    <div class="field" style="margin-top:10px">
-      <label>Adjustment (+ / -)</label>
-      <input id="adjustQty" type="number" value="0">
-    </div>
+  const price=
+    num(document.getElementById("mPurchasePrice").value);
 
-    <div class="field" style="margin-top:10px">
-      <label>Reason</label>
-      <input id="adjustReason" placeholder="Stock count / Damage / etc.">
-    </div>
-  `;
+  if(qty<=0){
+
+    showToast("Quantity မှန်အောင်ထည့်ပါ");
+
+    return;
+  }
+
+  const total=qty*price;
+
+  const payment=
+    document.getElementById("mPurchasePayment").value;
+
+  const purchase={
+    id:uid("pur_"),
+    invoice:"PUR-"+Date.now(),
+    date:today(),
+    createdAt:new Date().toISOString(),
+    supplierId:supplier.id,
+    supplierName:supplier.name,
+    productId:product.id,
+    productName:product.name,
+    qty,
+    price,
+    total,
+    payment
+  };
+
+  product.stock=num(product.stock)+qty;
+
+  if(payment==="Credit-Due"){
+
+    supplier.payable=
+      num(supplier.payable)+total;
+
+  }
+
+  db.purchases.push(purchase);
+
+  saveDB();
+
+  closeModal();
+
+  renderAll();
+
+  showToast("Purchase saved");
+
+}
+
+/* =========================================================
+   STOCK
+========================================================= */
+
+function renderStock(){
+
+  const search=
+    document.getElementById("stockSearch").value
+      .trim().toLowerCase();
+
+  const products=db.products.filter(p=>
+    !search ||
+    p.name.toLowerCase().includes(search) ||
+    String(p.barcode || "")
+      .toLowerCase()
+      .includes(search)
+  );
+
+  document.getElementById("stockProductCount")
+    .textContent=db.products.length;
+
+  document.getElementById("stockUnitCount")
+    .textContent=db.products.reduce(
+      (s,p)=>s+num(p.stock),0
+    );
+
+  document.getElementById("stockCostValue")
+    .textContent=money(
+      db.products.reduce(
+        (s,p)=>s+(num(p.stock)*num(p.buyPrice)),
+        0
+      )
+    );
+
+  document.getElementById("stockLowCount")
+    .textContent=db.products.filter(
+      p=>num(p.stock)<=num(p.minStock)
+    ).length;
+
+  const tbody=document.getElementById("stockTableBody");
+
+  if(!products.length){
+
+    tbody.innerHTML=`
+      <tr>
+        <td colspan="7" class="empty">
+          Stock မရှိသေးပါ
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tbody.innerHTML=products.map(p=>`
+
+    <tr>
+
+      <td>${escapeHTML(p.name)}</td>
+      <td>${escapeHTML(p.category || "-")}</td>
+      <td>${num(p.stock)}</td>
+      <td>${num(p.minStock)}</td>
+      <td>${money(p.buyPrice)}</td>
+      <td>${money(num(p.stock)*num(p.buyPrice))}</td>
+
+      <td>
+        ${
+          num(p.stock)<=0
+          ? `<span class="badge badge-danger">OUT</span>`
+          : num(p.stock)<=num(p.minStock)
+          ? `<span class="badge badge-warning">LOW</span>`
+          : `<span class="badge badge-success">OK</span>`
+        }
+      </td>
+
+    </tr>
+
+  `).join("");
+
+}
+
+function openStockAdjustmentModal(){
+
+  if(!db.products.length){
+
+    showToast("Product မရှိသေးပါ");
+
+    return;
+  }
 
   openModal(
     "Stock Adjustment",
-    body,
-    `<button class="btn" onclick="closeModal()">Cancel</button>
-     <button class="btn btn-primary" onclick="saveAdjustment()">Save</button>`
+    "Stock ကို +/- ပြင်နိုင်ပါတယ်",
+    `
+      <div class="form-grid">
+
+        <div class="form-group full">
+          <label>Product</label>
+          <select id="mAdjustProduct">
+            ${db.products.map(p=>`
+              <option value="${escapeHTML(p.id)}">
+                ${escapeHTML(p.name)}
+                — Current: ${num(p.stock)}
+              </option>
+            `).join("")}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Adjustment Qty</label>
+          <input
+            id="mAdjustQty"
+            type="number"
+            value="0"
+          >
+        </div>
+
+        <div class="form-group">
+          <label>Reason</label>
+          <input
+            id="mAdjustReason"
+            placeholder="Damage / Lost / Found..."
+          >
+        </div>
+
+      </div>
+    `,
+    `
+      <button class="btn btn-light" id="cancelModalBtn">
+        Cancel
+      </button>
+
+      <button class="btn btn-warning" id="saveAdjustmentBtn">
+        Save Adjustment
+      </button>
+    `
   );
-});
 
-function saveAdjustment(){
-  const id=$("adjustProduct").value;
-  const p=data.products.find(x=>x.id===id);
-  const qty=Number($("adjustQty").value||0);
-
-  if(!p)return;
-
-  p.stock=Math.max(0,Number(p.stock)+qty);
-
-  data.stockMoves.push({
-    id:uid("SM"),
-    date:today(),
-    productId:id,
-    productName:p.name,
-    qty,
-    reason:$("adjustReason").value
-  });
-
-  saveData();
-  closeModal();
-  refresh();
-  toast("Stock updated");
 }
 
-/* ================= CUSTOMERS ================= */
+function saveStockAdjustment(){
 
-function customerForm(c={}){
-  return `
-    <div class="form-grid">
-      <div class="field"><label>Name *</label><input id="cName" value="${esc(c.name||"")}"></div>
-      <div class="field"><label>Phone</label><input id="cPhone" value="${esc(c.phone||"")}"></div>
-      <div class="field"><label>Address</label><input id="cAddress" value="${esc(c.address||"")}"></div>
-      <div class="field"><label>Opening Due</label><input id="cDue" type="number" value="${c.due||0}"></div>
-    </div>
-  `;
-}
-
-$("addCustomerBtn").addEventListener("click",()=>{
-  openModal(
-    "Add Customer",
-    customerForm(),
-    `<button class="btn" onclick="closeModal()">Cancel</button>
-     <button class="btn btn-primary" onclick="saveCustomer()">Save</button>`
+  const product=db.products.find(
+    p=>p.id===
+    document.getElementById("mAdjustProduct").value
   );
-});
 
-function saveCustomer(id=null){
-  const name=$("cName").value.trim();
+  const qty=
+    num(document.getElementById("mAdjustQty").value);
 
-  if(!name){
-    toast("Customer name ထည့်ပါ");
+  const reason=
+    document.getElementById("mAdjustReason").value.trim();
+
+  if(!product || qty===0){
+
+    showToast("Product နှင့် Qty ထည့်ပါ");
+
     return;
   }
 
-  const obj={
-    id:id||uid("C"),
-    name,
-    phone:$("cPhone").value.trim(),
-    address:$("cAddress").value.trim(),
-    due:Number($("cDue").value||0)
-  };
+  product.stock=
+    Math.max(0,num(product.stock)+qty);
 
-  const i=data.customers.findIndex(x=>x.id===id);
+  db.adjustments.push({
+    id:uid("adj_"),
+    date:today(),
+    createdAt:new Date().toISOString(),
+    productId:product.id,
+    productName:product.name,
+    qty,
+    reason
+  });
 
-  if(i>=0)data.customers[i]=obj;
-  else data.customers.push(obj);
+  saveDB();
 
-  saveData();
   closeModal();
-  refresh();
-  toast("Customer saved");
+
+  renderAll();
+
+  showToast("Stock adjusted");
+
 }
+
+/* =========================================================
+   CUSTOMERS
+========================================================= */
 
 function renderCustomers(){
-  const search=($("customerSearch").value||"").toLowerCase();
 
-  const list=data.customers.filter(c=>
-    c.name.toLowerCase().includes(search)||
-    String(c.phone||"").includes(search)
+  const search=
+    document.getElementById("customerSearch").value
+      .trim().toLowerCase();
+
+  const customers=db.customers.filter(c=>
+    !search ||
+    c.name.toLowerCase().includes(search) ||
+    String(c.phone || "")
+      .toLowerCase()
+      .includes(search)
   );
 
-  $("customerCount").textContent=data.customers.length;
+  document.getElementById("customerCount")
+    .textContent=db.customers.length;
 
-  $("customerReceivable").textContent=money(
-    data.customers.reduce((a,c)=>a+Number(c.due||0),0)
-  );
-
-  $("customerTableBody").innerHTML=list.length?list.map(c=>`
-    <tr>
-      <td><strong>${esc(c.name)}</strong></td>
-      <td>${esc(c.phone||"-")}</td>
-      <td>${esc(c.address||"-")}</td>
-      <td>${money(c.due)}</td>
-      <td>
-        <button class="btn btn-sm btn-primary edit-customer" data-id="${c.id}">Edit</button>
-        <button class="btn btn-sm btn-danger delete-customer" data-id="${c.id}">Delete</button>
-      </td>
-    </tr>
-  `).join(""):`<tr><td colspan="5" class="empty">Customer မရှိသေးပါ။</td></tr>`;
-}
-
-$("customerSearch").addEventListener("input",renderCustomers);
-
-document.addEventListener("click",e=>{
-  const edit=e.target.closest(".edit-customer");
-
-  if(edit){
-    const c=data.customers.find(x=>x.id===edit.dataset.id);
-
-    openModal(
-      "Edit Customer",
-      customerForm(c),
-      `<button class="btn" onclick="closeModal()">Cancel</button>
-       <button class="btn btn-primary" onclick="saveCustomer('${c.id}')">Update</button>`
+  document.getElementById("customerReceivable")
+    .textContent=money(
+      db.customers.reduce(
+        (s,c)=>s+num(c.due),0
+      )
     );
-  }
 
-  const del=e.target.closest(".delete-customer");
+  const tbody=
+    document.getElementById("customerTableBody");
 
-  if(del&&confirm("Customer ကိုဖျက်မလား?")){
-    data.customers=data.customers.filter(c=>c.id!==del.dataset.id);
-    saveData();
-    refresh();
-  }
-});
+  if(!customers.length){
 
-/* ================= SUPPLIERS ================= */
+    tbody.innerHTML=`
+      <tr>
+        <td colspan="5" class="empty">
+          Customer မရှိသေးပါ
+        </td>
+      </tr>
+    `;
 
-function supplierForm(s={}){
-  return `
-    <div class="form-grid">
-      <div class="field"><label>Name *</label><input id="sName" value="${esc(s.name||"")}"></div>
-      <div class="field"><label>Phone</label><input id="sPhone" value="${esc(s.phone||"")}"></div>
-      <div class="field"><label>Address</label><input id="sAddress" value="${esc(s.address||"")}"></div>
-      <div class="field"><label>Payable</label><input id="sDue" type="number" value="${s.due||0}"></div>
-    </div>
-  `;
-}
-
-$("addSupplierBtn").addEventListener("click",()=>{
-  openModal(
-    "Add Supplier",
-    supplierForm(),
-    `<button class="btn" onclick="closeModal()">Cancel</button>
-     <button class="btn btn-primary" onclick="saveSupplier()">Save</button>`
-  );
-});
-
-function saveSupplier(id=null){
-  const name=$("sName").value.trim();
-
-  if(!name){
-    toast("Supplier name ထည့်ပါ");
     return;
   }
 
-  const obj={
-    id:id||uid("SUP"),
+  tbody.innerHTML=customers.map(c=>`
+
+    <tr>
+
+      <td><strong>${escapeHTML(c.name)}</strong></td>
+
+      <td>${escapeHTML(c.phone || "-")}</td>
+
+      <td>${escapeHTML(c.address || "-")}</td>
+
+      <td>
+        <span class="${
+          num(c.due)>0
+          ? "badge badge-danger"
+          : "badge badge-success"
+        }">
+          ${money(c.due)}
+        </span>
+      </td>
+
+      <td>
+
+        <button
+          class="btn btn-success btn-sm"
+          data-receive-customer="${escapeHTML(c.id)}"
+        >
+          Receive
+        </button>
+
+        <button
+          class="btn btn-light btn-sm"
+          data-edit-customer="${escapeHTML(c.id)}"
+        >
+          Edit
+        </button>
+
+        <button
+          class="btn btn-danger btn-sm"
+          data-delete-customer="${escapeHTML(c.id)}"
+        >
+          Delete
+        </button>
+
+      </td>
+
+    </tr>
+
+  `).join("");
+
+}
+
+function openCustomerModal(customerId=null){
+
+  editingId=customerId;
+
+  const customer=customerId
+    ? db.customers.find(c=>c.id===customerId)
+    : null;
+
+  openModal(
+    customer ? "Edit Customer" : "Add Customer",
+    "Customer information",
+    `
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Name *</label>
+          <input id="mCustomerName"
+            value="${escapeHTML(customer?.name || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input id="mCustomerPhone"
+            value="${escapeHTML(customer?.phone || "")}">
+        </div>
+
+        <div class="form-group full">
+          <label>Address</label>
+          <input id="mCustomerAddress"
+            value="${escapeHTML(customer?.address || "")}">
+        </div>
+
+      </div>
+    `,
+    `
+      <button class="btn btn-light" id="cancelModalBtn">
+        Cancel
+      </button>
+
+      <button class="btn btn-primary" id="saveCustomerBtn">
+        Save Customer
+      </button>
+    `
+  );
+
+}
+
+function saveCustomer(){
+
+  const name=
+    document.getElementById("mCustomerName")
+      .value.trim();
+
+  if(!name){
+
+    showToast("Customer Name ထည့်ပါ");
+
+    return;
+  }
+
+  const data={
     name,
-    phone:$("sPhone").value.trim(),
-    address:$("sAddress").value.trim(),
-    due:Number($("sDue").value||0)
+    phone:
+      document.getElementById("mCustomerPhone")
+        .value.trim(),
+    address:
+      document.getElementById("mCustomerAddress")
+        .value.trim()
   };
 
-  const i=data.suppliers.findIndex(x=>x.id===id);
+  if(editingId){
 
-  if(i>=0)data.suppliers[i]=obj;
-  else data.suppliers.push(obj);
+    const customer=db.customers.find(
+      c=>c.id===editingId
+    );
 
-  saveData();
+    if(customer){
+      Object.assign(customer,data);
+    }
+
+  }else{
+
+    db.customers.push({
+      id:uid("cus_"),
+      due:0,
+      createdAt:new Date().toISOString(),
+      ...data
+    });
+
+  }
+
+  saveDB();
+
   closeModal();
-  refresh();
-  toast("Supplier saved");
+
+  renderAll();
+
+  showToast("Customer saved");
+
 }
+
+function deleteCustomer(id){
+
+  if(!confirm("Customer ကို ဖျက်မလား?")) return;
+
+  db.customers=db.customers.filter(
+    c=>c.id!==id
+  );
+
+  saveDB();
+
+  renderAll();
+
+}
+
+function receiveCustomerPayment(id){
+
+  const customer=db.customers.find(
+    c=>c.id===id
+  );
+
+  if(!customer) return;
+
+  openModal(
+    "Receive Customer Payment",
+    customer.name,
+    `
+      <div class="form-group">
+        <label>Current Due</label>
+        <input value="${money(customer.due)}" disabled>
+      </div>
+
+      <div class="form-group" style="margin-top:12px">
+        <label>Receive Amount</label>
+        <input
+          id="mReceiveAmount"
+          type="number"
+          min="0"
+          value="0"
+        >
+      </div>
+    `,
+    `
+      <button class="btn btn-light" id="cancelModalBtn">
+        Cancel
+      </button>
+
+      <button class="btn btn-success" id="receivePaymentBtn">
+        Receive
+      </button>
+    `
+  );
+
+  document
+    .getElementById("receivePaymentBtn")
+    .dataset.customerId=id;
+
+}
+
+function saveCustomerPayment(id){
+
+  const customer=db.customers.find(
+    c=>c.id===id
+  );
+
+  const amount=
+    num(document.getElementById("mReceiveAmount").value);
+
+  if(!customer || amount<=0){
+
+    showToast("Amount ထည့်ပါ");
+
+    return;
+  }
+
+  customer.due=
+    Math.max(0,num(customer.due)-amount);
+
+  saveDB();
+
+  closeModal();
+
+  renderAll();
+
+  showToast("Payment received");
+
+}
+
+/* =========================================================
+   SUPPLIERS
+========================================================= */
 
 function renderSuppliers(){
-  $("supplierTableBody").innerHTML=data.suppliers.length?
-    data.suppliers.map(s=>`
+
+  const search=
+    document.getElementById("supplierSearch").value
+      .trim().toLowerCase();
+
+  const suppliers=db.suppliers.filter(s=>
+    !search ||
+    s.name.toLowerCase().includes(search) ||
+    String(s.phone || "")
+      .toLowerCase()
+      .includes(search)
+  );
+
+  const tbody=
+    document.getElementById("supplierTableBody");
+
+  if(!suppliers.length){
+
+    tbody.innerHTML=`
       <tr>
-        <td><strong>${esc(s.name)}</strong></td>
-        <td>${esc(s.phone||"-")}</td>
-        <td>${esc(s.address||"-")}</td>
-        <td>${money(s.due)}</td>
-        <td>
-          <button class="btn btn-sm btn-primary edit-supplier" data-id="${s.id}">Edit</button>
-          <button class="btn btn-sm btn-danger delete-supplier" data-id="${s.id}">Delete</button>
+        <td colspan="5" class="empty">
+          Supplier မရှိသေးပါ
         </td>
       </tr>
-    `).join("")
-  :`<tr><td colspan="5" class="empty">Supplier မရှိသေးပါ။</td></tr>`;
-}
+    `;
 
-document.addEventListener("click",e=>{
-  const edit=e.target.closest(".edit-supplier");
-
-  if(edit){
-    const s=data.suppliers.find(x=>x.id===edit.dataset.id);
-
-    openModal(
-      "Edit Supplier",
-      supplierForm(s),
-      `<button class="btn" onclick="closeModal()">Cancel</button>
-       <button class="btn btn-primary" onclick="saveSupplier('${s.id}')">Update</button>`
-    );
-  }
-
-  const del=e.target.closest(".delete-supplier");
-
-  if(del&&confirm("Supplier ကိုဖျက်မလား?")){
-    data.suppliers=data.suppliers.filter(s=>s.id!==del.dataset.id);
-    saveData();
-    refresh();
-  }
-});
-
-/* ================= DEBTS ================= */
-
-function renderDebts(){
-  const rec=data.customers.reduce((a,c)=>a+Number(c.due||0),0);
-  const pay=data.suppliers.reduce((a,s)=>a+Number(s.due||0),0);
-
-  $("totalReceivable").textContent=money(rec);
-  $("totalPayable").textContent=money(pay);
-
-  $("receivableList").innerHTML=data.customers.filter(c=>Number(c.due)>0).length
-    ?data.customers.filter(c=>Number(c.due)>0).map(c=>`
-      <div class="cart-row">
-        <span>${esc(c.name)}</span>
-        <strong>${money(c.due)}</strong>
-      </div>
-    `).join("")
-    :`<div class="empty">Receivable မရှိပါ။</div>`;
-
-  $("payableList").innerHTML=data.suppliers.filter(s=>Number(s.due)>0).length
-    ?data.suppliers.filter(s=>Number(s.due)>0).map(s=>`
-      <div class="cart-row">
-        <span>${esc(s.name)}</span>
-        <strong>${money(s.due)}</strong>
-      </div>
-    `).join("")
-    :`<div class="empty">Payable မရှိပါ။</div>`;
-}
-
-/* ================= EXPENSES ================= */
-
-function expenseForm(e={}){
-  return `
-    <div class="form-grid">
-      <div class="field">
-        <label>Category</label>
-        <select id="eCategory">
-          <option ${e.category==="Rent"?"selected":""}>Rent</option>
-          <option ${e.category==="Salary"?"selected":""}>Salary</option>
-          <option ${e.category==="Transport"?"selected":""}>Transport</option>
-          <option ${e.category==="Electricity"?"selected":""}>Electricity</option>
-          <option ${e.category==="Other"?"selected":""}>Other</option>
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Amount</label>
-        <input id="eAmount" type="number" value="${e.amount||0}">
-      </div>
-
-      <div class="field" style="grid-column:1/-1">
-        <label>Description</label>
-        <input id="eDescription" value="${esc(e.description||"")}">
-      </div>
-    </div>
-  `;
-}
-
-$("addExpenseBtn").addEventListener("click",()=>{
-  openModal(
-    "Add Expense",
-    expenseForm(),
-    `<button class="btn" onclick="closeModal()">Cancel</button>
-     <button class="btn btn-primary" onclick="saveExpense()">Save</button>`
-  );
-});
-
-function saveExpense(){
-  const amount=Number($("eAmount").value||0);
-
-  if(amount<=0){
-    toast("Amount ထည့်ပါ");
     return;
   }
 
-  data.expenses.push({
-    id:uid("E"),
-    date:today(),
-    category:$("eCategory").value,
-    description:$("eDescription").value.trim(),
-    amount
-  });
+  tbody.innerHTML=suppliers.map(s=>`
 
-  saveData();
-  closeModal();
-  refresh();
-  toast("Expense saved");
+    <tr>
+
+      <td><strong>${escapeHTML(s.name)}</strong></td>
+
+      <td>${escapeHTML(s.phone || "-")}</td>
+
+      <td>${escapeHTML(s.address || "-")}</td>
+
+      <td>
+        <span class="${
+          num(s.payable)>0
+          ? "badge badge-danger"
+          : "badge badge-success"
+        }">
+          ${money(s.payable)}
+        </span>
+      </td>
+
+      <td>
+
+        <button
+          class="btn btn-success btn-sm"
+          data-pay-supplier="${escapeHTML(s.id)}"
+        >
+          Pay
+        </button>
+
+        <button
+          class="btn btn-light btn-sm"
+          data-edit-supplier="${escapeHTML(s.id)}"
+        >
+          Edit
+        </button>
+
+        <button
+          class="btn btn-danger btn-sm"
+          data-delete-supplier="${escapeHTML(s.id)}"
+        >
+          Delete
+        </button>
+
+      </td>
+
+    </tr>
+
+  `).join("");
+
 }
 
-function renderExpenses(){
-  const td=today();
-  const mo=month();
-  const yr=year();
+function openSupplierModal(supplierId=null){
 
-  const todayTotal=data.expenses.filter(e=>e.date===td)
-    .reduce((a,e)=>a+Number(e.amount),0);
+  editingId=supplierId;
 
-  const monthTotal=data.expenses.filter(e=>e.date.startsWith(mo))
-    .reduce((a,e)=>a+Number(e.amount),0);
+  const supplier=supplierId
+    ? db.suppliers.find(s=>s.id===supplierId)
+    : null;
 
-  const yearTotal=data.expenses.filter(e=>e.date.startsWith(yr))
-    .reduce((a,e)=>a+Number(e.amount),0);
-
-  $("expenseToday").textContent=money(todayTotal);
-  $("expenseMonth").textContent=money(monthTotal);
-  $("expenseYear").textContent=money(yearTotal);
-
-  $("expenseTableBody").innerHTML=data.expenses.length?
-    [...data.expenses].reverse().map(e=>`
-      <tr>
-        <td>${e.date}</td>
-        <td>${esc(e.category)}</td>
-        <td>${esc(e.description||"-")}</td>
-        <td>${money(e.amount)}</td>
-        <td>
-          <button class="btn btn-sm btn-danger delete-expense" data-id="${e.id}">
-            Delete
-          </button>
-        </td>
-      </tr>
-    `).join("")
-  :`<tr><td colspan="5" class="empty">Expense မရှိသေးပါ။</td></tr>`;
-}
-
-document.addEventListener("click",e=>{
-  const del=e.target.closest(".delete-expense");
-
-  if(del&&confirm("Expense ကိုဖျက်မလား?")){
-    data.expenses=data.expenses.filter(x=>x.id!==del.dataset.id);
-    saveData();
-    refresh();
-  }
-});
-
-/* ================= EMPLOYEES ================= */
-
-function employeeForm(e={}){
-  return `
-    <div class="form-grid">
-      <div class="field"><label>Name *</label><input id="empName" value="${esc(e.name||"")}"></div>
-      <div class="field"><label>Position</label><input id="empPosition" value="${esc(e.position||"")}"></div>
-      <div class="field"><label>Phone</label><input id="empPhone" value="${esc(e.phone||"")}"></div>
-      <div class="field"><label>Monthly Salary</label><input id="empSalary" type="number" value="${e.salary||0}"></div>
-    </div>
-  `;
-}
-
-$("addEmployeeBtn").addEventListener("click",()=>{
   openModal(
-    "Add Employee",
-    employeeForm(),
-    `<button class="btn" onclick="closeModal()">Cancel</button>
-     <button class="btn btn-primary" onclick="saveEmployee()">Save</button>`
-  );
-});
+    supplier ? "Edit Supplier" : "Add Supplier",
+    "Supplier information",
+    `
+      <div class="form-grid">
 
-function saveEmployee(id=null){
-  const name=$("empName").value.trim();
+        <div class="form-group">
+          <label>Name *</label>
+          <input id="mSupplierName"
+            value="${escapeHTML(supplier?.name || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input id="mSupplierPhone"
+            value="${escapeHTML(supplier?.phone || "")}">
+        </div>
+
+        <div class="form-group full">
+          <label>Address</label>
+          <input id="mSupplierAddress"
+            value="${escapeHTML(supplier?.address || "")}">
+        </div>
+
+      </div>
+    `,
+    `
+      <button class="btn btn-light" id="cancelModalBtn">
+        Cancel
+      </button>
+
+      <button class="btn btn-primary" id="saveSupplierBtn">
+        Save Supplier
+      </button>
+    `
+  );
+
+}
+
+function saveSupplier(){
+
+  const name=
+    document.getElementById("mSupplierName")
+      .value.trim();
 
   if(!name){
-    toast("Employee name ထည့်ပါ");
+
+    showToast("Supplier Name ထည့်ပါ");
+
     return;
   }
 
-  const obj={
-    id:id||uid("EMP"),
+  const data={
     name,
-    position:$("empPosition").value.trim(),
-    phone:$("empPhone").value.trim(),
-    salary:Number($("empSalary").value||0)
+    phone:
+      document.getElementById("mSupplierPhone")
+        .value.trim(),
+    address:
+      document.getElementById("mSupplierAddress")
+        .value.trim()
   };
 
-  const i=data.employees.findIndex(x=>x.id===id);
+  if(editingId){
 
-  if(i>=0)data.employees[i]=obj;
-  else data.employees.push(obj);
+    const supplier=db.suppliers.find(
+      s=>s.id===editingId
+    );
 
-  saveData();
+    if(supplier){
+      Object.assign(supplier,data);
+    }
+
+  }else{
+
+    db.suppliers.push({
+      id:uid("sup_"),
+      payable:0,
+      createdAt:new Date().toISOString(),
+      ...data
+    });
+
+  }
+
+  saveDB();
+
   closeModal();
-  refresh();
-  toast("Employee saved");
+
+  renderAll();
+
+  showToast("Supplier saved");
+
 }
 
-function renderEmployees(){
-  $("employeeTableBody").innerHTML=data.employees.length?
-    data.employees.map(e=>`
+function deleteSupplier(id){
+
+  if(!confirm("Supplier ကို ဖျက်မလား?")) return;
+
+  db.suppliers=db.suppliers.filter(
+    s=>s.id!==id
+  );
+
+  saveDB();
+
+  renderAll();
+
+}
+
+function paySupplier(id){
+
+  const supplier=db.suppliers.find(
+    s=>s.id===id
+  );
+
+  if(!supplier) return;
+
+  openModal(
+    "Pay Supplier",
+    supplier.name,
+    `
+      <div class="form-group">
+        <label>Current Payable</label>
+        <input value="${money(supplier.payable)}" disabled>
+      </div>
+
+      <div class="form-group" style="margin-top:12px">
+        <label>Payment Amount</label>
+        <input
+          id="mSupplierPayment"
+          type="number"
+          min="0"
+          value="0"
+        >
+      </div>
+    `,
+    `
+      <button class="btn btn-light" id="cancelModalBtn">
+        Cancel
+      </button>
+
+      <button class="btn btn-success" id="paySupplierBtn">
+        Pay
+      </button>
+    `
+  );
+
+  document
+    .getElementById("paySupplierBtn")
+    .dataset.supplierId=id;
+
+}
+
+function saveSupplierPayment(id){
+
+  const supplier=db.suppliers.find(
+    s=>s.id===id
+  );
+
+  const amount=
+    num(document.getElementById("mSupplierPayment").value);
+
+  if(!supplier || amount<=0){
+
+    showToast("Amount ထည့်ပါ");
+
+    return;
+  }
+
+  supplier.payable=
+    Math.max(0,num(supplier.payable)-amount);
+
+  saveDB();
+
+  closeModal();
+
+  renderAll();
+
+  showToast("Supplier payment saved");
+
+}
+
+/* =========================================================
+   DEBTS
+========================================================= */
+
+function renderDebts(){
+
+  const receivable=db.customers.reduce(
+    (s,c)=>s+num(c.due),0
+  );
+
+  const payable=db.suppliers.reduce(
+    (s,sup)=>s+num(sup.payable),0
+  );
+
+  document.getElementById("totalReceivable")
+    .textContent=money(receivable);
+
+  document.getElementById("totalPayable")
+    .textContent=money(payable);
+
+  const customers=db.customers.filter(
+    c=>num(c.due)>0
+  );
+
+  const suppliers=db.suppliers.filter(
+    s=>num(s.payable)>0
+  );
+
+  document.getElementById("receivableList").innerHTML=
+    customers.length
+    ? customers.map(c=>`
+        <div class="alert alert-danger">
+          <strong>${escapeHTML(c.name)}</strong>
+          <span style="float:right">
+            ${money(c.due)}
+          </span>
+        </div>
+      `).join("")
+    : `<div class="empty">Receivable မရှိပါ</div>`;
+
+  document.getElementById("payableList").innerHTML=
+    suppliers.length
+    ? suppliers.map(s=>`
+        <div class="alert alert-warning">
+          <strong>${escapeHTML(s.name)}</strong>
+          <span style="float:right">
+            ${money(s.payable)}
+          </span>
+        </div>
+      `).join("")
+    : `<div class="empty">Payable မရှိပါ</div>`;
+
+}
+
+/* =========================================================
+   EXPENSES
+========================================================= */
+
+function renderExpenses(){
+
+  const todayDate=today();
+
+  const now=new Date();
+
+  const month=
+    `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+
+  const year=String(now.getFullYear());
+
+  const todayTotal=db.expenses
+    .filter(e=>e.date===todayDate)
+    .reduce((s,e)=>s+num(e.amount),0);
+
+  const monthTotal=db.expenses
+    .filter(e=>e.date.startsWith(month))
+    .reduce((s,e)=>s+num(e.amount),0);
+
+  const yearTotal=db.expenses
+    .filter(e=>e.date.startsWith(year))
+    .reduce((s,e)=>s+num(e.amount),0);
+
+  document.getElementById("expenseToday")
+    .textContent=money(todayTotal);
+
+  document.getElementById("expenseMonth")
+    .textContent=money(monthTotal);
+
+  document.getElementById("expenseYear")
+    .textContent=money(yearTotal);
+
+  const search=
+    document.getElementById("expenseSearch").value
+      .trim().toLowerCase();
+
+  const expenses=db.expenses
+    .filter(e=>
+      !search ||
+      e.category.toLowerCase().includes(search) ||
+      e.description.toLowerCase().includes(search)
+    )
+    .sort((a,b)=>
+      new Date(b.createdAt)-new Date(a.createdAt)
+    );
+
+  const tbody=
+    document.getElementById("expenseTableBody");
+
+  if(!expenses.length){
+
+    tbody.innerHTML=`
       <tr>
-        <td>${esc(e.name)}</td>
-        <td>${esc(e.position||"-")}</td>
-        <td>${esc(e.phone||"-")}</td>
-        <td>${money(e.salary)}</td>
-        <td>
-          <button class="btn btn-sm btn-primary edit-employee" data-id="${e.id}">Edit</button>
-          <button class="btn btn-sm btn-danger delete-employee" data-id="${e.id}">Delete</button>
+        <td colspan="5" class="empty">
+          Expense မရှိသေးပါ
         </td>
       </tr>
-    `).join("")
-  :`<tr><td colspan="5" class="empty">Employee မရှိသေးပါ။</td></tr>`;
+    `;
+
+    return;
+  }
+
+  tbody.innerHTML=expenses.map(e=>`
+
+    <tr>
+
+      <td>${escapeHTML(e.date)}</td>
+      <td>${escapeHTML(e.category)}</td>
+      <td>${escapeHTML(e.description)}</td>
+      <td>${money(e.amount)}</td>
+
+      <td>
+        <button
+          class="btn btn-danger btn-sm"
+          data-delete-expense="${escapeHTML(e.id)}"
+        >
+          Delete
+        </button>
+      </td>
+
+    </tr>
+
+  `).join("");
+
 }
 
-document.addEventListener("click",e=>{
-  const edit=e.target.closest(".edit-employee");
+function openExpenseModal(){
 
-  if(edit){
-    const emp=data.employees.find(x=>x.id===edit.dataset.id);
+  openModal(
+    "Add Expense",
+    "Business expense",
+    `
+      <div class="form-grid">
 
-    openModal(
-      "Edit Employee",
-      employeeForm(emp),
-      `<button class="btn" onclick="closeModal()">Cancel</button>
-       <button class="btn btn-primary" onclick="saveEmployee('${emp.id}')">Update</button>`
+        <div class="form-group">
+          <label>Date</label>
+          <input id="mExpenseDate"
+            type="date"
+            value="${today()}">
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <select id="mExpenseCategory">
+            <option>Rent</option>
+            <option>Electricity</option>
+            <option>Transport</option>
+            <option>Salary</option>
+            <option>Marketing</option>
+            <option>Office</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group full">
+          <label>Description</label>
+          <input id="mExpenseDescription">
+        </div>
+
+        <div class="form-group">
+          <label>Amount</label>
+          <input
+            id="mExpenseAmount"
+            type="number"
+            min="0"
+          >
+        </div>
+
+      </div>
+    `,
+    `
+      <button class="btn btn-light" id="cancelModalBtn">
+        Cancel
+      </button>
+
+      <button class="btn btn-primary" id="saveExpenseBtn">
+        Save Expense
+      </button>
+    `
+  );
+
+}
+
+function saveExpense(){
+
+  const amount=
+    num(document.getElementById("mExpenseAmount").value);
+
+  if(amount<=0){
+
+    showToast("Amount ထည့်ပါ");
+
+    return;
+  }
+
+  db.expenses.push({
+    id:uid("exp_"),
+    date:
+      document.getElementById("mExpenseDate").value,
+    category:
+      document.getElementById("mExpenseCategory").value,
+    description:
+      document.getElementById("mExpenseDescription")
+        .value.trim(),
+    amount,
+    createdAt:new Date().toISOString()
+  });
+
+  saveDB();
+
+  closeModal();
+
+  renderAll();
+
+  showToast("Expense saved");
+
+}
+
+function deleteExpense(id){
+
+  if(!confirm("Expense ကို ဖျက်မလား?")) return;
+
+  db.expenses=db.expenses.filter(
+    e=>e.id!==id
+  );
+
+  saveDB();
+
+  renderAll();
+
+}
+
+/* =========================================================
+   EMPLOYEES
+========================================================= */
+
+function renderEmployees(){
+
+  const search=
+    document.getElementById("employeeSearch")
+      .value.trim().toLowerCase();
+
+  const employees=db.employees.filter(e=>
+    !search ||
+    e.name.toLowerCase().includes(search) ||
+    e.role.toLowerCase().includes(search)
+  );
+
+  const tbody=
+    document.getElementById("employeeTableBody");
+
+  if(!employees.length){
+
+    tbody.innerHTML=`
+      <tr>
+        <td colspan="6" class="empty">
+          Employee မရှိသေးပါ
+        </td>
+      </tr>
+    `;
+
+    return;
+  }
+
+  tbody.innerHTML=employees.map(e=>`
+
+    <tr>
+
+      <td>${escapeHTML(e.name)}</td>
+      <td>${escapeHTML(e.role)}</td>
+      <td>${escapeHTML(e.phone || "-")}</td>
+      <td>${money(e.salary)}</td>
+      <td>${money(e.totalPaid)}</td>
+
+      <td>
+
+        <button
+          class="btn btn-success btn-sm"
+          data-pay-salary="${escapeHTML(e.id)}"
+        >
+          Pay
+        </button>
+
+        <button
+          class="btn btn-light btn-sm"
+          data-edit-employee="${escapeHTML(e.id)}"
+        >
+          Edit
+        </button>
+
+        <button
+          class="btn btn-danger btn-sm"
+          data-delete-employee="${escapeHTML(e.id)}"
+        >
+          Delete
+        </button>
+
+      </td>
+
+    </tr>
+
+  `).join("");
+
+}
+
+function openEmployeeModal(employeeId=null){
+
+  editingId=employeeId;
+
+  const employee=employeeId
+    ? db.employees.find(e=>e.id===employeeId)
+    : null;
+
+  openModal(
+    employee ? "Edit Employee" : "Add Employee",
+    "Employee information",
+    `
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Name *</label>
+          <input id="mEmployeeName"
+            value="${escapeHTML(employee?.name || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Role</label>
+          <input id="mEmployeeRole"
+            value="${escapeHTML(employee?.role || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Phone</label>
+          <input id="mEmployeePhone"
+            value="${escapeHTML(employee?.phone || "")}">
+        </div>
+
+        <div class="form-group">
+          <label>Monthly Salary</label>
+          <input id="mEmployeeSalary"
+            type="number"
+            value="${num(employee?.salary)}">
+        </div>
+
+      </div>
+    `,
+    `
+      <button class="btn btn-light" id="cancelModalBtn">
+        Cancel
+      </button>
+
+      <button class="btn btn-primary" id="saveEmployeeBtn">
+        Save Employee
+      </button>
+    `
+  );
+
+}
+
+function saveEmployee(){
+
+  const name=
+    document.getElementById("mEmployeeName")
+      .value.trim();
+
+  if(!name){
+
+    showToast("Employee Name ထည့်ပါ");
+
+    return;
+  }
+
+  const data={
+    name,
+    role:
+      document.getElementById("mEmployeeRole")
+        .value.trim(),
+    phone:
+      document.getElementById("mEmployeePhone")
+        .value.trim(),
+    salary:
+      num(document.getElementById("mEmployeeSalary").value)
+  };
+
+  if(editingId){
+
+    const employee=db.employees.find(
+      e=>e.id===editingId
     );
+
+    if(employee){
+      Object.assign(employee,data);
+    }
+
+  }else{
+
+    db.employees.push({
+      id:uid("emp_"),
+      totalPaid:0,
+      createdAt:new Date().toISOString(),
+      ...data
+    });
+
   }
 
-  const del=e.target.closest(".delete-employee");
+  saveDB();
 
-  if(del&&confirm("Employee ကိုဖျက်မလား?")){
-    data.employees=data.employees.filter(x=>x.id!==del.dataset.id);
-    saveData();
-    refresh();
+  closeModal();
+
+  renderAll();
+
+  showToast("Employee saved");
+
+}
+
+function payEmployee(id){
+
+  const employee=db.employees.find(
+    e=>e.id===id
+  );
+
+  if(!employee) return;
+
+  openModal(
+    "Pay Employee Salary",
+    employee.name,
+    `
+      <div class="form-group">
+        <label>Salary</label>
+        <input
+          id="mSalaryPayment"
+          type="number"
+          value="${num(employee.salary)}"
+        >
+      </div>
+    `,
+    `
+      <button class="btn btn-light" id="cancelModalBtn">
+        Cancel
+      </button>
+
+      <button class="btn btn-success" id="saveSalaryBtn">
+        Pay Salary
+      </button>
+    `
+  );
+
+  document
+    .getElementById("saveSalaryBtn")
+    .dataset.employeeId=id;
+
+}
+
+function saveSalary(id){
+
+  const employee=db.employees.find(
+    e=>e.id===id
+  );
+
+  const amount=
+    num(document.getElementById("mSalaryPayment").value);
+
+  if(!employee || amount<=0){
+
+    showToast("Amount ထည့်ပါ");
+
+    return;
   }
-});
 
-/* ================= REPORTS ================= */
+  employee.totalPaid=
+    num(employee.totalPaid)+amount;
 
-function getReportData(){
-  const period=$("reportPeriod").value;
+  db.expenses.push({
+    id:uid("exp_"),
+    date:today(),
+    category:"Salary",
+    description:`Salary - ${employee.name}`,
+    amount,
+    createdAt:new Date().toISOString()
+  });
 
-  let sales=data.sales;
-  let purchases=data.purchases;
-  let expenses=data.expenses;
+  saveDB();
+
+  closeModal();
+
+  renderAll();
+
+  showToast("Salary paid");
+
+}
+
+function deleteEmployee(id){
+
+  if(!confirm("Employee ကို ဖျက်မလား?")) return;
+
+  db.employees=db.employees.filter(
+    e=>e.id!==id
+  );
+
+  saveDB();
+
+  renderAll();
+
+}
+
+/* =========================================================
+   REPORTS
+========================================================= */
+
+function filterByPeriod(items,dateField,period){
+
+  if(period==="all") return items;
+
+  const now=new Date();
+
+  const todayDate=today();
 
   if(period==="today"){
-    sales=sales.filter(x=>x.date===today());
-    purchases=purchases.filter(x=>x.date===today());
-    expenses=expenses.filter(x=>x.date===today());
+
+    return items.filter(
+      x=>x[dateField]===todayDate
+    );
+
   }
 
   if(period==="month"){
-    sales=sales.filter(x=>x.date.startsWith(month()));
-    purchases=purchases.filter(x=>x.date.startsWith(month()));
-    expenses=expenses.filter(x=>x.date.startsWith(month()));
+
+    const prefix=
+      `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,"0")}`;
+
+    return items.filter(
+      x=>String(x[dateField]).startsWith(prefix)
+    );
+
   }
 
   if(period==="year"){
-    sales=sales.filter(x=>x.date.startsWith(year()));
-    purchases=purchases.filter(x=>x.date.startsWith(year()));
-    expenses=expenses.filter(x=>x.date.startsWith(year()));
+
+    const prefix=String(now.getFullYear());
+
+    return items.filter(
+      x=>String(x[dateField]).startsWith(prefix)
+    );
+
   }
 
-  const salesTotal=sales.reduce((a,x)=>a+Number(x.total),0);
-  const purchaseTotal=purchases.reduce((a,x)=>a+Number(x.total),0);
-  const expenseTotal=expenses.reduce((a,x)=>a+Number(x.amount),0);
-  const grossProfit=sales.reduce((a,x)=>a+Number(x.profit||0),0);
-  const netProfit=grossProfit-expenseTotal;
+  return items;
 
-  return {sales,salesTotal,purchaseTotal,expenseTotal,grossProfit,netProfit};
 }
 
 function renderReports(){
-  const r=getReportData();
 
-  $("reportSales").textContent=money(r.salesTotal);
-  $("reportPurchase").textContent=money(r.purchaseTotal);
-  $("reportExpenses").textContent=money(r.expenseTotal);
-  $("reportProfit").textContent=money(r.netProfit);
+  const period=
+    document.getElementById("reportPeriod").value;
 
-  $("salesReportSummary").innerHTML=`
-    <div class="cart-row"><span>Invoices</span><strong>${r.sales.length}</strong></div>
-    <div class="cart-row"><span>Sales</span><strong>${money(r.salesTotal)}</strong></div>
-    <div class="cart-row"><span>Gross Profit</span><strong>${money(r.grossProfit)}</strong></div>
+  const sales=
+    filterByPeriod(db.sales,"date",period);
+
+  const purchases=
+    filterByPeriod(db.purchases,"date",period);
+
+  const expenses=
+    filterByPeriod(db.expenses,"date",period);
+
+  const salesTotal=
+    sales.reduce((s,x)=>s+num(x.total),0);
+
+  const purchaseTotal=
+    purchases.reduce((s,x)=>s+num(x.total),0);
+
+  const expenseTotal=
+    expenses.reduce((s,x)=>s+num(x.amount),0);
+
+  const grossProfit=
+    sales.reduce((s,x)=>s+saleGrossProfit(x),0);
+
+  const netProfit=
+    grossProfit-expenseTotal;
+
+  document.getElementById("reportSales")
+    .textContent=money(salesTotal);
+
+  document.getElementById("reportPurchase")
+    .textContent=money(purchaseTotal);
+
+  document.getElementById("reportExpenses")
+    .textContent=money(expenseTotal);
+
+  document.getElementById("reportProfit")
+    .textContent=money(netProfit);
+
+  document.getElementById("salesReportSummary").innerHTML=`
+
+    <div class="summary-row">
+      <span>Invoices</span>
+      <strong>${sales.length}</strong>
+    </div>
+
+    <div class="summary-row">
+      <span>Sales</span>
+      <strong>${money(salesTotal)}</strong>
+    </div>
+
+    <div class="summary-row">
+      <span>COGS</span>
+      <strong>${money(purchaseTotal)}</strong>
+    </div>
+
+    <div class="summary-row">
+      <span>Gross Profit</span>
+      <strong>${money(grossProfit)}</strong>
+    </div>
+
   `;
 
-  $("profitReportSummary").innerHTML=`
-    <div class="cart-row"><span>Gross Profit</span><strong>${money(r.grossProfit)}</strong></div>
-    <div class="cart-row"><span>Expenses</span><strong>${money(r.expenseTotal)}</strong></div>
-    <div class="cart-row"><span>Net Profit</span><strong>${money(r.netProfit)}</strong></div>
+  document.getElementById("profitReportSummary").innerHTML=`
+
+    <div class="summary-row">
+      <span>Gross Profit</span>
+      <strong>${money(grossProfit)}</strong>
+    </div>
+
+    <div class="summary-row">
+      <span>Operating Expenses</span>
+      <strong>${money(expenseTotal)}</strong>
+    </div>
+
+    <div class="summary-row">
+      <span>Net Profit</span>
+      <strong>${money(netProfit)}</strong>
+    </div>
+
+    <div class="summary-row">
+      <span>Margin</span>
+      <strong>
+        ${salesTotal
+          ? ((netProfit/salesTotal)*100).toFixed(1)
+          : "0.0"}%
+      </strong>
+    </div>
+
   `;
+
 }
 
-$("reportPeriod").addEventListener("change",renderReports);
+function printReport(){
 
-/* ================= PURCHASE TABLE ================= */
+  const period=
+    document.getElementById("reportPeriod").value;
 
-function renderPurchases(){
-  const td=today();
+  const sales=
+    filterByPeriod(db.sales,"date",period);
 
-  const total=data.purchases.filter(x=>x.date===td)
-    .reduce((a,x)=>a+Number(x.total),0);
+  const purchases=
+    filterByPeriod(db.purchases,"date",period);
 
-  $("purchaseTodayTotal").textContent=money(total);
-  $("purchaseInvoiceCount").textContent=data.purchases.length;
+  const expenses=
+    filterByPeriod(db.expenses,"date",period);
 
-  $("supplierPayable").textContent=money(
-    data.suppliers.reduce((a,s)=>a+Number(s.due||0),0)
+  const salesTotal=
+    sales.reduce((s,x)=>s+num(x.total),0);
+
+  const purchaseTotal=
+    purchases.reduce((s,x)=>s+num(x.total),0);
+
+  const expenseTotal=
+    expenses.reduce((s,x)=>s+num(x.amount),0);
+
+  const grossProfit=
+    sales.reduce((s,x)=>s+saleGrossProfit(x),0);
+
+  const netProfit=grossProfit-expenseTotal;
+
+  const html=`
+
+    <div style="font-family:Arial;padding:25px">
+
+      <h1>${escapeHTML(db.shop.name)}</h1>
+
+      <h2>Business Report</h2>
+
+      <p>Period: ${escapeHTML(period)}</p>
+
+      <hr>
+
+      <h3>Sales: ${money(salesTotal)}</h3>
+      <h3>COGS: ${money(purchaseTotal)}</h3>
+      <h3>Gross Profit: ${money(grossProfit)}</h3>
+      <h3>Expenses: ${money(expenseTotal)}</h3>
+      <h2>Net Profit: ${money(netProfit)}</h2>
+
+      <hr>
+
+      <p>Total Sales Invoices: ${sales.length}</p>
+      <p>Total Purchase Records: ${purchases.length}</p>
+      <p>Total Expense Records: ${expenses.length}</p>
+
+    </div>
+  `;
+
+  const win=window.open("","_blank");
+
+  if(!win){
+
+    showToast("Popup blocked ဖြစ်နေပါတယ်");
+
+    return;
+  }
+
+  win.document.write(`
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <title>Business Report</title>
+    </head>
+    <body>
+      ${html}
+      <script>
+        window.onload=function(){
+          window.print();
+        };
+      <\/script>
+    </body>
+    </html>
+  `);
+
+  win.document.close();
+
+}
+
+/* =========================================================
+   USERS
+========================================================= */
+
+function renderUsers(){
+
+  const tbody=
+    document.getElementById("usersTableBody");
+
+  tbody.innerHTML=db.users.map(user=>`
+
+    <tr>
+
+      <td>${escapeHTML(user.name)}</td>
+
+      <td>••••</td>
+
+      <td>
+        <span class="badge badge-success">
+          ${escapeHTML(user.role)}
+        </span>
+      </td>
+
+      <td>
+
+        ${
+          user.id!=="u1"
+          ? `
+            <button
+              class="btn btn-danger btn-sm"
+              data-delete-user="${escapeHTML(user.id)}"
+            >
+              Delete
+            </button>
+          `
+          : `
+            <span style="font-size:11px;color:#6b7280">
+              Main Admin
+            </span>
+          `
+        }
+
+      </td>
+
+    </tr>
+
+  `).join("");
+
+}
+
+function openUserModal(){
+
+  if(db.users.length>=5){
+
+    showToast("User ၅ ယောက်အထိပဲ ထည့်နိုင်ပါတယ်");
+
+    return;
+  }
+
+  openModal(
+    "Add User",
+    "Maximum 5 accounts",
+    `
+      <div class="form-grid">
+
+        <div class="form-group">
+          <label>Name</label>
+          <input id="mUserName">
+        </div>
+
+        <div class="form-group">
+          <label>PIN</label>
+          <input id="mUserPin" type="password">
+        </div>
+
+        <div class="form-group">
+          <label>Role</label>
+          <select id="mUserRole">
+            <option>Manager</option>
+            <option>Cashier</option>
+            <option>Staff</option>
+          </select>
+        </div>
+
+      </div>
+    `,
+    `
+      <button class="btn btn-light" id="cancelModalBtn">
+        Cancel
+      </button>
+
+      <button class="btn btn-primary" id="saveUserBtn">
+        Save User
+      </button>
+    `
   );
 
-  $("purchaseTableBody").innerHTML=data.purchases.length?
-    [...data.purchases].reverse().map(p=>`
-      <tr>
-        <td>${p.date}</td>
-        <td>${esc(p.invoice)}</td>
-        <td>${esc(p.supplierName)}</td>
-        <td>${money(p.total)}</td>
-        <td>${esc(p.payment)}</td>
-      </tr>
-    `).join("")
-  :`<tr><td colspan="5" class="empty">Purchase မရှိသေးပါ။</td></tr>`;
 }
 
-/* ================= STOCK TABLE ================= */
+function saveUser(){
 
-function renderStock(){
-  const units=data.products.reduce((a,p)=>a+Number(p.stock||0),0);
-  const costValue=data.products.reduce((a,p)=>a+Number(p.stock||0)*Number(p.cost||0),0);
-  const low=data.products.filter(p=>Number(p.stock)<=Number(p.minStock||5)).length;
+  const name=
+    document.getElementById("mUserName").value.trim();
 
-  $("stockProductCount").textContent=data.products.length;
-  $("stockUnitCount").textContent=units;
-  $("stockCostValue").textContent=money(costValue);
-  $("stockLowCount").textContent=low;
+  const pin=
+    document.getElementById("mUserPin").value.trim();
 
-  $("stockTableBody").innerHTML=data.products.length?
-    data.products.map(p=>{
-      const isLow=Number(p.stock)<=Number(p.minStock||5);
+  const role=
+    document.getElementById("mUserRole").value;
 
-      return `
-        <tr>
-          <td>${esc(p.name)}</td>
-          <td>${esc(p.category||"-")}</td>
-          <td>${p.stock}</td>
-          <td>${esc(p.unit||"pcs")}</td>
-          <td>${money(p.stock*p.cost)}</td>
-          <td>${money(p.stock*p.retail)}</td>
-          <td>
-            <span class="badge ${isLow?"badge-red":"badge-green"}">
-              ${isLow?"Low":"OK"}
-            </span>
-          </td>
-        </tr>
-      `;
-    }).join("")
-  :`<tr><td colspan="7" class="empty">Stock မရှိသေးပါ။</td></tr>`;
+  if(!name || !pin){
+
+    showToast("Name နှင့် PIN ထည့်ပါ");
+
+    return;
+  }
+
+  if(!/^[0-9]{4,6}$/.test(pin)){
+
+    showToast("PIN ကို 4-6 digit ထည့်ပါ");
+
+    return;
+  }
+
+  db.users.push({
+    id:uid("usr_"),
+    name,
+    pin,
+    role
+  });
+
+  saveDB();
+
+  closeModal();
+
+  initLogin();
+
+  renderUsers();
+
+  showToast("User added");
+
 }
 
-/* ================= SETTINGS ================= */
+function deleteUser(id){
 
-function loadSettings(){
-  $("settingShopName").value=data.settings.shopName||"";
-  $("settingPhone").value=data.settings.phone||"";
-  $("settingAddress").value=data.settings.address||"";
-  $("settingFooter").value=data.settings.footer||"";
+  if(db.users.length<=1){
+
+    showToast("အနည်းဆုံး User တစ်ယောက်ရှိရပါမယ်");
+
+    return;
+  }
+
+  if(!confirm("User ကို ဖျက်မလား?")) return;
+
+  db.users=db.users.filter(
+    u=>u.id!==id
+  );
+
+  saveDB();
+
+  initLogin();
+
+  renderUsers();
+
 }
 
-$("saveShopBtn").addEventListener("click",()=>{
-  data.settings.shopName=$("settingShopName").value.trim()||"My Shop";
-  data.settings.phone=$("settingPhone").value.trim();
-  data.settings.address=$("settingAddress").value.trim();
-  data.settings.footer=$("settingFooter").value.trim();
+/* =========================================================
+   SETTINGS
+========================================================= */
 
-  saveData();
-  refresh();
-  toast("Shop settings saved ✓");
-});
+function renderSettings(){
 
-$("backupBtn").addEventListener("click",()=>{
+  document.getElementById("settingShopName").value=
+    db.shop.name || "";
+
+  document.getElementById("settingShopPhone").value=
+    db.shop.phone || "";
+
+  document.getElementById("settingShopAddress").value=
+    db.shop.address || "";
+
+  document.getElementById("settingReceiptFooter").value=
+    db.shop.footer || "";
+
+}
+
+function saveShopSettings(){
+
+  db.shop.name=
+    document.getElementById("settingShopName").value.trim()
+    || "Aung POS";
+
+  db.shop.phone=
+    document.getElementById("settingShopPhone").value.trim();
+
+  db.shop.address=
+    document.getElementById("settingShopAddress").value.trim();
+
+  db.shop.footer=
+    document.getElementById("settingReceiptFooter")
+      .value.trim();
+
+  saveDB();
+
+  renderDashboard();
+
+  showToast("Shop settings saved");
+
+}
+
+function backupData(){
+
   const blob=new Blob(
-    [JSON.stringify(data,null,2)],
+    [JSON.stringify(db,null,2)],
     {type:"application/json"}
   );
 
   const url=URL.createObjectURL(blob);
+
   const a=document.createElement("a");
 
   a.href=url;
-  a.download="aung-pos-backup-"+today()+".json";
+
+  a.download=
+    `aung-pos-backup-${today()}.json`;
+
+  document.body.appendChild(a);
+
   a.click();
 
+  a.remove();
+
   URL.revokeObjectURL(url);
-  toast("Backup downloaded");
-});
 
-$("clearDataBtn").addEventListener("click",()=>{
-  if(!confirm("Data အားလုံးကို ဖျက်မှာသေချာပါသလား?"))return;
+  showToast("Backup downloaded");
 
-  localStorage.removeItem(KEY);
-  data=JSON.parse(JSON.stringify(defaultData));
-  cart=[];
-
-  refresh();
-  toast("Data cleared");
-});
-
-/* ================= SEARCH ================= */
-
-$("productSearch").addEventListener("input",renderProducts);
-$("productCategoryFilter").addEventListener("change",renderProducts);
-$("stockFilter").addEventListener("change",renderProducts);
-
-$("salesSearch").addEventListener("input",renderSalesProducts);
-$("salesCategory").addEventListener("change",renderSalesProducts);
-
-/* ================= MOBILE ================= */
-
-$("mobileMenu").addEventListener("click",()=>{
-  $("sidebar").classList.toggle("open");
-});
-
-/* ================= REFRESH ================= */
-
-function refresh(){
-  populateCategories();
-  refreshDashboard();
-  renderProducts();
-  renderSalesProducts();
-  renderCart();
-  renderPurchases();
-  renderStock();
-  renderCustomers();
-  renderSuppliers();
-  renderDebts();
-  renderExpenses();
-  renderEmployees();
-  renderReports();
-  loadSettings();
 }
 
-/* ================= START ================= */
+function restoreData(file){
 
-document.addEventListener("DOMContentLoaded",()=>{
-  refresh();
-  showPage("dashboard");
+  if(!file) return;
+
+  const reader=new FileReader();
+
+  reader.onload=function(e){
+
+    try{
+
+      const restored=JSON.parse(e.target.result);
+
+      if(!restored.products ||
+         !restored.sales ||
+         !restored.users){
+
+        throw new Error("Invalid backup");
+
+      }
+
+      db={
+        ...defaultDB,
+        ...restored
+      };
+
+      saveDB();
+
+      initLogin();
+
+      renderAll();
+
+      showToast("Data restored successfully");
+
+    }catch(error){
+
+      console.error(error);
+
+      showToast("Backup file မမှန်ပါ");
+
+    }
+
+  };
+
+  reader.readAsText(file);
+
+}
+
+function clearAllData(){
+
+  if(!confirm(
+    "⚠️ Data အားလုံး ဖျက်မယ်။ သေချာပါသလား?"
+  )) return;
+
+  if(!confirm(
+    "နောက်တစ်ကြိမ် အတည်ပြုပါ။ Backup မရှိရင် ပြန်မရနိုင်ပါ။"
+  )) return;
+
+  localStorage.removeItem(DB_KEY);
+
+  db=JSON.parse(JSON.stringify(defaultDB));
+
+  cart=[];
+
+  initLogin();
+
+  renderAll();
+
+  showToast("All data cleared");
+
+}
+
+/* =========================================================
+   BARCODE
+========================================================= */
+
+function scanBarcode(){
+
+  const code=prompt(
+    "Barcode number ထည့်ပါ"
+  );
+
+  if(!code) return;
+
+  document.getElementById("salesSearch").value=code;
+
+  renderSalesProducts();
+
+  const product=db.products.find(
+    p=>String(p.barcode || "")===String(code)
+  );
+
+  if(product){
+
+    addToCart(product.id);
+
+  }else{
+
+    showToast("Barcode မတွေ့ပါ");
+
+  }
+
+}
+
+/* =========================================================
+   EVENT DELEGATION
+========================================================= */
+
+document.addEventListener("click",function(e){
+
+  const target=e.target;
+
+  /* NAV */
+  const nav=target.closest(".nav-btn[data-section]");
+
+  if(nav){
+
+    showSection(nav.dataset.section);
+
+    return;
+  }
+
+  /* ADD PRODUCT */
+  if(target.id==="addProductBtn"){
+
+    openProductModal();
+
+    return;
+  }
+
+  /* EDIT PRODUCT */
+  const editProduct=target.closest(
+    "[data-edit-product]"
+  );
+
+  if(editProduct){
+
+    openProductModal(
+      editProduct.dataset.editProduct
+    );
+
+    return;
+  }
+
+  /* DELETE PRODUCT */
+  const deleteProductBtn=target.closest(
+    "[data-delete-product]"
+  );
+
+  if(deleteProductBtn){
+
+    deleteProduct(
+      deleteProductBtn.dataset.deleteProduct
+    );
+
+    return;
+  }
+
+  /* ADD TO CART */
+  const productCard=target.closest(
+    "[data-add-product]"
+  );
+
+  if(productCard){
+
+    addToCart(
+      productCard.dataset.addProduct
+    );
+
+    return;
+  }
+
+  /* CART MINUS */
+  const cartMinus=target.closest(
+    "[data-cart-minus]"
+  );
+
+  if(cartMinus){
+
+    changeCartQty(
+      cartMinus.dataset.cartMinus,
+      -1
+    );
+
+    return;
+  }
+
+  /* CART PLUS */
+  const cartPlus=target.closest(
+    "[data-cart-plus]"
+  );
+
+  if(cartPlus){
+
+    changeCartQty(
+      cartPlus.dataset.cartPlus,
+      1
+    );
+
+    return;
+  }
+
+  /* CART REMOVE */
+  const cartRemove=target.closest(
+    "[data-cart-remove]"
+  );
+
+  if(cartRemove){
+
+    removeCartItem(
+      cartRemove.dataset.cartRemove
+    );
+
+    return;
+  }
+
+  /* PAYMENT */
+  const payment=target.closest(
+    ".payment-btn"
+  );
+
+  if(payment){
+
+    document.querySelectorAll(".payment-btn")
+      .forEach(btn=>btn.classList.remove("active"));
+
+    payment.classList.add("active");
+
+    selectedPayment=
+      payment.dataset.payment;
+
+    return;
+  }
+
+  /* CUSTOMER */
+  if(target.id==="addCustomerBtn"){
+
+    openCustomerModal();
+
+    return;
+  }
+
+  const editCustomer=target.closest(
+    "[data-edit-customer]"
+  );
+
+  if(editCustomer){
+
+    openCustomerModal(
+      editCustomer.dataset.editCustomer
+    );
+
+    return;
+  }
+
+  const deleteCustomerBtn=target.closest(
+    "[data-delete-customer]"
+  );
+
+  if(deleteCustomerBtn){
+
+    deleteCustomer(
+      deleteCustomerBtn.dataset.deleteCustomer
+    );
+
+    return;
+  }
+
+  const receiveCustomer=target.closest(
+    "[data-receive-customer]"
+  );
+
+  if(receiveCustomer){
+
+    receiveCustomerPayment(
+      receiveCustomer.dataset.receiveCustomer
+    );
+
+    return;
+  }
+
+  /* SUPPLIER */
+  if(target.id==="addSupplierBtn"){
+
+    openSupplierModal();
+
+    return;
+  }
+
+  const editSupplier=target.closest(
+    "[data-edit-supplier]"
+  );
+
+  if(editSupplier){
+
+    openSupplierModal(
+      editSupplier.dataset.editSupplier
+    );
+
+    return;
+  }
+
+  const deleteSupplierBtn=target.closest(
+    "[data-delete-supplier]"
+  );
+
+  if(deleteSupplierBtn){
+
+    deleteSupplier(
+      deleteSupplierBtn.dataset.deleteSupplier
+    );
+
+    return;
+  }
+
+  const paySupplierBtn=target.closest(
+    "[data-pay-supplier]"
+  );
+
+  if(paySupplierBtn){
+
+    paySupplier(
+      paySupplierBtn.dataset.paySupplier
+    );
+
+    return;
+  }
+
+  /* EXPENSE */
+  if(target.id==="addExpenseBtn"){
+
+    openExpenseModal();
+
+    return;
+  }
+
+  const deleteExpenseBtn=target.closest(
+    "[data-delete-expense]"
+  );
+
+  if(deleteExpenseBtn){
+
+    deleteExpense(
+      deleteExpenseBtn.dataset.deleteExpense
+    );
+
+    return;
+  }
+
+  /* EMPLOYEE */
+  if(target.id==="addEmployeeBtn"){
+
+    openEmployeeModal();
+
+    return;
+  }
+
+  const editEmployee=target.closest(
+    "[data-edit-employee]"
+  );
+
+  if(editEmployee){
+
+    openEmployeeModal(
+      editEmployee.dataset.editEmployee
+    );
+
+    return;
+  }
+
+  const deleteEmployeeBtn=target.closest(
+    "[data-delete-employee]"
+  );
+
+  if(deleteEmployeeBtn){
+
+    deleteEmployee(
+      deleteEmployeeBtn.dataset.deleteEmployee
+    );
+
+    return;
+  }
+
+  const paySalaryBtn=target.closest(
+    "[data-pay-salary]"
+  );
+
+  if(paySalaryBtn){
+
+    payEmployee(
+      paySalaryBtn.dataset.paySalary
+    );
+
+    return;
+  }
+
+  /* PURCHASE */
+  if(target.id==="newPurchaseBtn"){
+
+    openPurchaseModal();
+
+    return;
+  }
+
+  /* STOCK */
+  if(target.id==="stockAdjustmentBtn"){
+
+    openStockAdjustmentModal();
+
+    return;
+  }
+
+  /* USER */
+  if(target.id==="addUserBtn"){
+
+    openUserModal();
+
+    return;
+  }
+
+  const deleteUserBtn=target.closest(
+    "[data-delete-user]"
+  );
+
+  if(deleteUserBtn){
+
+    deleteUser(
+      deleteUserBtn.dataset.deleteUser
+    );
+
+    return;
+  }
+
+  /* MODAL CANCEL */
+  if(target.id==="modalClose" ||
+     target.id==="cancelModalBtn"){
+
+    closeModal();
+
+    return;
+  }
+
+  /* MODAL SAVE */
+  if(target.id==="saveProductBtn"){
+
+    saveProduct();
+
+    return;
+  }
+
+  if(target.id==="saveCustomerBtn"){
+
+    saveCustomer();
+
+    return;
+  }
+
+  if(target.id==="saveSupplierBtn"){
+
+    saveSupplier();
+
+    return;
+  }
+
+  if(target.id==="savePurchaseBtn"){
+
+    savePurchase();
+
+    return;
+  }
+
+  if(target.id==="saveAdjustmentBtn"){
+
+    saveStockAdjustment();
+
+    return;
+  }
+
+  if(target.id==="saveExpenseBtn"){
+
+    saveExpense();
+
+    return;
+  }
+
+  if(target.id==="saveEmployeeBtn"){
+
+    saveEmployee();
+
+    return;
+  }
+
+  if(target.id==="receivePaymentBtn"){
+
+    saveCustomerPayment(
+      target.dataset.customerId
+    );
+
+    return;
+  }
+
+  if(target.id==="paySupplierBtn"){
+
+    saveSupplierPayment(
+      target.dataset.supplierId
+    );
+
+    return;
+  }
+
+  if(target.id==="saveSalaryBtn"){
+
+    saveSalary(
+      target.dataset.employeeId
+    );
+
+    return;
+  }
+
+  if(target.id==="saveUserBtn"){
+
+    saveUser();
+
+    return;
+  }
+
 });
 
-window.AungPOS={
-  data,
-  refresh,
-  showPage,
-  saveData
-};
+/* =========================================================
+   INPUT EVENTS
+========================================================= */
+
+document.getElementById("salesSearch")
+  .addEventListener("input",renderSalesProducts);
+
+document.getElementById("salesCategory")
+  .addEventListener("change",renderSalesProducts);
+
+document.getElementById("productSearch")
+  .addEventListener("input",renderProducts);
+
+document.getElementById("productCategoryFilter")
+  .addEventListener("change",renderProducts);
+
+document.getElementById("stockFilter")
+  .addEventListener("change",renderProducts);
+
+document.getElementById("stockSearch")
+  .addEventListener("input",renderStock);
+
+document.getElementById("customerSearch")
+  .addEventListener("input",renderCustomers);
+
+document.getElementById("supplierSearch")
+  .addEventListener("input",renderSuppliers);
+
+document.getElementById("expenseSearch")
+  .addEventListener("input",renderExpenses);
+
+document.getElementById("employeeSearch")
+  .addEventListener("input",renderEmployees);
+
+document.getElementById("saleDiscount")
+  .addEventListener("input",renderCart);
+
+document.getElementById("reportPeriod")
+  .addEventListener("change",renderReports);
+
+/* =========================================================
+   MAIN BUTTONS
+========================================================= */
+
+document.getElementById("loginBtn")
+  .addEventListener("click",login);
+
+document.getElementById("logoutBtn")
+  .addEventListener("click",logout);
+
+document.getElementById("menuBtn")
+  .addEventListener("click",function(){
+
+    document.getElementById("sidebar")
+      .classList.toggle("open");
+
+  });
+
+document.getElementById("clearCartBtn")
+  .addEventListener("click",function(){
+
+    cart=[];
+
+    renderCart();
+
+  });
+
+document.getElementById("checkoutBtn")
+  .addEventListener("click",checkout);
+
+document.getElementById("scanBarcodeBtn")
+  .addEventListener("click",scanBarcode);
+
+document.getElementById("newSaleBtn")?.addEventListener(
+  "click",
+  function(){
+
+    cart=[];
+
+    renderCart();
+
+  }
+);
+
+document.getElementById("refreshReportBtn")
+  .addEventListener("click",renderReports);
+
+document.getElementById("printReportBtn")
+  .addEventListener("click",printReport);
+
+document.getElementById("saveShopSettingsBtn")
+  .addEventListener("click",saveShopSettings);
+
+document.getElementById("backupBtn")
+  .addEventListener("click",backupData);
+
+document.getElementById("restoreInput")
+  .addEventListener("change",function(){
+
+    restoreData(this.files[0]);
+
+    this.value="";
+
+  });
+
+document.getElementById("clearDataBtn")
+  .addEventListener("click",clearAllData);
+
+/* =========================================================
+   GLOBAL KEYBOARD
+========================================================= */
+
+document.addEventListener("keydown",function(e){
+
+  if(e.key==="Escape"){
+
+    closeModal();
+
+  }
+
+});
+
+/* =========================================================
+   RENDER ALL
+========================================================= */
+
+function renderAll(){
+
+  fillCategorySelects();
+
+  renderDashboard();
+
+  renderSalesProducts();
+
+  renderSaleCustomers();
+
+  renderProducts();
+
+  renderPurchases();
+
+  renderStock();
+
+  renderCustomers();
+
+  renderSuppliers();
+
+  renderDebts();
+
+  renderExpenses();
+
+  renderEmployees();
+
+  renderReports();
+
+  renderUsers();
+
+  renderSettings();
+
+  renderCart();
+
+}
+
+/* =========================================================
+   CLOCK / DATE
+========================================================= */
+
+function updateTopDate(){
+
+  const now=new Date();
+
+  document.getElementById("topDate")
+    .textContent=
+      now.toLocaleDateString("en-GB",{
+        day:"2-digit",
+        month:"short",
+        year:"numeric"
+      });
+
+}
+
+/* =========================================================
+   INITIALIZE
+========================================================= */
+
+initLogin();
+
+updateTopDate();
+
+setInterval(updateTopDate,60000);
+
+showSection("dashboard");
 
 </script>
 
