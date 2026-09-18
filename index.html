@@ -4,2371 +4,2695 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0f172a">
-<title>Aung POS V2</title>
+<title>Aung POS V2 Professional</title>
 
 <style>
-:root{
-  --primary:#2563eb;
-  --primary2:#1d4ed8;
-  --dark:#0f172a;
-  --dark2:#1e293b;
-  --bg:#f1f5f9;
-  --card:#fff;
-  --text:#0f172a;
-  --muted:#64748b;
-  --border:#e2e8f0;
-  --green:#16a34a;
-  --red:#dc2626;
-  --orange:#ea580c;
-  --purple:#7c3aed;
-  --shadow:0 8px 30px rgba(15,23,42,.08);
-  --radius:16px;
-}
-
-*{box-sizing:border-box}
+*{box-sizing:border-box;margin:0;padding:0}
 body{
-  margin:0;
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans Myanmar",Arial,sans-serif;
-  background:var(--bg);
-  color:var(--text);
+  font-family:Arial,"Noto Sans Myanmar",sans-serif;
+  background:#f4f7fb;color:#172033;
 }
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
 
-/* AUTH */
-.auth-screen{
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-  background:linear-gradient(135deg,#0f172a,#1e3a8a);
+:root{
+ --nav:#0f172a;
+ --nav2:#1e293b;
+ --primary:#2563eb;
+ --primary2:#1d4ed8;
+ --success:#059669;
+ --danger:#dc2626;
+ --warning:#d97706;
+ --text:#172033;
+ --muted:#64748b;
+ --border:#e2e8f0;
+ --card:#fff;
+}
+
+.auth{
+ min-height:100vh;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:20px;
+ background:linear-gradient(135deg,#0f172a,#1d4ed8);
 }
 .auth-card{
-  width:min(450px,100%);
-  background:white;
-  border-radius:24px;
-  padding:30px;
-  box-shadow:0 25px 70px rgba(0,0,0,.25);
+ width:min(450px,100%);
+ background:#fff;
+ border-radius:22px;
+ padding:28px;
+ box-shadow:0 25px 70px rgba(0,0,0,.25);
 }
-.brand{text-align:center;margin-bottom:24px}
-.brand-icon{
-  width:64px;height:64px;
-  margin:auto;
-  border-radius:18px;
-  display:grid;
-  place-items:center;
-  background:var(--primary);
-  color:white;
-  font-size:28px;
-  font-weight:800;
+.logo{
+ font-size:27px;
+ font-weight:800;
+ margin-bottom:6px;
 }
-.brand h1{margin:12px 0 4px;font-size:25px}
-.brand p{margin:0;color:var(--muted)}
-
-.field{margin-bottom:15px}
+.auth-title{
+ font-size:15px;
+ color:var(--muted);
+ margin-bottom:20px;
+}
+.field{margin-bottom:13px}
 .field label{
-  display:block;
-  font-weight:700;
-  font-size:14px;
-  margin-bottom:7px;
+ display:block;
+ font-size:13px;
+ font-weight:700;
+ margin-bottom:6px;
 }
 input,select,textarea{
-  width:100%;
-  border:1px solid var(--border);
-  border-radius:10px;
-  padding:11px 12px;
-  background:#fff;
-  color:var(--text);
-  outline:none;
+ width:100%;
+ border:1px solid var(--border);
+ background:#fff;
+ border-radius:10px;
+ padding:11px 12px;
+ outline:none;
 }
 input:focus,select:focus,textarea:focus{
-  border-color:var(--primary);
-  box-shadow:0 0 0 3px rgba(37,99,235,.1);
+ border-color:var(--primary);
+ box-shadow:0 0 0 3px rgba(37,99,235,.1);
 }
+textarea{min-height:80px;resize:vertical}
 
 .btn{
-  border:0;
-  border-radius:10px;
-  padding:11px 16px;
-  font-weight:700;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:7px;
+ border:0;
+ border-radius:10px;
+ padding:10px 14px;
+ font-weight:700;
 }
 .btn-primary{background:var(--primary);color:#fff}
 .btn-primary:hover{background:var(--primary2)}
-.btn-secondary{background:#e2e8f0;color:#0f172a}
-.btn-success{background:var(--green);color:#fff}
-.btn-danger{background:var(--red);color:#fff}
-.btn-warning{background:#f59e0b;color:#fff}
-.btn-purple{background:var(--purple);color:#fff}
-.btn-block{width:100%}
-.btn-sm{padding:7px 10px;font-size:13px}
+.btn-light{background:#eef2f7;color:#334155}
+.btn-success{background:#d1fae5;color:#047857}
+.btn-danger{background:#fee2e2;color:#b91c1c}
+.btn-warning{background:#fef3c7;color:#92400e}
+.btn-sm{padding:7px 9px;font-size:12px}
 
-.setup-note,.login-note{
-  background:#eff6ff;
-  border:1px solid #bfdbfe;
-  color:#1e40af;
-  padding:12px;
-  border-radius:10px;
-  font-size:13px;
-  margin-bottom:18px;
-}
-
-/* APP */
-.app{min-height:100vh}
+.app{min-height:100vh;display:flex}
 .sidebar{
-  position:fixed;
-  left:0;top:0;bottom:0;
-  width:250px;
-  background:var(--dark);
-  color:#fff;
-  z-index:50;
-  overflow-y:auto;
+ width:255px;
+ position:fixed;
+ left:0;top:0;bottom:0;
+ background:var(--nav);
+ color:#fff;
+ overflow-y:auto;
+ z-index:30;
 }
-.side-brand{
-  padding:22px 18px;
-  border-bottom:1px solid rgba(255,255,255,.08);
+.brand{
+ padding:20px;
+ border-bottom:1px solid rgba(255,255,255,.08);
 }
-.side-brand strong{font-size:19px}
-.side-brand small{
-  display:block;
-  color:#94a3b8;
-  margin-top:4px;
+.brand-title{font-size:20px;font-weight:900}
+.brand-sub{font-size:11px;color:#94a3b8;margin-top:4px}
+
+.nav{padding:12px}
+.nav-group{
+ font-size:10px;
+ color:#64748b;
+ font-weight:800;
+ padding:15px 10px 5px;
 }
-.nav-title{
-  padding:18px 18px 7px;
-  font-size:11px;
-  color:#64748b;
-  font-weight:800;
-  letter-spacing:.8px;
+.nav button{
+ width:100%;
+ border:0;
+ background:transparent;
+ color:#cbd5e1;
+ text-align:left;
+ padding:11px 12px;
+ border-radius:9px;
+ margin:2px 0;
 }
-.nav-item{
-  margin:3px 10px;
-  padding:11px 12px;
-  border-radius:10px;
-  color:#cbd5e1;
-  display:flex;
-  gap:10px;
-  align-items:center;
-  text-decoration:none;
-  cursor:pointer;
+.nav button:hover,
+.nav button.active{
+ background:var(--nav2);
+ color:#fff;
 }
-.nav-item:hover,.nav-item.active{
-  background:#1e40af;
-  color:#fff;
-}
+
 .main{
-  margin-left:250px;
-  min-height:100vh;
+ margin-left:255px;
+ width:calc(100% - 255px);
 }
 .topbar{
-  position:sticky;
-  top:0;
-  z-index:30;
-  height:68px;
-  background:rgba(255,255,255,.95);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--border);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  padding:0 22px;
+ height:64px;
+ background:#fff;
+ border-bottom:1px solid var(--border);
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ padding:0 22px;
+ position:sticky;
+ top:0;
+ z-index:20;
 }
-.top-left{display:flex;align-items:center;gap:12px}
-.menu-btn{display:none}
-.user-chip{
-  display:flex;
-  align-items:center;
-  gap:9px;
-  background:#f8fafc;
-  border:1px solid var(--border);
-  padding:7px 11px;
-  border-radius:12px;
-}
-.avatar{
-  width:34px;height:34px;
-  border-radius:50%;
-  background:var(--primary);
-  color:#fff;
-  display:grid;
-  place-items:center;
-  font-weight:800;
-}
-.content{padding:24px}
-.page-head{
-  display:flex;
-  justify-content:space-between;
-  gap:15px;
-  align-items:center;
-  margin-bottom:20px;
-}
-.page-head h2{margin:0;font-size:24px}
-.page-head p{margin:5px 0 0;color:var(--muted)}
+.mobile-menu{display:none}
 
-.cards{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px;
+.content{
+ max-width:1500px;
+ margin:auto;
+ padding:22px;
 }
-.stat-card{
-  background:white;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:18px;
-  box-shadow:var(--shadow);
-}
-.stat-card .label{color:var(--muted);font-size:13px}
-.stat-card .value{font-size:25px;font-weight:800;margin-top:7px}
-.stat-icon{
-  float:right;
-  width:40px;height:40px;
-  border-radius:12px;
-  display:grid;
-  place-items:center;
-  background:#eff6ff;
-}
+.section{display:none}
+.section.active{display:block}
 
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
-.panel{
-  background:#fff;
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  padding:18px;
-  box-shadow:var(--shadow);
+.page-title{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:12px;
+ margin-bottom:18px;
 }
-.panel-title{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin-bottom:15px;
-}
-.panel-title h3{margin:0;font-size:17px}
+.page-title h2{font-size:23px}
+.muted{color:var(--muted);font-size:13px}
 
-.table-wrap{overflow:auto}
-table{width:100%;border-collapse:collapse;min-width:650px}
-th,td{
-  padding:11px 10px;
-  border-bottom:1px solid var(--border);
-  text-align:left;
-  font-size:13px;
+.grid{
+ display:grid;
+ gap:15px;
 }
-th{background:#f8fafc;color:#475569}
-.badge{
-  display:inline-flex;
-  padding:4px 8px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:800;
+.g4{grid-template-columns:repeat(4,1fr)}
+.g3{grid-template-columns:repeat(3,1fr)}
+.g2{grid-template-columns:repeat(2,1fr)}
+
+.card{
+ background:var(--card);
+ border:1px solid var(--border);
+ border-radius:15px;
+ padding:17px;
+ box-shadow:0 5px 18px rgba(15,23,42,.05);
 }
-.badge-green{background:#dcfce7;color:#166534}
-.badge-red{background:#fee2e2;color:#991b1b}
-.badge-blue{background:#dbeafe;color:#1e40af}
-.badge-orange{background:#ffedd5;color:#9a3412}
-.badge-purple{background:#ede9fe;color:#6d28d9}
+.card h3{margin-bottom:13px}
+
+.stat .label{
+ color:var(--muted);
+ font-size:12px;
+}
+.stat .value{
+ font-size:25px;
+ font-weight:900;
+ margin-top:7px;
+}
+.stat .sub{
+ font-size:11px;
+ color:var(--muted);
+ margin-top:5px;
+}
 
 .toolbar{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  margin-bottom:15px;
+ display:flex;
+ gap:8px;
+ flex-wrap:wrap;
+ margin-bottom:14px;
 }
-.toolbar>*{flex:1;min-width:160px}
+.toolbar>*{
+ flex:1;
+ min-width:150px;
+}
+
+.table-wrap{overflow:auto}
+.table{
+ width:100%;
+ border-collapse:collapse;
+ min-width:700px;
+}
+.table th,.table td{
+ padding:10px;
+ border-bottom:1px solid var(--border);
+ text-align:left;
+ font-size:13px;
+}
+.table th{
+ background:#f8fafc;
+ font-weight:800;
+}
+
+.badge{
+ display:inline-block;
+ padding:4px 8px;
+ border-radius:999px;
+ font-size:11px;
+ font-weight:700;
+ background:#e5e7eb;
+}
+.badge.success{background:#d1fae5;color:#047857}
+.badge.warning{background:#fef3c7;color:#92400e}
+.badge.danger{background:#fee2e2;color:#b91c1c}
+.badge.blue{background:#dbeafe;color:#1d4ed8}
 
 .form-grid{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:13px;
-}
-.form-grid-3{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:13px;
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
 }
 .full{grid-column:1/-1}
 
-.empty{
-  text-align:center;
-  color:var(--muted);
-  padding:35px 15px;
+.actions{
+ display:flex;
+ gap:8px;
+ justify-content:flex-end;
+ flex-wrap:wrap;
+ margin-top:15px;
 }
 
-/* POS */
-.pos-grid{
-  display:grid;
-  grid-template-columns:1.35fr .9fr;
-  gap:18px;
-}
-.product-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-}
 .product-card{
-  border:1px solid var(--border);
-  border-radius:12px;
-  padding:13px;
-  background:#fff;
-  cursor:pointer;
+ border:1px solid var(--border);
+ border-radius:12px;
+ padding:12px;
+ background:#fff;
 }
-.product-card:hover{border-color:var(--primary);box-shadow:0 5px 18px rgba(37,99,235,.1)}
-.product-card strong{display:block}
-.product-card small{color:var(--muted)}
-.product-price{font-weight:800;color:var(--primary);margin-top:7px}
-.cart{
-  position:sticky;
-  top:85px;
+.product-card h4{
+ margin-bottom:5px;
+ font-size:14px;
 }
-.cart-item{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
-  padding:10px 0;
-  border-bottom:1px solid var(--border);
+.product-card .pmeta{
+ color:var(--muted);
+ font-size:11px;
+ margin-bottom:9px;
 }
-.qty-controls{display:flex;align-items:center;gap:5px}
-.qty-controls button{
-  width:28px;height:28px;border:0;border-radius:7px;background:#e2e8f0;
-}
-.total-box{
-  margin-top:15px;
-  padding:15px;
-  background:#f8fafc;
-  border-radius:12px;
-}
-.total-line{
-  display:flex;
-  justify-content:space-between;
-  margin:7px 0;
-}
-.grand-total{
-  font-size:22px;
-  font-weight:900;
-  padding-top:10px;
-  border-top:2px solid var(--border);
+.product-card .pprice{
+ font-weight:900;
+ margin-bottom:9px;
 }
 
-/* SUBSCRIPTION */
-.subscription-hero{
-  background:linear-gradient(135deg,#172554,#2563eb);
-  color:white;
-  border-radius:20px;
-  padding:24px;
-  margin-bottom:18px;
+.cart-row{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ padding:10px 0;
+ border-bottom:1px solid var(--border);
 }
-.subscription-status{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:15px;
+.cart-info{flex:1}
+.cart-info strong{display:block}
+.cart-info small{color:var(--muted)}
+.qty{
+ display:flex;
+ align-items:center;
+ gap:5px;
 }
-.days{
-  font-size:38px;
-  font-weight:900;
+.qty button{
+ width:28px;height:28px;
+ border:0;
+ background:#eef2f7;
+ border-radius:7px;
 }
+.cart-total{
+ font-size:20px;
+ font-weight:900;
+ text-align:right;
+ margin-top:15px;
+}
+
 .plan-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:18px;
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:15px;
 }
 .plan{
-  position:relative;
-  background:white;
-  border:2px solid var(--border);
-  border-radius:18px;
-  padding:22px;
-  box-shadow:var(--shadow);
+ position:relative;
+ border:2px solid var(--border);
+ border-radius:18px;
+ padding:22px;
+ background:#fff;
 }
-.plan.popular{border-color:var(--primary)}
-.plan.best{border-color:var(--purple)}
+.plan.recommended{border-color:var(--primary)}
+.plan.best{border-color:#f59e0b}
 .plan-tag{
-  position:absolute;
-  right:15px;top:15px;
-  padding:5px 9px;
-  border-radius:20px;
-  font-size:11px;
-  font-weight:800;
-  background:#dbeafe;
-  color:#1e40af;
+ position:absolute;
+ top:-12px;
+ right:15px;
+ background:var(--primary);
+ color:#fff;
+ padding:5px 10px;
+ border-radius:999px;
+ font-size:11px;
+ font-weight:800;
 }
-.plan h3{margin:0 0 8px}
-.plan-price{font-size:30px;font-weight:900}
-.plan-month{color:var(--muted);font-size:13px;margin-bottom:15px}
-.plan ul{padding-left:20px;color:#475569;line-height:1.9}
-.payment-box{
-  margin-top:18px;
-  background:#f8fafc;
-  border:1px solid var(--border);
-  border-radius:14px;
-  padding:17px;
+.plan.best .plan-tag{background:#f59e0b}
+.plan-price{
+ font-size:29px;
+ font-weight:900;
+ margin:12px 0 5px;
 }
-.payment-method{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:12px;
+.plan-note{
+ color:var(--muted);
+ font-size:12px;
+ margin-bottom:15px;
 }
-.pay-method{
-  border:2px solid var(--border);
-  border-radius:12px;
-  padding:15px;
-  cursor:pointer;
-  text-align:center;
+.notice{
+ background:#eff6ff;
+ color:#1e40af;
+ padding:12px;
+ border-radius:10px;
+ font-size:13px;
+ margin-bottom:12px;
 }
-.pay-method.selected{
-  border-color:var(--primary);
-  background:#eff6ff;
+.notice.warning{
+ background:#fffbeb;
+ color:#92400e;
 }
-.pay-number{
-  font-size:20px;
-  font-weight:900;
-  margin-top:7px;
+.notice.danger{
+ background:#fef2f2;
+ color:#991b1b;
 }
 
-/* MODAL */
 .modal-overlay{
-  position:fixed;
-  inset:0;
-  background:rgba(15,23,42,.6);
-  z-index:100;
-  display:none;
-  align-items:center;
-  justify-content:center;
-  padding:18px;
+ position:fixed;
+ inset:0;
+ background:rgba(15,23,42,.55);
+ z-index:100;
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ padding:15px;
 }
-.modal-overlay.show{display:flex}
 .modal{
-  width:min(650px,100%);
-  max-height:90vh;
-  overflow:auto;
-  background:white;
-  border-radius:18px;
-  box-shadow:0 30px 80px rgba(0,0,0,.3);
+ width:min(720px,100%);
+ max-height:90vh;
+ overflow:auto;
+ background:#fff;
+ border-radius:18px;
+ padding:20px;
 }
 .modal-head{
-  display:flex;
-  justify-content:space-between;
-  padding:18px;
-  border-bottom:1px solid var(--border);
+ display:flex;
+ justify-content:space-between;
+ align-items:start;
+ gap:10px;
+ margin-bottom:15px;
 }
 .modal-head h3{margin:0}
-.modal-body{padding:18px}
-.modal-close{
-  border:0;
-  background:#f1f5f9;
-  width:34px;height:34px;
-  border-radius:8px;
-}
-.modal-foot{
-  padding:15px 18px;
-  border-top:1px solid var(--border);
-  display:flex;
-  justify-content:flex-end;
-  gap:8px;
+.close{
+ border:0;
+ background:#eef2f7;
+ border-radius:8px;
+ padding:7px 10px;
 }
 
-/* TOAST */
 .toast-container{
-  position:fixed;
-  right:18px;
-  bottom:18px;
-  z-index:200;
+ position:fixed;
+ right:15px;
+ bottom:15px;
+ z-index:200;
+ display:flex;
+ flex-direction:column;
+ gap:8px;
 }
 .toast{
-  background:#0f172a;
-  color:white;
-  padding:12px 15px;
-  border-radius:10px;
-  margin-top:8px;
-  box-shadow:0 10px 30px rgba(0,0,0,.2);
+ background:#111827;
+ color:#fff;
+ padding:11px 14px;
+ border-radius:10px;
+ box-shadow:0 10px 30px rgba(0,0,0,.2);
+ font-size:13px;
 }
 
-/* PRINT */
-#printArea{display:none}
 .receipt{
-  width:100%;
-  max-width:380px;
-  margin:auto;
-  font-family:monospace;
-  color:#000;
-  font-size:12px;
+ width:300px;
+ margin:auto;
+ font-family:monospace;
+ font-size:12px;
 }
-.receipt.center{text-align:center}
+.receipt h2{text-align:center;margin-bottom:4px}
+.receipt .center{text-align:center}
+.receipt hr{
+ border:0;
+ border-top:1px dashed #000;
+ margin:8px 0;
+}
 .receipt-row{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-}
-.receipt-line{
-  border-top:1px dashed #000;
-  margin:8px 0;
-}
-.receipt-total{font-size:17px;font-weight:900}
-.receipt-logo{font-size:21px;font-weight:900}
-.receipt small{font-size:10px}
-
-@media(max-width:1100px){
-  .cards{grid-template-columns:repeat(2,1fr)}
-  .product-grid{grid-template-columns:repeat(2,1fr)}
-  .plan-grid{grid-template-columns:1fr}
-}
-@media(max-width:850px){
-  .sidebar{
-    transform:translateX(-100%);
-    transition:.25s;
-  }
-  .sidebar.open{transform:translateX(0)}
-  .main{margin-left:0}
-  .menu-btn{
-    display:grid;
-    place-items:center;
-    width:40px;height:40px;
-    border:0;
-    background:#f1f5f9;
-    border-radius:9px;
-  }
-  .grid2,.pos-grid{grid-template-columns:1fr}
-  .cart{position:static}
-}
-@media(max-width:600px){
-  .content{padding:15px}
-  .cards{grid-template-columns:1fr 1fr;gap:10px}
-  .stat-card{padding:13px}
-  .stat-card .value{font-size:19px}
-  .form-grid,.form-grid-3{grid-template-columns:1fr}
-  .product-grid{grid-template-columns:1fr 1fr}
-  .page-head{align-items:flex-start}
-  .page-head h2{font-size:20px}
-  .topbar{padding:0 12px}
-  .user-chip small{display:none}
+ display:flex;
+ justify-content:space-between;
+ gap:8px;
+ margin:4px 0;
 }
 
-/* PRINT CSS */
+.print-area{display:none}
+
+@media(max-width:1050px){
+ .g4{grid-template-columns:repeat(2,1fr)}
+ .plan-grid{grid-template-columns:1fr}
+}
+@media(max-width:800px){
+ .sidebar{
+  transform:translateX(-100%);
+  transition:.2s;
+ }
+ .sidebar.open{transform:translateX(0)}
+ .main{
+  margin-left:0;
+  width:100%;
+ }
+ .mobile-menu{display:inline-flex}
+ .topbar{padding:0 12px}
+ .content{padding:14px}
+}
+@media(max-width:650px){
+ .g4,.g3,.g2{grid-template-columns:1fr}
+ .form-grid{grid-template-columns:1fr}
+ .full{grid-column:auto}
+ .page-title{
+  flex-direction:column;
+  align-items:flex-start;
+ }
+ .user-role{display:none}
+}
+
 @media print{
-  body *{visibility:hidden!important}
-  #printArea,#printArea *{visibility:visible!important}
-  #printArea{
-    display:block!important;
-    position:absolute;
-    left:0;top:0;
-    width:100%;
-    margin:0;
-    padding:0;
-  }
-  @page{
-    size:80mm auto;
-    margin:3mm;
-  }
+ body{background:#fff}
+ body>*{display:none!important}
+ .print-area{
+  display:block!important;
+  position:static!important;
+ }
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= AUTH ================= -->
+<!-- SETUP -->
+<div id="setupScreen" class="auth hidden">
+ <div class="auth-card">
+  <div class="logo">🧾 Aung POS V2</div>
+  <div class="auth-title">ပထမဆုံးအသုံးပြုရန် Shop Account တည်ဆောက်ပါ</div>
 
-<div id="setupScreen" class="auth-screen hidden">
-  <div class="auth-card">
-    <div class="brand">
-      <div class="brand-icon">A</div>
-      <h1>Aung POS V2</h1>
-      <p>Professional POS Management</p>
-    </div>
-
-    <div class="setup-note">
-      ပထမဆုံးအသုံးပြုခြင်းဖြစ်သောကြောင့် Admin Account တည်ဆောက်ပါ။
-    </div>
-
-    <div class="field">
-      <label>ဆိုင်အမည်</label>
-      <input id="setupShop" placeholder="ဥပမာ - Aung Mini Mart">
-    </div>
-
-    <div class="field">
-      <label>Admin အမည်</label>
-      <input id="setupAdminName" placeholder="Admin Name">
-    </div>
-
-    <div class="field">
-      <label>Username</label>
-      <input id="setupUsername" autocomplete="username">
-    </div>
-
-    <div class="field">
-      <label>Password</label>
-      <input id="setupPassword" type="password" autocomplete="new-password">
-    </div>
-
-    <div class="field">
-      <label>Password အတည်ပြုရန်</label>
-      <input id="setupPassword2" type="password" autocomplete="new-password">
-    </div>
-
-    <button class="btn btn-primary btn-block" onclick="createFirstAdmin()">
-      စတင်အသုံးပြုမည်
-    </button>
+  <div class="field">
+   <label>Shop Name</label>
+   <input id="setupShop" placeholder="ဥပမာ - Aung Mini Mart">
   </div>
+
+  <div class="field">
+   <label>Admin Name</label>
+   <input id="setupName" placeholder="Admin အမည်">
+  </div>
+
+  <div class="field">
+   <label>Username</label>
+   <input id="setupUser" autocomplete="username">
+  </div>
+
+  <div class="field">
+   <label>Password</label>
+   <input id="setupPass" type="password" autocomplete="new-password">
+  </div>
+
+  <div class="field">
+   <label>Confirm Password</label>
+   <input id="setupPass2" type="password">
+  </div>
+
+  <button class="btn btn-primary" style="width:100%" id="setupBtn">
+   POS စတင်အသုံးပြုမည်
+  </button>
+ </div>
 </div>
 
-<div id="loginScreen" class="auth-screen hidden">
-  <div class="auth-card">
-    <div class="brand">
-      <div class="brand-icon">A</div>
-      <h1>Aung POS V2</h1>
-      <p id="loginShopName">Professional POS Management</p>
-    </div>
+<!-- LOGIN -->
+<div id="loginScreen" class="auth hidden">
+ <div class="auth-card">
+  <div class="logo">🧾 <span id="loginShop">Aung POS V2</span></div>
+  <div class="auth-title">Professional Business POS</div>
 
-    <div class="login-note">
-      သင့် Username နှင့် Password ဖြင့် Login ဝင်ပါ။
-    </div>
-
-    <div class="field">
-      <label>Username</label>
-      <input id="loginUsername" autocomplete="username">
-    </div>
-
-    <div class="field">
-      <label>Password</label>
-      <input id="loginPassword" type="password" autocomplete="current-password">
-    </div>
-
-    <button class="btn btn-primary btn-block" onclick="login()">
-      Login
-    </button>
+  <div class="field">
+   <label>Username</label>
+   <input id="loginUser" autocomplete="username">
   </div>
+
+  <div class="field">
+   <label>Password</label>
+   <input id="loginPass" type="password" autocomplete="current-password">
+  </div>
+
+  <button class="btn btn-primary" style="width:100%" id="loginBtn">
+   Login
+  </button>
+
+  <div class="login-note" style="margin-top:12px;color:#64748b;font-size:12px">
+   Password ကို Login screen မှာ မပြသပါ
+  </div>
+ </div>
 </div>
 
-<!-- ================= APP ================= -->
-
+<!-- APP -->
 <div id="app" class="app hidden">
 
-  <aside id="sidebar" class="sidebar">
-    <div class="side-brand">
-      <strong>🧾 Aung POS V2</strong>
-      <small id="sideShopName">Professional POS</small>
-    </div>
-
-    <div class="nav-title">WORKSPACE</div>
-
-    <div class="nav-item" data-section="dashboard" onclick="showSection('dashboard')">🏠 Dashboard</div>
-    <div class="nav-item" data-section="sales" onclick="showSection('sales')">🛒 Sales / POS</div>
-    <div class="nav-item" data-section="products" onclick="showSection('products')">📦 Products</div>
-    <div class="nav-item" data-section="purchases" onclick="showSection('purchases')">🚚 Purchases</div>
-    <div class="nav-item" data-section="stock" onclick="showSection('stock')">📊 Stock</div>
-    <div class="nav-item" data-section="customers" onclick="showSection('customers')">👥 Customers</div>
-    <div class="nav-item" data-section="suppliers" onclick="showSection('suppliers')">🏢 Suppliers</div>
-    <div class="nav-item" data-section="debts" onclick="showSection('debts')">💳 Debts</div>
-    <div class="nav-item" data-section="expenses" onclick="showSection('expenses')">💰 Expenses</div>
-    <div class="nav-item" data-section="employees" onclick="showSection('employees')">👨‍💼 Employees</div>
-    <div class="nav-item" data-section="reports" onclick="showSection('reports')">📈 Reports</div>
-
-    <div class="nav-title">ACCOUNT</div>
-
-    <div class="nav-item" data-section="subscription" onclick="showSection('subscription')">💎 Subscription</div>
-    <div class="nav-item" data-section="users" onclick="showSection('users')">👤 Users</div>
-    <div class="nav-item" data-section="settings" onclick="showSection('settings')">⚙️ Settings</div>
-  </aside>
-
-  <main class="main">
-
-    <header class="topbar">
-      <div class="top-left">
-        <button class="menu-btn" onclick="toggleSidebar()">☰</button>
-        <strong id="topPageTitle">Dashboard</strong>
-      </div>
-
-      <div class="user-chip">
-        <div class="avatar" id="userAvatar">A</div>
-        <div>
-          <strong id="currentUserName">Admin</strong>
-          <small id="currentUserRole" style="display:block;color:#64748b">Admin</small>
-        </div>
-        <button class="btn btn-secondary btn-sm" onclick="logout()">Logout</button>
-      </div>
-    </header>
-
-    <div class="content">
-
-      <!-- DASHBOARD -->
-      <section id="section-dashboard" class="page-section">
-        <div class="page-head">
-          <div>
-            <h2>Dashboard</h2>
-            <p id="welcomeShopName">Business Overview</p>
-          </div>
-        </div>
-
-        <div class="cards">
-          <div class="stat-card">
-            <div class="stat-icon">💵</div>
-            <div class="label">ယနေ့အရောင်း</div>
-            <div class="value" id="todaySales">0 Ks</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">📈</div>
-            <div class="label">ယနေ့ Gross Profit</div>
-            <div class="value" id="todayProfit">0 Ks</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">🚚</div>
-            <div class="label">ယနေ့ Purchase</div>
-            <div class="value" id="todayPurchase">0 Ks</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">💸</div>
-            <div class="label">ယနေ့ Expense</div>
-            <div class="value" id="todayExpense">0 Ks</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">📦</div>
-            <div class="label">Products</div>
-            <div class="value" id="totalProducts">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">⚠️</div>
-            <div class="label">Low Stock</div>
-            <div class="value" id="lowStockCount">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">⏰</div>
-            <div class="label">Expiry Alert</div>
-            <div class="value" id="expiryCount">0</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon">👥</div>
-            <div class="label">Customers</div>
-            <div class="value" id="totalCustomers">0</div>
-          </div>
-        </div>
-
-        <br>
-
-        <div class="grid2">
-          <div class="panel">
-            <div class="panel-title"><h3>Recent Sales</h3></div>
-            <div id="recentSales"></div>
-          </div>
-          <div class="panel">
-            <div class="panel-title"><h3>Alerts</h3></div>
-            <div id="dashboardAlerts"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SALES -->
-      <section id="section-sales" class="page-section hidden">
-        <div class="page-head">
-          <div>
-            <h2>Sales / POS</h2>
-            <p>ရောင်းချမှုနှင့် Receipt</p>
-          </div>
-          <button class="btn btn-secondary" onclick="clearCart()">🗑 Clear Cart</button>
-        </div>
-
-        <div class="pos-grid">
-          <div class="panel">
-            <div class="toolbar">
-              <input id="salesSearch" placeholder="Product / Barcode ရှာရန်" oninput="renderPOSProducts()">
-              <select id="salesCategory" onchange="renderPOSProducts()">
-                <option value="">Category အားလုံး</option>
-              </select>
-            </div>
-            <div id="salesProducts" class="product-grid"></div>
-          </div>
-
-          <div class="panel cart">
-            <div class="panel-title">
-              <h3>🛒 Cart</h3>
-              <span class="badge badge-blue" id="cartCount">0 Items</span>
-            </div>
-
-            <div id="cartItems"></div>
-
-            <div class="total-box">
-              <div class="total-line">
-                <span>Subtotal</span>
-                <strong id="cartSubtotal">0 Ks</strong>
-              </div>
-
-              <div class="field">
-                <label>Discount</label>
-                <input id="saleDiscount" type="number" value="0" min="0" oninput="renderCart()">
-              </div>
-
-              <div class="total-line grand-total">
-                <span>Total</span>
-                <strong id="cartTotal">0 Ks</strong>
-              </div>
-
-              <div class="field">
-                <label>Customer</label>
-                <select id="saleCustomer">
-                  <option value="">Walk-in Customer</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label>Payment</label>
-                <select id="salePayment">
-                  <option value="Cash">Cash</option>
-                  <option value="KPay">KPay</option>
-                  <option value="WavePay">WavePay</option>
-                  <option value="Bank">Bank</option>
-                  <option value="Credit">Credit / Due</option>
-                </select>
-              </div>
-
-              <button class="btn btn-success btn-block" onclick="checkout()">
-                💳 Checkout & Print
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- PRODUCTS -->
-      <section id="section-products" class="page-section hidden">
-        <div class="page-head">
-          <div>
-            <h2>Products</h2>
-            <p>Product Master Data</p>
-          </div>
-          <button class="btn btn-primary" onclick="openProductModal()">＋ Product</button>
-        </div>
-
-        <div class="panel">
-          <div class="toolbar">
-            <input id="productSearch" placeholder="Product ရှာရန်" oninput="renderProductsTable()">
-            <select id="productCategoryFilter" onchange="renderProductsTable()">
-              <option value="">Category အားလုံး</option>
-            </select>
-            <select id="stockFilter" onchange="renderProductsTable()">
-              <option value="">Stock Filter</option>
-              <option value="low">Low Stock</option>
-              <option value="out">Out of Stock</option>
-            </select>
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  <th>Category</th>
-                  <th>Unit</th>
-                  <th>Buy</th>
-                  <th>Retail</th>
-                  <th>Stock</th>
-                  <th>Expiry</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody id="productsTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- PURCHASES -->
-      <section id="section-purchases" class="page-section hidden">
-        <div class="page-head">
-          <div>
-            <h2>Purchases</h2>
-            <p>ကုန်ဝယ်ယူမှု</p>
-          </div>
-          <button class="btn btn-primary" onclick="openPurchaseModal()">＋ Purchase</button>
-        </div>
-
-        <div class="cards">
-          <div class="stat-card"><div class="label">Today Purchase</div><div class="value" id="purchaseTodayTotal">0 Ks</div></div>
-          <div class="stat-card"><div class="label">Invoices</div><div class="value" id="purchaseInvoiceCount">0</div></div>
-          <div class="stat-card"><div class="label">Supplier Payable</div><div class="value" id="supplierPayable">0 Ks</div></div>
-        </div>
-        <br>
-
-        <div class="panel">
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Date</th><th>Invoice</th><th>Supplier</th><th>Product</th><th>Qty</th><th>Total</th><th>Due</th></tr></thead>
-              <tbody id="purchaseTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- STOCK -->
-      <section id="section-stock" class="page-section hidden">
-        <div class="page-head">
-          <div><h2>Stock</h2><p>Inventory Management</p></div>
-          <button class="btn btn-warning" onclick="openAdjustmentModal()">± Stock Adjustment</button>
-        </div>
-
-        <div class="cards">
-          <div class="stat-card"><div class="label">Products</div><div class="value" id="stockProductCount">0</div></div>
-          <div class="stat-card"><div class="label">Units</div><div class="value" id="stockUnitCount">0</div></div>
-          <div class="stat-card"><div class="label">Stock Cost Value</div><div class="value" id="stockCostValue">0 Ks</div></div>
-          <div class="stat-card"><div class="label">Low Stock</div><div class="value" id="stockLowCount">0</div></div>
-        </div>
-        <br>
-
-        <div class="panel">
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Product</th><th>Category</th><th>Stock</th><th>Min</th><th>Buy Price</th><th>Value</th><th>Status</th></tr></thead>
-              <tbody id="stockTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- CUSTOMERS -->
-      <section id="section-customers" class="page-section hidden">
-        <div class="page-head">
-          <div><h2>Customers</h2><p>Customer & Receivable</p></div>
-          <button class="btn btn-primary" onclick="openCustomerModal()">＋ Customer</button>
-        </div>
-
-        <div class="cards">
-          <div class="stat-card"><div class="label">Customers</div><div class="value" id="customerCount">0</div></div>
-          <div class="stat-card"><div class="label">Receivable</div><div class="value" id="customerReceivable">0 Ks</div></div>
-        </div>
-        <br>
-
-        <div class="panel">
-          <input id="customerSearch" placeholder="Customer ရှာရန်" oninput="renderCustomers()">
-          <br><br>
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Name</th><th>Phone</th><th>Address</th><th>Due</th><th>Action</th></tr></thead>
-              <tbody id="customerTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- SUPPLIERS -->
-      <section id="section-suppliers" class="page-section hidden">
-        <div class="page-head">
-          <div><h2>Suppliers</h2><p>Supplier & Payable</p></div>
-          <button class="btn btn-primary" onclick="openSupplierModal()">＋ Supplier</button>
-        </div>
-
-        <div class="panel">
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Name</th><th>Phone</th><th>Address</th><th>Payable</th><th>Action</th></tr></thead>
-              <tbody id="supplierTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- DEBTS -->
-      <section id="section-debts" class="page-section hidden">
-        <div class="page-head"><div><h2>Debts</h2><p>Receivable / Payable</p></div></div>
-
-        <div class="cards">
-          <div class="stat-card"><div class="label">Total Receivable</div><div class="value" id="totalReceivable">0 Ks</div></div>
-          <div class="stat-card"><div class="label">Total Payable</div><div class="value" id="totalPayable">0 Ks</div></div>
-        </div>
-        <br>
-
-        <div class="grid2">
-          <div class="panel"><div class="panel-title"><h3>Customer Receivable</h3></div><div id="receivableList"></div></div>
-          <div class="panel"><div class="panel-title"><h3>Supplier Payable</h3></div><div id="payableList"></div></div>
-        </div>
-      </section>
-
-      <!-- EXPENSES -->
-      <section id="section-expenses" class="page-section hidden">
-        <div class="page-head">
-          <div><h2>Expenses</h2><p>Business Expenses</p></div>
-          <button class="btn btn-primary" onclick="openExpenseModal()">＋ Expense</button>
-        </div>
-
-        <div class="cards">
-          <div class="stat-card"><div class="label">Today</div><div class="value" id="expenseToday">0 Ks</div></div>
-          <div class="stat-card"><div class="label">This Month</div><div class="value" id="expenseMonth">0 Ks</div></div>
-          <div class="stat-card"><div class="label">This Year</div><div class="value" id="expenseYear">0 Ks</div></div>
-        </div>
-        <br>
-
-        <div class="panel">
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount</th><th>Action</th></tr></thead>
-              <tbody id="expenseTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- EMPLOYEES -->
-      <section id="section-employees" class="page-section hidden">
-        <div class="page-head">
-          <div><h2>Employees</h2><p>Employee Management</p></div>
-          <button class="btn btn-primary" onclick="openEmployeeModal()">＋ Employee</button>
-        </div>
-
-        <div class="panel">
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Name</th><th>Role</th><th>Phone</th><th>Salary</th><th>Action</th></tr></thead>
-              <tbody id="employeeTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- REPORTS -->
-      <section id="section-reports" class="page-section hidden">
-        <div class="page-head">
-          <div><h2>Reports</h2><p>Business Performance</p></div>
-          <button class="btn btn-secondary" onclick="window.print()">🖨 Print</button>
-        </div>
-
-        <div class="panel">
-          <div class="toolbar">
-            <select id="reportPeriod" onchange="renderReports()">
-              <option value="today">Today</option>
-              <option value="month">This Month</option>
-              <option value="year">This Year</option>
-              <option value="all">All Time</option>
-            </select>
-          </div>
-
-          <div class="cards">
-            <div class="stat-card"><div class="label">Sales</div><div class="value" id="reportSales">0 Ks</div></div>
-            <div class="stat-card"><div class="label">Purchase</div><div class="value" id="reportPurchase">0 Ks</div></div>
-            <div class="stat-card"><div class="label">Expenses</div><div class="value" id="reportExpenses">0 Ks</div></div>
-            <div class="stat-card"><div class="label">Gross Profit</div><div class="value" id="reportProfit">0 Ks</div></div>
-          </div>
-
-          <br>
-          <div id="salesReportSummary"></div>
-          <div id="profitReportSummary"></div>
-        </div>
-      </section>
-
-      <!-- SUBSCRIPTION -->
-      <section id="section-subscription" class="page-section hidden">
-
-        <div class="page-head">
-          <div>
-            <h2>💎 Subscription</h2>
-            <p>Aung POS အသုံးပြုခွင့်</p>
-          </div>
-        </div>
-
-        <div class="subscription-hero">
-          <div class="subscription-status">
-            <div>
-              <div style="opacity:.8">Current Subscription</div>
-              <h2 id="currentPlan" style="margin:5px 0">Not Active</h2>
-              <div id="subscriptionExpiry">Expiry: -</div>
-            </div>
-            <div style="text-align:right">
-              <div style="opacity:.8">Days Remaining</div>
-              <div class="days" id="daysRemaining">0</div>
-            </div>
-          </div>
-        </div>
-
-        <div class="plan-grid">
-
-          <div class="plan">
-            <h3>🟢 1 Month</h3>
-            <div class="plan-price">100,000 Ks</div>
-            <div class="plan-month">100,000 Ks / month</div>
-            <ul>
-              <li>POS / Sales</li>
-              <li>Stock Management</li>
-              <li>Purchase</li>
-              <li>Reports</li>
-              <li>Up to 5 Users</li>
-              <li>Receipt Printing</li>
-            </ul>
-            <button class="btn btn-primary btn-block" onclick="selectSubscription(1,100000)">
-              ဒီ Package ရွေးမည်
-            </button>
-          </div>
-
-          <div class="plan popular">
-            <div class="plan-tag">MOST POPULAR</div>
-            <h3>🔵 3 Months</h3>
-            <div class="plan-price">270,000 Ks</div>
-            <div class="plan-month">90,000 Ks / month · 10% Save</div>
-            <ul>
-              <li>POS / Sales</li>
-              <li>Stock Management</li>
-              <li>Purchase</li>
-              <li>Reports</li>
-              <li>Up to 5 Users</li>
-              <li>Receipt Printing</li>
-            </ul>
-            <button class="btn btn-primary btn-block" onclick="selectSubscription(3,270000)">
-              ⭐ ဒီ Package ရွေးမည်
-            </button>
-          </div>
-
-          <div class="plan best">
-            <div class="plan-tag" style="background:#ede9fe;color:#6d28d9">BEST VALUE</div>
-            <h3>🟣 6 Months</h3>
-            <div class="plan-price">480,000 Ks</div>
-            <div class="plan-month">80,000 Ks / month · 20% Save</div>
-            <ul>
-              <li>POS / Sales</li>
-              <li>Stock Management</li>
-              <li>Purchase</li>
-              <li>Reports</li>
-              <li>Up to 5 Users</li>
-              <li>Receipt Printing</li>
-            </ul>
-            <button class="btn btn-purple btn-block" onclick="selectSubscription(6,480000)">
-              🔥 ဒီ Package ရွေးမည်
-            </button>
-          </div>
-
-        </div>
-
-        <div id="paymentPanel" class="panel hidden" style="margin-top:20px">
-          <div class="panel-title">
-            <h3>💳 Payment</h3>
-            <span class="badge badge-orange">Manual Verification</span>
-          </div>
-
-          <div id="selectedPackageText" style="font-weight:800;margin-bottom:15px"></div>
-
-          <div class="payment-method">
-            <div class="pay-method" id="kpayMethod" onclick="choosePayment('KPay')">
-              <strong>💚 KPay</strong>
-              <div class="pay-number">0943016420</div>
-              <small>ငွေလွှဲရန်</small>
-            </div>
-
-            <div class="pay-method" id="waveMethod" onclick="choosePayment('WavePay')">
-              <strong>💙 WavePay</strong>
-              <div class="pay-number">0943016420</div>
-              <small>ငွေလွှဲရန်</small>
-            </div>
-          </div>
-
-          <br>
-
-          <div class="form-grid">
-            <div class="field">
-              <label>Payment Method</label>
-              <select id="paymentMethod">
-                <option value="">ရွေးချယ်ပါ</option>
-                <option value="KPay">KPay</option>
-                <option value="WavePay">WavePay</option>
-              </select>
-            </div>
-
-            <div class="field">
-              <label>Transaction ID / Reference</label>
-              <input id="paymentReference" placeholder="ငွေလွှဲပြီး Reference ထည့်ပါ">
-            </div>
-          </div>
-
-          <button class="btn btn-success" onclick="submitPayment()">
-            Payment Submit
-          </button>
-        </div>
-
-        <br>
-
-        <div class="panel">
-          <div class="panel-title"><h3>Payment History</h3></div>
-          <div class="table-wrap">
-            <table>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Plan</th>
-                  <th>Amount</th>
-                  <th>Method</th>
-                  <th>Reference</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody id="paymentHistoryBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- USERS -->
-      <section id="section-users" class="page-section hidden">
-        <div class="page-head">
-          <div><h2>Users</h2><p>Maximum 5 Accounts</p></div>
-          <button class="btn btn-primary" onclick="openUserModal()">＋ User</button>
-        </div>
-
-        <div class="panel">
-          <div class="setup-note">
-            Admin = Full Access · Manager = Business Management · Cashier = Sales / Customer
-          </div>
-
-          <div class="table-wrap">
-            <table>
-              <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Status</th><th>Action</th></tr></thead>
-              <tbody id="usersTableBody"></tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <!-- SETTINGS -->
-      <section id="section-settings" class="page-section hidden">
-        <div class="page-head">
-          <div><h2>Settings</h2><p>System & Account Settings</p></div>
-        </div>
-
-        <div class="grid2">
-
-          <div class="panel">
-            <div class="panel-title"><h3>🏪 Shop Settings</h3></div>
-
-            <div class="field">
-              <label>Shop Name</label>
-              <input id="shopName">
-            </div>
-
-            <div class="field">
-              <label>Address</label>
-              <input id="shopAddress">
-            </div>
-
-            <div class="field">
-              <label>Phone</label>
-              <input id="shopPhone">
-            </div>
-
-            <div class="field">
-              <label>Receipt Footer</label>
-              <input id="shopFooter">
-            </div>
-
-            <button class="btn btn-primary" onclick="saveShopSettings()">Save Settings</button>
-          </div>
-
-          <div class="panel">
-            <div class="panel-title"><h3>🔐 My Account</h3></div>
-
-            <div class="field">
-              <label>New Password</label>
-              <input id="newPassword" type="password">
-            </div>
-
-            <div class="field">
-              <label>Confirm Password</label>
-              <input id="newPassword2" type="password">
-            </div>
-
-            <button class="btn btn-warning" onclick="changePassword()">Change Password</button>
-          </div>
-
-        </div>
-
-        <br>
-
-        <div class="grid2">
-
-          <div class="panel">
-            <div class="panel-title"><h3>💾 Backup</h3></div>
-            <p style="color:#64748b">
-              Business data ကို JSON file အဖြစ် Backup ပြုလုပ်နိုင်ပါတယ်။
-            </p>
-            <button class="btn btn-secondary" onclick="backupData()">Download Backup</button>
-            <input type="file" id="restoreFile" accept=".json" style="margin-top:10px">
-            <button class="btn btn-primary" style="margin-top:10px" onclick="restoreData()">Restore Backup</button>
-          </div>
-
-          <div class="panel">
-            <div class="panel-title"><h3>⚠️ Business Data</h3></div>
-            <p style="color:#64748b">
-              ဒီလုပ်ဆောင်ချက်သည် Product, Sales, Purchase စသည့် Business Data များကို ဖျက်ပါမည်။
-            </p>
-            <button class="btn btn-danger" onclick="clearBusinessData()">Clear Business Data</button>
-          </div>
-
-        </div>
-
-        <br>
-
-        <div class="panel">
-          <strong>Subscription</strong>
-          <p style="color:#64748b;margin-bottom:0">
-            Aung POS V2 Monthly Subscription System — Ready for activation.
-          </p>
-        </div>
-      </section>
-
-    </div>
-  </main>
-</div>
-
-<!-- ================= MODAL ================= -->
-
-<div id="modalOverlay" class="modal-overlay">
-  <div class="modal">
-    <div class="modal-head">
-      <h3 id="modalTitle">Modal</h3>
-      <button class="modal-close" onclick="closeModal()">✕</button>
-    </div>
-    <div id="modalBody" class="modal-body"></div>
-    <div id="modalFoot" class="modal-foot"></div>
+<aside id="sidebar" class="sidebar">
+ <div class="brand">
+  <div class="brand-title">🧾 Aung POS V2</div>
+  <div class="brand-sub" id="sideShopName"></div>
+ </div>
+
+ <div class="nav">
+
+  <div class="nav-group">WORKSPACE</div>
+  <button data-section="dashboard">🏠 Dashboard</button>
+  <button data-section="sales">🛒 Sales / POS</button>
+  <button data-section="products">📦 Products</button>
+  <button data-section="purchases">🚚 Purchases</button>
+  <button data-section="stock">📊 Stock</button>
+
+  <div class="nav-group">CUSTOMER & FINANCE</div>
+  <button data-section="customers">👥 Customers</button>
+  <button data-section="suppliers">🏢 Suppliers</button>
+  <button data-section="debts">💳 Debts</button>
+  <button data-section="expenses">💸 Expenses</button>
+  <button data-section="employees">👨‍💼 Employees</button>
+
+  <div class="nav-group">MANAGEMENT</div>
+  <button data-section="reports">📈 Reports</button>
+  <button data-section="subscription">⭐ Subscription</button>
+  <button data-section="users" data-admin>👤 Users</button>
+  <button data-section="settings" data-admin>⚙️ Settings</button>
+
+ </div>
+</aside>
+
+<main class="main">
+
+<header class="topbar">
+ <div style="display:flex;align-items:center;gap:10px">
+  <button class="btn btn-light mobile-menu" id="menuBtn">☰</button>
+  <b id="topShopName"></b>
+ </div>
+
+ <div style="display:flex;align-items:center;gap:10px">
+  <span id="currentUser" class="user-role"></span>
+  <button class="btn btn-light btn-sm" id="logoutBtn">Logout</button>
+ </div>
+</header>
+
+<div class="content">
+
+<!-- DASHBOARD -->
+<section id="dashboard" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Dashboard</h2>
+   <span class="muted">လုပ်ငန်းအခြေအနေကို တစ်နေရာတည်းမှကြည့်ပါ</span>
   </div>
+  <button class="btn btn-primary" data-go="sales">＋ Sale အသစ်</button>
+ </div>
+
+ <div class="grid g4">
+
+  <div class="card stat">
+   <div class="label">ယနေ့ Sales</div>
+   <div class="value" id="todaySales">0 Ks</div>
+   <div class="sub" id="todaySalesCount">0 invoices</div>
+  </div>
+
+  <div class="card stat">
+   <div class="label">ယနေ့ Gross Profit</div>
+   <div class="value" id="todayProfit">0 Ks</div>
+  </div>
+
+  <div class="card stat">
+   <div class="label">ယနေ့ Purchases</div>
+   <div class="value" id="todayPurchase">0 Ks</div>
+  </div>
+
+  <div class="card stat">
+   <div class="label">ယနေ့ Expenses</div>
+   <div class="value" id="todayExpense">0 Ks</div>
+  </div>
+
+  <div class="card stat">
+   <div class="label">Products</div>
+   <div class="value" id="totalProducts">0</div>
+  </div>
+
+  <div class="card stat">
+   <div class="label">Low Stock</div>
+   <div class="value" id="lowStockCount">0</div>
+  </div>
+
+  <div class="card stat">
+   <div class="label">Expiry Alert</div>
+   <div class="value" id="expiryCount">0</div>
+  </div>
+
+  <div class="card stat">
+   <div class="label">Customer Due</div>
+   <div class="value" id="totalCustomers">0 Ks</div>
+  </div>
+
+ </div>
+
+ <div class="grid g2" style="margin-top:15px">
+
+  <div class="card">
+   <h3>Recent Sales</h3>
+   <div id="recentSales"></div>
+  </div>
+
+  <div class="card">
+   <h3>Business Alerts</h3>
+   <div id="dashboardAlerts"></div>
+  </div>
+
+ </div>
+</section>
+
+<!-- SALES -->
+<section id="sales" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Sales / POS</h2>
+   <span class="muted">Product ရွေးပြီး Cart ထဲထည့်ပါ</span>
+  </div>
+  <button class="btn btn-light" id="clearCartBtn">Clear Cart</button>
+ </div>
+
+ <div class="grid g2">
+
+  <div class="card">
+
+   <div class="toolbar">
+    <input id="salesSearch" placeholder="Product / Barcode ရှာရန်">
+    <select id="salesCategory">
+     <option value="">Category အားလုံး</option>
+    </select>
+   </div>
+
+   <div id="salesProducts" class="grid g2"></div>
+
+  </div>
+
+  <div class="card">
+
+   <h3>🛒 Cart <span id="cartCount" class="badge blue">0</span></h3>
+
+   <div id="cartItems"></div>
+
+   <div class="field" style="margin-top:15px">
+    <label>Customer</label>
+    <select id="saleCustomer">
+     <option value="">Walk-in Customer</option>
+    </select>
+   </div>
+
+   <div class="field">
+    <label>Discount</label>
+    <input id="saleDiscount" type="number" min="0" value="0">
+   </div>
+
+   <div class="field">
+    <label>Payment Method</label>
+    <select id="salePayment">
+     <option value="Cash">Cash</option>
+     <option value="KBZ Pay">KBZ Pay</option>
+     <option value="Wave Pay">Wave Pay</option>
+     <option value="Bank">Bank</option>
+     <option value="Credit-Due">Credit / Due</option>
+    </select>
+   </div>
+
+   <div class="cart-total">
+    Total: <span id="cartTotal">0 Ks</span>
+   </div>
+
+   <button class="btn btn-primary" style="width:100%;margin-top:12px" id="checkoutBtn">
+    Complete Sale
+   </button>
+
+  </div>
+
+ </div>
+</section>
+
+<!-- PRODUCTS -->
+<section id="products" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Products</h2>
+   <span class="muted">Product Master Data</span>
+  </div>
+  <button class="btn btn-primary" id="addProductBtn">＋ Product</button>
+ </div>
+
+ <div class="card">
+
+  <div class="toolbar">
+   <input id="productSearch" placeholder="Product ရှာရန်">
+   <select id="productCategoryFilter">
+    <option value="">Category အားလုံး</option>
+   </select>
+   <select id="stockFilter">
+    <option value="">Stock အားလုံး</option>
+    <option value="low">Low Stock</option>
+    <option value="out">Out of Stock</option>
+   </select>
+  </div>
+
+  <div class="table-wrap">
+   <table class="table">
+    <thead>
+     <tr>
+      <th>Product</th>
+      <th>Category</th>
+      <th>Unit</th>
+      <th>Buy</th>
+      <th>Retail</th>
+      <th>Wholesale</th>
+      <th>Stock</th>
+      <th>Expiry</th>
+      <th>Action</th>
+     </tr>
+    </thead>
+    <tbody id="productsTableBody"></tbody>
+   </table>
+  </div>
+
+ </div>
+</section>
+
+<!-- PURCHASE -->
+<section id="purchases" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Purchases</h2>
+   <span class="muted">Stock ဝယ်ယူမှုများ</span>
+  </div>
+  <button class="btn btn-primary" id="newPurchaseBtn">＋ Purchase</button>
+ </div>
+
+ <div class="grid g3">
+
+  <div class="card stat">
+   <div class="label">ယနေ့ Purchase</div>
+   <div class="value" id="purchaseTodayTotal">0 Ks</div>
+  </div>
+
+  <div class="card stat">
+   <div class="label">Invoices</div>
+   <div class="value" id="purchaseInvoiceCount">0</div>
+  </div>
+
+  <div class="card stat">
+   <div class="label">Supplier Payable</div>
+   <div class="value" id="supplierPayable">0 Ks</div>
+  </div>
+
+ </div>
+
+ <div class="card" style="margin-top:15px">
+  <div class="table-wrap">
+   <table class="table">
+    <thead>
+     <tr>
+      <th>Date</th>
+      <th>Invoice</th>
+      <th>Supplier</th>
+      <th>Product</th>
+      <th>Qty</th>
+      <th>Total</th>
+      <th>Paid</th>
+      <th>Due</th>
+     </tr>
+    </thead>
+    <tbody id="purchaseTableBody"></tbody>
+   </table>
+  </div>
+ </div>
+
+</section>
+
+<!-- STOCK -->
+<section id="stock" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Stock Management</h2>
+   <span class="muted">Stock အခြေအနေနှင့် Adjustment</span>
+  </div>
+  <button class="btn btn-primary" id="stockAdjustmentBtn">＋ Adjustment</button>
+ </div>
+
+ <div class="grid g4">
+  <div class="card stat"><div class="label">Products</div><div class="value" id="stockProductCount">0</div></div>
+  <div class="card stat"><div class="label">Total Units</div><div class="value" id="stockUnitCount">0</div></div>
+  <div class="card stat"><div class="label">Cost Value</div><div class="value" id="stockCostValue">0 Ks</div></div>
+  <div class="card stat"><div class="label">Low Stock</div><div class="value" id="stockLowCount">0</div></div>
+ </div>
+
+ <div class="card" style="margin-top:15px">
+  <div class="table-wrap">
+   <table class="table">
+    <thead>
+     <tr>
+      <th>Product</th>
+      <th>Category</th>
+      <th>Stock</th>
+      <th>Min</th>
+      <th>Unit</th>
+      <th>Cost Value</th>
+      <th>Status</th>
+     </tr>
+    </thead>
+    <tbody id="stockTableBody"></tbody>
+   </table>
+  </div>
+ </div>
+
+</section>
+
+<!-- CUSTOMERS -->
+<section id="customers" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Customers</h2>
+   <span class="muted">Customer & Receivable Management</span>
+  </div>
+  <button class="btn btn-primary" id="addCustomerBtn">＋ Customer</button>
+ </div>
+
+ <div class="grid g2">
+  <div class="card stat">
+   <div class="label">Customers</div>
+   <div class="value" id="customerCount">0</div>
+  </div>
+  <div class="card stat">
+   <div class="label">Receivable</div>
+   <div class="value" id="customerReceivable">0 Ks</div>
+  </div>
+ </div>
+
+ <div class="card" style="margin-top:15px">
+  <div class="toolbar">
+   <input id="customerSearch" placeholder="Customer ရှာရန်">
+  </div>
+  <div class="table-wrap">
+   <table class="table">
+    <thead>
+     <tr>
+      <th>Name</th>
+      <th>Phone</th>
+      <th>Address</th>
+      <th>Due</th>
+      <th>Action</th>
+     </tr>
+    </thead>
+    <tbody id="customerTableBody"></tbody>
+   </table>
+  </div>
+ </div>
+
+</section>
+
+<!-- SUPPLIERS -->
+<section id="suppliers" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Suppliers</h2>
+   <span class="muted">Supplier & Payable Management</span>
+  </div>
+  <button class="btn btn-primary" id="addSupplierBtn">＋ Supplier</button>
+ </div>
+
+ <div class="card">
+  <div class="table-wrap">
+   <table class="table">
+    <thead>
+     <tr>
+      <th>Name</th>
+      <th>Phone</th>
+      <th>Address</th>
+      <th>Payable</th>
+      <th>Action</th>
+     </tr>
+    </thead>
+    <tbody id="supplierTableBody"></tbody>
+   </table>
+  </div>
+ </div>
+
+</section>
+
+<!-- DEBTS -->
+<section id="debts" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Debts</h2>
+   <span class="muted">Receivable & Payable</span>
+  </div>
+ </div>
+
+ <div class="grid g2">
+  <div class="card stat">
+   <div class="label">Customer Receivable</div>
+   <div class="value" id="totalReceivable">0 Ks</div>
+  </div>
+  <div class="card stat">
+   <div class="label">Supplier Payable</div>
+   <div class="value" id="totalPayable">0 Ks</div>
+  </div>
+ </div>
+
+ <div class="grid g2" style="margin-top:15px">
+  <div class="card">
+   <h3>Customer Due</h3>
+   <div id="receivableList"></div>
+  </div>
+  <div class="card">
+   <h3>Supplier Payable</h3>
+   <div id="payableList"></div>
+  </div>
+ </div>
+
+</section>
+
+<!-- EXPENSES -->
+<section id="expenses" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Expenses</h2>
+   <span class="muted">Business Expense Management</span>
+  </div>
+  <button class="btn btn-primary" id="addExpenseBtn">＋ Expense</button>
+ </div>
+
+ <div class="grid g3">
+  <div class="card stat"><div class="label">Today</div><div class="value" id="expenseToday">0 Ks</div></div>
+  <div class="card stat"><div class="label">This Month</div><div class="value" id="expenseMonth">0 Ks</div></div>
+  <div class="card stat"><div class="label">This Year</div><div class="value" id="expenseYear">0 Ks</div></div>
+ </div>
+
+ <div class="card" style="margin-top:15px">
+  <div class="table-wrap">
+   <table class="table">
+    <thead>
+     <tr>
+      <th>Date</th>
+      <th>Category</th>
+      <th>Description</th>
+      <th>Amount</th>
+      <th>Action</th>
+     </tr>
+    </thead>
+    <tbody id="expenseTableBody"></tbody>
+   </table>
+  </div>
+ </div>
+
+</section>
+
+<!-- EMPLOYEES -->
+<section id="employees" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Employees</h2>
+   <span class="muted">Staff Management</span>
+  </div>
+  <button class="btn btn-primary" id="addEmployeeBtn">＋ Employee</button>
+ </div>
+
+ <div class="card">
+  <div class="table-wrap">
+   <table class="table">
+    <thead>
+     <tr>
+      <th>Name</th>
+      <th>Role</th>
+      <th>Phone</th>
+      <th>Salary</th>
+      <th>Action</th>
+     </tr>
+    </thead>
+    <tbody id="employeeTableBody"></tbody>
+   </table>
+  </div>
+ </div>
+
+</section>
+
+<!-- REPORTS -->
+<section id="reports" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Reports</h2>
+   <span class="muted">Business Performance Report</span>
+  </div>
+  <button class="btn btn-primary" id="printReportBtn">🖨 Print Report</button>
+ </div>
+
+ <div class="card">
+  <div class="toolbar">
+   <select id="reportPeriod">
+    <option value="today">Today</option>
+    <option value="month">This Month</option>
+    <option value="year">This Year</option>
+    <option value="all">All Time</option>
+   </select>
+  </div>
+
+  <div class="grid g4">
+   <div class="card stat"><div class="label">Sales</div><div class="value" id="reportSales">0 Ks</div></div>
+   <div class="card stat"><div class="label">Purchases</div><div class="value" id="reportPurchase">0 Ks</div></div>
+   <div class="card stat"><div class="label">Expenses</div><div class="value" id="reportExpenses">0 Ks</div></div>
+   <div class="card stat"><div class="label">Gross Profit</div><div class="value" id="reportProfit">0 Ks</div></div>
+  </div>
+
+  <div id="salesReportSummary" style="margin-top:15px"></div>
+  <div id="profitReportSummary" style="margin-top:10px"></div>
+ </div>
+
+</section>
+
+<!-- SUBSCRIPTION -->
+<section id="subscription" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>⭐ Subscription</h2>
+   <span class="muted">Aung POS Monthly Subscription</span>
+  </div>
+ </div>
+
+ <div id="subscriptionStatusBox"></div>
+
+ <div class="plan-grid">
+
+  <div class="plan">
+   <h3>1 Month</h3>
+   <div class="plan-price">100,000 Ks</div>
+   <div class="plan-note">Monthly Plan</div>
+   <button class="btn btn-primary" style="width:100%" data-plan="1">
+    Select Plan
+   </button>
+  </div>
+
+  <div class="plan recommended">
+   <div class="plan-tag">⭐ RECOMMENDED</div>
+   <h3>3 Months</h3>
+   <div class="plan-price">270,000 Ks</div>
+   <div class="plan-note">90,000 Ks / month</div>
+   <button class="btn btn-primary" style="width:100%" data-plan="3">
+    Select Plan
+   </button>
+  </div>
+
+  <div class="plan best">
+   <div class="plan-tag">🔥 BEST VALUE</div>
+   <h3>6 Months</h3>
+   <div class="plan-price">480,000 Ks</div>
+   <div class="plan-note">80,000 Ks / month</div>
+   <button class="btn btn-primary" style="width:100%" data-plan="6">
+    Select Plan
+   </button>
+  </div>
+
+ </div>
+
+ <div class="card" style="margin-top:15px">
+  <h3>💳 Payment</h3>
+
+  <div class="notice">
+   KPay / WavePay ဖြင့် ငွေပေးချေနိုင်ပါသည်
+  </div>
+
+  <div class="grid g2">
+
+   <div>
+    <div class="field">
+     <label>KPay / WavePay Number</label>
+     <div style="display:flex;gap:7px">
+      <input id="paymentNumber" value="0943016420" readonly>
+      <button class="btn btn-light" id="copyPaymentBtn">Copy</button>
+     </div>
+    </div>
+   </div>
+
+   <div>
+    <div class="field">
+     <label>Payment Method</label>
+     <select id="subscriptionPayment">
+      <option value="KPay">KPay</option>
+      <option value="WavePay">WavePay</option>
+     </select>
+    </div>
+   </div>
+
+  </div>
+
+  <button class="btn btn-primary" id="paymentRequestBtn">
+   Payment Activation Request
+  </button>
+
+ </div>
+
+ <div class="card" style="margin-top:15px">
+  <h3>Payment Instructions</h3>
+  <ol style="padding-left:20px;line-height:1.9;font-size:13px">
+   <li>Subscription Plan ရွေးပါ</li>
+   <li>KPay / WavePay ဖြင့် ငွေပေးပါ</li>
+   <li>Transaction ID ထည့်ပါ</li>
+   <li>Activation Request တင်ပါ</li>
+   <li>Admin မှ Manual Activation ပြုလုပ်နိုင်ပါသည်</li>
+  </ol>
+
+  <div class="notice warning" style="margin-top:12px">
+   လက်ရှိ Version သည် LocalStorage Version ဖြစ်သောကြောင့် Payment ကို Auto Verify မလုပ်သေးပါ။ Cloud/Firebase ထည့်သည့် Version တွင် Remote Activation ပြုလုပ်နိုင်ပါမည်။
+  </div>
+ </div>
+
+</section>
+
+<!-- USERS -->
+<section id="users" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Users & Permissions</h2>
+   <span class="muted">အများဆုံး User 5 ယောက်</span>
+  </div>
+  <button class="btn btn-primary" id="addUserBtn">＋ User</button>
+ </div>
+
+ <div class="card">
+  <div class="notice">
+   Admin = Full Access · Manager = Business Management · Cashier = Sales Focus
+  </div>
+
+  <div class="table-wrap">
+   <table class="table">
+    <thead>
+     <tr>
+      <th>Name</th>
+      <th>Username</th>
+      <th>Role</th>
+      <th>Action</th>
+     </tr>
+    </thead>
+    <tbody id="usersTableBody"></tbody>
+   </table>
+  </div>
+ </div>
+
+</section>
+
+<!-- SETTINGS -->
+<section id="settings" class="section">
+
+ <div class="page-title">
+  <div>
+   <h2>Settings</h2>
+   <span class="muted">Shop & System Settings</span>
+  </div>
+ </div>
+
+ <div class="grid g2">
+
+  <div class="card">
+   <h3>🏪 Shop Settings</h3>
+
+   <div class="field">
+    <label>Shop Name</label>
+    <input id="settingShopName">
+   </div>
+
+   <div class="field">
+    <label>Address</label>
+    <input id="settingAddress">
+   </div>
+
+   <div class="field">
+    <label>Phone</label>
+    <input id="settingPhone">
+   </div>
+
+   <div class="field">
+    <label>Receipt Footer</label>
+    <input id="settingFooter">
+   </div>
+
+   <button class="btn btn-primary" id="saveShopSettings">
+    Save Settings
+   </button>
+  </div>
+
+  <div class="card">
+   <h3>🔐 My Account</h3>
+
+   <div class="field">
+    <label>Name</label>
+    <input id="accountName">
+   </div>
+
+   <div class="field">
+    <label>Current Password</label>
+    <input id="currentPassword" type="password">
+   </div>
+
+   <div class="field">
+    <label>New Password</label>
+    <input id="newPassword" type="password">
+   </div>
+
+   <div class="field">
+    <label>Confirm New Password</label>
+    <input id="newPassword2" type="password">
+   </div>
+
+   <button class="btn btn-primary" id="changePasswordBtn">
+    Change Password
+   </button>
+  </div>
+
+  <div class="card">
+   <h3>💾 Backup & Restore</h3>
+
+   <p class="muted" style="margin-bottom:12px">
+    Business Data ကို JSON file အဖြစ် Backup ပြုလုပ်နိုင်ပါသည်
+   </p>
+
+   <div class="actions" style="justify-content:flex-start">
+    <button class="btn btn-success" id="backupBtn">Download Backup</button>
+    <label class="btn btn-light" style="display:inline-block">
+     Restore Backup
+     <input id="restoreInput" type="file" accept=".json" style="display:none">
+    </label>
+   </div>
+  </div>
+
+  <div class="card">
+   <h3>⚠️ Business Data</h3>
+
+   <div class="notice danger">
+    Clear Business Data လုပ်ပါက Products, Sales, Purchase, Customer စသည့် data များ ပျက်သွားနိုင်ပါသည်
+   </div>
+
+   <button class="btn btn-danger" id="clearDataBtn">
+    Clear Business Data
+   </button>
+  </div>
+
+ </div>
+
+</section>
+
+</div>
+</main>
 </div>
 
+<!-- MODAL -->
+<div id="modalOverlay" class="modal-overlay hidden">
+ <div class="modal">
+  <div class="modal-head">
+   <div>
+    <h3 id="modalTitle"></h3>
+    <div class="muted" id="modalSubtitle"></div>
+   </div>
+   <button class="close" id="modalClose">✕</button>
+  </div>
+  <div id="modalBody"></div>
+ </div>
+</div>
+
+<!-- TOAST -->
 <div id="toastContainer" class="toast-container"></div>
 
-<!-- PRINT AREA -->
-<div id="printArea"></div>
+<!-- PRINT -->
+<div class="print-area" id="printArea"></div>
 
 <script>
 "use strict";
 
 /* =========================================================
-   AUNG POS V2
-   Single File POS + Subscription
+   AUNG POS V2 PROFESSIONAL
+   SINGLE FILE / LOCAL STORAGE
 ========================================================= */
 
 const STORAGE_KEY = "aung_pos_professional_v2";
 
 const PERMISSIONS = {
-  Admin:{
-    dashboard:1,sales:1,products:1,purchases:1,stock:1,
-    customers:1,suppliers:1,debts:1,expenses:1,employees:1,
-    reports:1,subscription:1,users:1,settings:1
-  },
-  Manager:{
-    dashboard:1,sales:1,products:1,purchases:1,stock:1,
-    customers:1,suppliers:1,debts:1,expenses:1,employees:1,
-    reports:1,subscription:1,users:0,settings:0
-  },
-  Cashier:{
-    dashboard:1,sales:1,products:1,purchases:0,stock:0,
-    customers:1,suppliers:0,debts:1,expenses:0,employees:0,
-    reports:1,subscription:1,users:0,settings:0
-  }
+ Admin:{
+  dashboard:1,sales:1,products:1,purchases:1,stock:1,
+  customers:1,suppliers:1,debts:1,expenses:1,employees:1,
+  reports:1,subscription:1,users:1,settings:1
+ },
+ Manager:{
+  dashboard:1,sales:1,products:1,purchases:1,stock:1,
+  customers:1,suppliers:1,debts:1,expenses:1,employees:1,
+  reports:1,subscription:1,users:0,settings:0
+ },
+ Cashier:{
+  dashboard:1,sales:1,products:1,purchases:0,stock:0,
+  customers:1,suppliers:0,debts:1,expenses:0,employees:0,
+  reports:1,subscription:1,users:0,settings:0
+ }
 };
 
-let db;
+let db = loadDB();
 let currentUser = null;
-let currentSection = "dashboard";
 let cart = [];
-let selectedSubscription = null;
-let selectedPaymentMethod = "";
-
-/* =========================================================
-   DATABASE
-========================================================= */
+let selectedPlan = "1";
 
 function defaultDB(){
-  return {
-    version:2,
-    setupComplete:false,
-    shop:{
-      name:"",
-      address:"",
-      phone:"",
-      footer:"Thank you for your purchase",
-      receiptFontSize:12
-    },
-    users:[],
-    products:[],
-    sales:[],
-    purchases:[],
-    customers:[],
-    suppliers:[],
-    expenses:[],
-    employees:[],
-    adjustments:[],
-    customerPayments:[],
-    supplierPayments:[],
-    subscriptions:[],
-    payments:[]
-  };
+ return {
+  version:2,
+  setupComplete:false,
+  shop:{
+   name:"",
+   address:"",
+   phone:"",
+   footer:"Thank you",
+   receiptFontSize:12
+  },
+  users:[],
+  products:[],
+  sales:[],
+  purchases:[],
+  customers:[],
+  suppliers:[],
+  expenses:[],
+  employees:[],
+  adjustments:[],
+  customerPayments:[],
+  supplierPayments:[],
+  subscription:{
+   status:"unsubscribed",
+   planId:"",
+   startDate:null,
+   endDate:null,
+   paymentMethod:"",
+   transactionId:"",
+   customerName:"",
+   requestDate:null
+  },
+  paymentRequests:[]
+ };
 }
 
 function loadDB(){
-  try{
-    const raw = localStorage.getItem(STORAGE_KEY);
-    db = raw ? JSON.parse(raw) : defaultDB();
-
-    db.shop ||= {};
-    db.users ||= [];
-    db.products ||= [];
-    db.sales ||= [];
-    db.purchases ||= [];
-    db.customers ||= [];
-    db.suppliers ||= [];
-    db.expenses ||= [];
-    db.employees ||= [];
-    db.adjustments ||= [];
-    db.customerPayments ||= [];
-    db.supplierPayments ||= [];
-    db.subscriptions ||= [];
-    db.payments ||= [];
-  }catch(e){
-    db = defaultDB();
-  }
+ try{
+  const raw=localStorage.getItem(STORAGE_KEY);
+  if(!raw)return defaultDB();
+  const parsed=JSON.parse(raw);
+  return Object.assign(defaultDB(),parsed);
+ }catch(e){
+  return defaultDB();
+ }
 }
 
 function saveDB(){
-  localStorage.setItem(STORAGE_KEY,JSON.stringify(db));
+ localStorage.setItem(STORAGE_KEY,JSON.stringify(db));
 }
 
 function uid(prefix="ID"){
-  return prefix + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+ return prefix+"_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7);
+}
+
+function today(){
+ return new Date().toISOString().slice(0,10);
+}
+
+function nowISO(){
+ return new Date().toISOString();
+}
+
+function money(n){
+ return Number(n||0).toLocaleString("en-US")+" Ks";
+}
+
+function num(v){
+ return Number(v)||0;
+}
+
+function escapeHTML(v){
+ return String(v??"")
+ .replace(/&/g,"&amp;")
+ .replace(/</g,"&lt;")
+ .replace(/>/g,"&gt;")
+ .replace(/"/g,"&quot;")
+ .replace(/'/g,"&#039;");
 }
 
 async function hashPassword(password){
-  const data = new TextEncoder().encode(password);
-  const hash = await crypto.subtle.digest("SHA-256",data);
-  return [...new Uint8Array(hash)]
-    .map(b=>b.toString(16).padStart(2,"0"))
-    .join("");
+ const data=new TextEncoder().encode(password);
+ const hash=await crypto.subtle.digest("SHA-256",data);
+ return [...new Uint8Array(hash)]
+  .map(b=>b.toString(16).padStart(2,"0")).join("");
 }
 
-function escapeHTML(value){
-  return String(value ?? "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+function toast(message){
+ const el=document.createElement("div");
+ el.className="toast";
+ el.textContent=message;
+ document.getElementById("toastContainer").appendChild(el);
+ setTimeout(()=>el.remove(),2800);
 }
 
-function money(value){
-  return Number(value || 0).toLocaleString("en-US")+" Ks";
+function openModal(title,subtitle="",html=""){
+ document.getElementById("modalTitle").textContent=title;
+ document.getElementById("modalSubtitle").textContent=subtitle;
+ document.getElementById("modalBody").innerHTML=html;
+ document.getElementById("modalOverlay").classList.remove("hidden");
 }
 
-function dateOnly(d=new Date()){
-  return new Date(d).toISOString().slice(0,10);
+function closeModal(){
+ document.getElementById("modalOverlay").classList.add("hidden");
 }
 
-function formatDate(value){
-  if(!value)return "-";
-  return new Date(value).toLocaleDateString("en-GB");
-}
-
-function isToday(value){
-  return dateOnly(new Date(value))===dateOnly();
-}
-
-function isThisMonth(value){
-  const d=new Date(value), n=new Date();
-  return d.getFullYear()===n.getFullYear() &&
-         d.getMonth()===n.getMonth();
-}
-
-function isThisYear(value){
-  const d=new Date(value), n=new Date();
-  return d.getFullYear()===n.getFullYear();
-}
+document.getElementById("modalClose").onclick=closeModal;
+document.getElementById("modalOverlay").addEventListener("click",e=>{
+ if(e.target.id==="modalOverlay")closeModal();
+});
 
 /* =========================================================
    AUTH
 ========================================================= */
 
-async function createFirstAdmin(){
-  const shop = document.getElementById("setupShop").value.trim();
-  const name = document.getElementById("setupAdminName").value.trim();
-  const username = document.getElementById("setupUsername").value.trim();
-  const password = document.getElementById("setupPassword").value;
-  const password2 = document.getElementById("setupPassword2").value;
-
-  if(!shop || !name || !username || !password){
-    return toast("အချက်အလက်အားလုံးဖြည့်ပါ");
-  }
-
-  if(password.length < 6){
-    return toast("Password အနည်းဆုံး 6 လုံးထားပါ");
-  }
-
-  if(password!==password2){
-    return toast("Password မတူပါ");
-  }
-
-  const passwordHash = await hashPassword(password);
-
-  db.shop.name=shop;
-  db.users=[{
-    id:uid("USR"),
-    name,
-    username,
-    passwordHash,
-    role:"Admin",
-    active:true,
-    createdAt:new Date().toISOString()
-  }];
-  db.setupComplete=true;
-
-  saveDB();
-
-  toast("Admin Account တည်ဆောက်ပြီးပါပြီ");
-
-  setTimeout(()=>{
-    document.getElementById("setupScreen").classList.add("hidden");
-    document.getElementById("loginScreen").classList.remove("hidden");
-    document.getElementById("loginShopName").textContent=db.shop.name;
-  },500);
+function showSetup(){
+ document.getElementById("setupScreen").classList.remove("hidden");
+ document.getElementById("loginScreen").classList.add("hidden");
+ document.getElementById("app").classList.add("hidden");
 }
 
-async function login(){
-  const username=document.getElementById("loginUsername").value.trim();
-  const password=document.getElementById("loginPassword").value;
+function showLogin(){
+ document.getElementById("setupScreen").classList.add("hidden");
+ document.getElementById("loginScreen").classList.remove("hidden");
+ document.getElementById("app").classList.add("hidden");
 
-  if(!username || !password){
-    return toast("Username နှင့် Password ဖြည့်ပါ");
-  }
-
-  const hash=await hashPassword(password);
-  const user=db.users.find(u=>u.username===username && u.passwordHash===hash);
-
-  if(!user){
-    return toast("Username သို့မဟုတ် Password မှားနေပါတယ်");
-  }
-
-  if(user.active===false){
-    return toast("ဒီ User Account ကို ပိတ်ထားပါတယ်");
-  }
-
-  currentUser={
-    id:user.id,
-    name:user.name,
-    username:user.username,
-    role:user.role
-  };
-
-  sessionStorage.setItem("aung_pos_session",JSON.stringify(currentUser));
-
-  document.getElementById("loginScreen").classList.add("hidden");
-  document.getElementById("app").classList.remove("hidden");
-
-  initializeApp();
+ document.getElementById("loginShop").textContent=
+  db.shop.name || "Aung POS V2";
 }
+
+function showApp(){
+ document.getElementById("setupScreen").classList.add("hidden");
+ document.getElementById("loginScreen").classList.add("hidden");
+ document.getElementById("app").classList.remove("hidden");
+
+ document.getElementById("sideShopName").textContent=db.shop.name;
+ document.getElementById("topShopName").textContent=db.shop.name;
+
+ updateUserUI();
+ applyPermissions();
+ refreshAll();
+ showSection("dashboard");
+}
+
+document.getElementById("setupBtn").onclick=async()=>{
+ const shop=document.getElementById("setupShop").value.trim();
+ const name=document.getElementById("setupName").value.trim();
+ const username=document.getElementById("setupUser").value.trim();
+ const pass=document.getElementById("setupPass").value;
+ const pass2=document.getElementById("setupPass2").value;
+
+ if(!shop||!name||!username||!pass){
+  toast("အချက်အလက်အားလုံးဖြည့်ပါ");
+  return;
+ }
+ if(pass.length<4){
+  toast("Password အနည်းဆုံး 4 လုံးထားပါ");
+  return;
+ }
+ if(pass!==pass2){
+  toast("Password မတူပါ");
+  return;
+ }
+
+ const hash=await hashPassword(pass);
+
+ db.shop.name=shop;
+ db.users=[{
+  id:uid("USR"),
+  name,
+  username,
+  passwordHash:hash,
+  role:"Admin",
+  createdAt:nowISO()
+ }];
+ db.setupComplete=true;
+
+ saveDB();
+
+ toast("Setup အောင်မြင်ပါသည်");
+ setTimeout(showLogin,500);
+};
+
+document.getElementById("loginBtn").onclick=async()=>{
+ const username=document.getElementById("loginUser").value.trim();
+ const pass=document.getElementById("loginPass").value;
+
+ const user=db.users.find(u=>u.username.toLowerCase()===username.toLowerCase());
+
+ if(!user){
+  toast("Username သို့မဟုတ် Password မှားနေပါသည်");
+  return;
+ }
+
+ const hash=await hashPassword(pass);
+
+ if(hash!==user.passwordHash){
+  toast("Username သို့မဟုတ် Password မှားနေပါသည်");
+  return;
+ }
+
+ currentUser=user;
+ sessionStorage.setItem("aung_pos_session",user.id);
+
+ document.getElementById("loginPass").value="";
+ showApp();
+};
+
+document.getElementById("logoutBtn").onclick=()=>{
+ sessionStorage.removeItem("aung_pos_session");
+ currentUser=null;
+ cart=[];
+ showLogin();
+};
 
 function restoreSession(){
-  const raw=sessionStorage.getItem("aung_pos_session");
+ const id=sessionStorage.getItem("aung_pos_session");
+ if(!id)return false;
 
-  if(!raw)return false;
+ const user=db.users.find(u=>u.id===id);
+ if(!user)return false;
 
-  try{
-    currentUser=JSON.parse(raw);
-    const exists=db.users.find(u=>u.id===currentUser.id);
-    if(!exists || exists.active===false){
-      sessionStorage.removeItem("aung_pos_session");
-      return false;
-    }
-    return true;
-  }catch(e){
-    return false;
-  }
+ currentUser=user;
+ return true;
 }
 
-function logout(){
-  sessionStorage.removeItem("aung_pos_session");
-  currentUser=null;
-  cart=[];
-  document.getElementById("app").classList.add("hidden");
-  document.getElementById("loginScreen").classList.remove("hidden");
-  document.getElementById("loginUsername").value="";
-  document.getElementById("loginPassword").value="";
-}
-
-/* =========================================================
-   INITIALIZE
-========================================================= */
-
-function initializeApp(){
-  document.getElementById("sideShopName").textContent=db.shop.name || "Aung POS";
-  document.getElementById("welcomeShopName").textContent=db.shop.name || "Business Overview";
-
-  document.getElementById("currentUserName").textContent=currentUser.name;
-  document.getElementById("currentUserRole").textContent=currentUser.role;
-  document.getElementById("userAvatar").textContent=(currentUser.name||"A").charAt(0).toUpperCase();
-
-  applyPermissions();
-  populateCustomerSelect();
-  populateSalesCategories();
-  renderAll();
-  showSection("dashboard");
-}
-
-function applyPermissions(){
-  const permissions=PERMISSIONS[currentUser.role];
-
-  document.querySelectorAll(".nav-item[data-section]").forEach(item=>{
-    const section=item.dataset.section;
-    item.style.display=permissions[section] ? "flex" : "none";
-  });
+function updateUserUI(){
+ if(!currentUser)return;
+ document.getElementById("currentUser").textContent=
+  currentUser.name+" · "+currentUser.role;
 }
 
 function can(section){
-  return !!(PERMISSIONS[currentUser.role] && PERMISSIONS[currentUser.role][section]);
+ return !!(currentUser && PERMISSIONS[currentUser.role] &&
+  PERMISSIONS[currentUser.role][section]);
 }
 
-/* =========================================================
-   NAVIGATION
-========================================================= */
+function applyPermissions(){
+ document.querySelectorAll("[data-section]").forEach(btn=>{
+  const section=btn.dataset.section;
+  btn.style.display=can(section)?"block":"none";
+ });
+}
 
 function showSection(section){
-  if(!can(section)){
-    return toast("ဒီ Section ကိုအသုံးပြုခွင့်မရှိပါ");
-  }
+ if(!can(section)){
+  toast("ဒီ Menu ကို အသုံးပြုခွင့်မရှိပါ");
+  return;
+ }
 
-  currentSection=section;
+ document.querySelectorAll(".section").forEach(s=>{
+  s.classList.remove("active");
+ });
 
-  document.querySelectorAll(".page-section").forEach(s=>s.classList.add("hidden"));
-  const target=document.getElementById("section-"+section);
+ const target=document.getElementById(section);
+ if(target)target.classList.add("active");
 
-  if(target)target.classList.remove("hidden");
+ document.querySelectorAll(".nav button").forEach(b=>{
+  b.classList.toggle("active",b.dataset.section===section);
+ });
 
-  document.querySelectorAll(".nav-item").forEach(n=>n.classList.remove("active"));
-  const nav=document.querySelector(`.nav-item[data-section="${section}"]`);
-  if(nav)nav.classList.add("active");
+ document.getElementById("sidebar").classList.remove("open");
 
-  const titles={
-    dashboard:"Dashboard",
-    sales:"Sales / POS",
-    products:"Products",
-    purchases:"Purchases",
-    stock:"Stock",
-    customers:"Customers",
-    suppliers:"Suppliers",
-    debts:"Debts",
-    expenses:"Expenses",
-    employees:"Employees",
-    reports:"Reports",
-    subscription:"Subscription",
-    users:"Users",
-    settings:"Settings"
-  };
-
-  document.getElementById("topPageTitle").textContent=titles[section]||"Aung POS";
-
-  if(window.innerWidth<=850){
-    document.getElementById("sidebar").classList.remove("open");
-  }
-
-  renderSection(section);
+ refreshSection(section);
 }
 
-function renderSection(section){
-  if(section==="dashboard")renderDashboard();
-  if(section==="sales"){
-    populateCustomerSelect();
-    populateSalesCategories();
-    renderPOSProducts();
-    renderCart();
-  }
-  if(section==="products"){
-    populateProductCategories();
-    renderProductsTable();
-  }
-  if(section==="purchases")renderPurchases();
-  if(section==="stock")renderStock();
-  if(section==="customers")renderCustomers();
-  if(section==="suppliers")renderSuppliers();
-  if(section==="debts")renderDebts();
-  if(section==="expenses")renderExpenses();
-  if(section==="employees")renderEmployees();
-  if(section==="reports")renderReports();
-  if(section==="subscription"){
-    renderSubscription();
-    renderPaymentHistory();
-  }
-  if(section==="users")renderUsers();
-  if(section==="settings")loadSettings();
-}
+document.querySelectorAll("[data-section]").forEach(btn=>{
+ btn.addEventListener("click",()=>showSection(btn.dataset.section));
+});
 
-function renderAll(){
-  renderDashboard();
-  populateSalesCategories();
-  populateCustomerSelect();
-  populateProductCategories();
-  renderProductsTable();
-  renderPurchases();
-  renderStock();
-  renderCustomers();
-  renderSuppliers();
-  renderDebts();
-  renderExpenses();
-  renderEmployees();
-  renderReports();
-  renderSubscription();
-  renderPaymentHistory();
-  renderUsers();
-}
+document.querySelectorAll("[data-go]").forEach(btn=>{
+ btn.addEventListener("click",()=>showSection(btn.dataset.go));
+});
+
+document.getElementById("menuBtn").onclick=()=>{
+ document.getElementById("sidebar").classList.toggle("open");
+};
 
 /* =========================================================
    DASHBOARD
 ========================================================= */
 
+function dateMatch(date,mode){
+ if(!date)return false;
+ const d=new Date(date);
+ const t=new Date();
+
+ if(mode==="today")
+  return d.toISOString().slice(0,10)===today();
+
+ if(mode==="month")
+  return d.getFullYear()===t.getFullYear() &&
+   d.getMonth()===t.getMonth();
+
+ if(mode==="year")
+  return d.getFullYear()===t.getFullYear();
+
+ return true;
+}
+
+function saleGrossProfit(sale){
+ return sale.items.reduce((sum,item)=>{
+  return sum + ((num(item.price)-num(item.buyPrice))*num(item.qty));
+ },0)-num(sale.discount);
+}
+
 function renderDashboard(){
-  const sales=db.sales.filter(s=>isToday(s.date));
-  const purchases=db.purchases.filter(p=>isToday(p.date));
-  const expenses=db.expenses.filter(e=>isToday(e.date));
+ const sales=db.sales.filter(s=>dateMatch(s.date,"today"));
+ const purchases=db.purchases.filter(p=>dateMatch(p.date,"today"));
+ const expenses=db.expenses.filter(e=>dateMatch(e.date,"today"));
 
-  const salesTotal=sales.reduce((a,b)=>a+Number(b.total),0);
-  const purchaseTotal=purchases.reduce((a,b)=>a+Number(b.total),0);
-  const expenseTotal=expenses.reduce((a,b)=>a+Number(b.amount),0);
+ const salesTotal=sales.reduce((a,b)=>a+num(b.total),0);
+ const purchaseTotal=purchases.reduce((a,b)=>a+num(b.total),0);
+ const expenseTotal=expenses.reduce((a,b)=>a+num(b.amount),0);
+ const profit=sales.reduce((a,b)=>a+saleGrossProfit(b),0);
 
-  const profit=sales.reduce((sum,s)=>{
-    return sum+s.items.reduce((x,i)=>{
-      return x+(Number(i.price)-Number(i.buyPrice))*Number(i.qty);
-    },0)-Number(s.discount||0);
-  },0);
+ document.getElementById("todaySales").textContent=money(salesTotal);
+ document.getElementById("todaySalesCount").textContent=sales.length+" invoices";
+ document.getElementById("todayProfit").textContent=money(profit);
+ document.getElementById("todayPurchase").textContent=money(purchaseTotal);
+ document.getElementById("todayExpense").textContent=money(expenseTotal);
 
-  document.getElementById("todaySales").textContent=money(salesTotal);
-  document.getElementById("todayProfit").textContent=money(profit);
-  document.getElementById("todayPurchase").textContent=money(purchaseTotal);
-  document.getElementById("todayExpense").textContent=money(expenseTotal);
-  document.getElementById("totalProducts").textContent=db.products.length;
+ document.getElementById("totalProducts").textContent=db.products.length;
 
-  const low=db.products.filter(p=>Number(p.stock)<=Number(p.minStock||0));
-  const expiry=db.products.filter(p=>p.expiry && daysUntil(p.expiry)<=30);
+ const low=db.products.filter(p=>num(p.stock)<=num(p.minStock));
+ document.getElementById("lowStockCount").textContent=low.length;
 
-  document.getElementById("lowStockCount").textContent=low.length;
-  document.getElementById("expiryCount").textContent=expiry.length;
-  document.getElementById("totalCustomers").textContent=db.customers.length;
+ const expiry=db.products.filter(p=>{
+  if(!p.expiry)return false;
+  const diff=(new Date(p.expiry)-new Date())/86400000;
+  return diff<=30;
+ });
+ document.getElementById("expiryCount").textContent=expiry.length;
 
-  document.getElementById("welcomeShopName").textContent=db.shop.name;
+ const receivable=db.customers.reduce((a,b)=>a+num(b.due),0);
+ document.getElementById("totalCustomers").textContent=money(receivable);
 
-  const recent=[...db.sales].sort((a,b)=>new Date(b.date)-new Date(a.date)).slice(0,6);
+ const recent=db.sales.slice(-8).reverse();
 
-  document.getElementById("recentSales").innerHTML=recent.length
-    ? recent.map(s=>`
-      <div class="receipt-row" style="padding:9px 0;border-bottom:1px solid #e2e8f0">
-        <span>${escapeHTML(s.invoice)}</span>
-        <strong>${money(s.total)}</strong>
-      </div>`).join("")
-    : `<div class="empty">Sales မရှိသေးပါ</div>`;
+ document.getElementById("recentSales").innerHTML=
+  recent.length?
+  recent.map(s=>`
+   <div style="padding:9px 0;border-bottom:1px solid #e5e7eb">
+    <div style="display:flex;justify-content:space-between">
+     <b>${escapeHTML(s.invoice)}</b>
+     <b>${money(s.total)}</b>
+    </div>
+    <small style="color:#64748b">${escapeHTML(s.date)}</small>
+   </div>
+  `).join("")
+  :
+  `<div class="muted">Sales မရှိသေးပါ</div>`;
 
-  const alerts=[];
+ let alerts=[];
 
-  low.slice(0,5).forEach(p=>{
-    alerts.push(`<div style="padding:8px 0">⚠️ ${escapeHTML(p.name)} — Stock ${p.stock}</div>`);
-  });
+ if(low.length)
+  alerts.push(`⚠️ Low Stock ${low.length} ခုရှိပါသည်`);
 
-  expiry.slice(0,5).forEach(p=>{
-    alerts.push(`<div style="padding:8px 0">⏰ ${escapeHTML(p.name)} — Expiry ${formatDate(p.expiry)}</div>`);
-  });
+ if(expiry.length)
+  alerts.push(`⏰ Expiry Alert ${expiry.length} ခုရှိပါသည်`);
 
-  if(subscriptionExpired()){
-    alerts.unshift(`<div style="padding:10px;background:#fee2e2;border-radius:8px;color:#991b1b;font-weight:700">💎 Subscription Expired</div>`);
-  }
+ if(receivable>0)
+  alerts.push(`💳 Customer Due ${money(receivable)}`);
 
-  document.getElementById("dashboardAlerts").innerHTML=
-    alerts.length?alerts.join(""):`<div class="empty">No critical alerts</div>`;
+ if(!alerts.length)
+  alerts.push("✅ လက်ရှိအခြေအနေတွင် အရေးပေါ် Alert မရှိပါ");
+
+ document.getElementById("dashboardAlerts").innerHTML=
+  alerts.map(x=>`<div style="padding:9px 0;border-bottom:1px solid #e5e7eb">${x}</div>`).join("");
 }
 
 /* =========================================================
    PRODUCTS
 ========================================================= */
 
-function populateSalesCategories(){
-  const select=document.getElementById("salesCategory");
-  const current=select.value;
-
-  const categories=[...new Set(db.products.map(p=>p.category).filter(Boolean))].sort();
-
-  select.innerHTML=`<option value="">Category အားလုံး</option>`+
-    categories.map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
-
-  select.value=current;
+function uniqueValues(field){
+ return [...new Set(db.products.map(p=>p[field]).filter(Boolean))].sort();
 }
 
-function populateProductCategories(){
-  const select=document.getElementById("productCategoryFilter");
-  const current=select.value;
+function refreshProductFilters(){
+ const categoryOptions=uniqueValues("category");
 
-  const categories=[...new Set(db.products.map(p=>p.category).filter(Boolean))].sort();
+ const filter=document.getElementById("productCategoryFilter");
+ const old=filter.value;
+ filter.innerHTML=`<option value="">Category အားလုံး</option>`+
+  categoryOptions.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join("");
+ filter.value=old;
 
-  select.innerHTML=`<option value="">Category အားလုံး</option>`+
-    categories.map(c=>`<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
-
-  select.value=current;
+ const salesCat=document.getElementById("salesCategory");
+ const old2=salesCat.value;
+ salesCat.innerHTML=`<option value="">Category အားလုံး</option>`+
+  categoryOptions.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join("");
+ salesCat.value=old2;
 }
 
-function renderPOSProducts(){
-  const search=(document.getElementById("salesSearch").value||"").toLowerCase();
-  const category=document.getElementById("salesCategory").value;
+function renderProducts(){
+ const q=document.getElementById("productSearch").value.trim().toLowerCase();
+ const cat=document.getElementById("productCategoryFilter").value;
+ const stockFilter=document.getElementById("stockFilter").value;
 
-  let products=db.products.filter(p=>{
-    const matchSearch=
-      !search ||
-      p.name.toLowerCase().includes(search) ||
-      String(p.barcode||"").toLowerCase().includes(search);
+ let list=db.products.filter(p=>{
+  const matchQ=!q ||
+   p.name.toLowerCase().includes(q) ||
+   (p.barcode||"").toLowerCase().includes(q);
 
-    const matchCategory=!category || p.category===category;
+  const matchCat=!cat||p.category===cat;
 
-    return matchSearch && matchCategory;
-  });
+  const matchStock=
+   !stockFilter ||
+   (stockFilter==="low"&&num(p.stock)<=num(p.minStock)) ||
+   (stockFilter==="out"&&num(p.stock)<=0);
 
-  const container=document.getElementById("salesProducts");
+  return matchQ&&matchCat&&matchStock;
+ });
 
-  if(!products.length){
-    container.innerHTML=`<div class="empty" style="grid-column:1/-1">Product မတွေ့ပါ</div>`;
-    return;
+ document.getElementById("productsTableBody").innerHTML=
+ list.length?
+ list.map(p=>`
+  <tr>
+   <td>
+    <b>${escapeHTML(p.name)}</b>
+    ${p.variant?`<br><small>${escapeHTML(p.variant)}</small>`:""}
+    ${p.barcode?`<br><small>${escapeHTML(p.barcode)}</small>`:""}
+   </td>
+   <td>${escapeHTML(p.category)}</td>
+   <td>${escapeHTML(p.unit)}</td>
+   <td>${money(p.buyPrice)}</td>
+   <td>${money(p.retailPrice)}</td>
+   <td>${money(p.wholesalePrice)}</td>
+   <td>${num(p.stock)}</td>
+   <td>${escapeHTML(p.expiry||"-")}</td>
+   <td>
+    <button class="btn btn-light btn-sm" onclick="editProduct('${p.id}')">Edit</button>
+    <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">Delete</button>
+   </td>
+  </tr>
+ `).join("")
+ :
+ `<tr><td colspan="9" class="muted">Product မရှိသေးပါ</td></tr>`;
+}
+
+function productForm(product=null){
+ const p=product||{
+  name:"",barcode:"",category:"",subcategory:"",unit:"",
+  buyPrice:"",retailPrice:"",wholesalePrice:"",
+  stock:0,minStock:5,expiry:"",variant:""
+ };
+
+ const names=uniqueValues("name");
+ const cats=uniqueValues("category");
+ const subs=uniqueValues("subcategory");
+ const units=uniqueValues("unit");
+
+ openModal(
+  product?"Edit Product":"Add Product",
+  "Product Name / Category / Subcategory / Unit ကို ပြန်ရွေးသုံးနိုင်ပါသည်",
+ `
+ <form id="productForm">
+  <div class="form-grid">
+
+   <div class="field">
+    <label>Product Name</label>
+    <select id="pfNameSelect">
+     <option value="">ရွေးချယ်ပါ</option>
+     ${names.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join("")}
+     <option value="__new__">＋ Product အသစ်ထည့်မည်</option>
+    </select>
+    <input id="pfNameNew" class="hidden" style="margin-top:7px" placeholder="Product အသစ်အမည်">
+   </div>
+
+   <div class="field">
+    <label>Barcode</label>
+    <input id="pfBarcode" value="${escapeHTML(p.barcode)}">
+   </div>
+
+   <div class="field">
+    <label>Category</label>
+    <select id="pfCategory">
+     <option value="">ရွေးချယ်ပါ</option>
+     ${cats.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join("")}
+     <option value="__new__">＋ Category အသစ်ထည့်မည်</option>
+    </select>
+    <input id="pfCategoryNew" class="hidden" style="margin-top:7px" placeholder="Category အသစ်">
+   </div>
+
+   <div class="field">
+    <label>Subcategory</label>
+    <select id="pfSubcategory">
+     <option value="">ရွေးချယ်ပါ</option>
+     ${subs.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join("")}
+     <option value="__new__">＋ Subcategory အသစ်ထည့်မည်</option>
+    </select>
+    <input id="pfSubcategoryNew" class="hidden" style="margin-top:7px" placeholder="Subcategory အသစ်">
+   </div>
+
+   <div class="field">
+    <label>Unit</label>
+    <select id="pfUnit">
+     <option value="">ရွေးချယ်ပါ</option>
+     ${units.map(v=>`<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join("")}
+     <option value="__new__">＋ Unit အသစ်ထည့်မည်</option>
+    </select>
+    <input id="pfUnitNew" class="hidden" style="margin-top:7px" placeholder="Unit အသစ်">
+   </div>
+
+   <div class="field">
+    <label>Variant / Size / Color</label>
+    <input id="pfVariant" value="${escapeHTML(p.variant)}">
+   </div>
+
+   <div class="field">
+    <label>Buy Price</label>
+    <input id="pfBuy" type="number" min="0" value="${p.buyPrice}">
+   </div>
+
+   <div class="field">
+    <label>Retail Price</label>
+    <input id="pfRetail" type="number" min="0" value="${p.retailPrice}">
+   </div>
+
+   <div class="field">
+    <label>Wholesale Price</label>
+    <input id="pfWholesale" type="number" min="0" value="${p.wholesalePrice}">
+   </div>
+
+   <div class="field">
+    <label>Stock</label>
+    <input id="pfStock" type="number" min="0" value="${p.stock}">
+   </div>
+
+   <div class="field">
+    <label>Minimum Stock</label>
+    <input id="pfMinStock" type="number" min="0" value="${p.minStock}">
+   </div>
+
+   <div class="field">
+    <label>Expiry Date</label>
+    <input id="pfExpiry" type="date" value="${p.expiry||""}">
+   </div>
+
+  </div>
+
+  <div class="actions">
+   <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+   <button type="submit" class="btn btn-primary">Save Product</button>
+  </div>
+ </form>
+ `
+ );
+
+ const nameSel=document.getElementById("pfNameSelect");
+ const catSel=document.getElementById("pfCategory");
+ const subSel=document.getElementById("pfSubcategory");
+ const unitSel=document.getElementById("pfUnit");
+
+ function setupNew(sel,inputId){
+  sel.onchange=()=>{
+   document.getElementById(inputId).classList.toggle("hidden",sel.value!=="__new__");
+  };
+ }
+
+ setupNew(nameSel,"pfNameNew");
+ setupNew(catSel,"pfCategoryNew");
+ setupNew(subSel,"pfSubcategoryNew");
+ setupNew(unitSel,"pfUnitNew");
+
+ if(product){
+  nameSel.value=names.includes(p.name)?p.name:"__new__";
+  if(!names.includes(p.name)){
+   document.getElementById("pfNameNew").classList.remove("hidden");
+   document.getElementById("pfNameNew").value=p.name;
   }
 
-  container.innerHTML=products.map(p=>`
-    <div class="product-card" onclick="addToCart('${p.id}')">
-      <strong>${escapeHTML(p.name)}</strong>
-      <small>${escapeHTML(p.variant||p.subcategory||p.category||"")}</small>
-      <div class="product-price">${money(p.retailPrice)}</div>
-      <small>Stock: ${p.stock} ${escapeHTML(p.unit||"")}</small>
-    </div>
-  `).join("");
-}
+  catSel.value=cats.includes(p.category)?p.category:"__new__";
+  if(!cats.includes(p.category)){
+   document.getElementById("pfCategoryNew").classList.remove("hidden");
+   document.getElementById("pfCategoryNew").value=p.category;
+  }
 
-function openProductModal(productId=null){
-  if(!can("products"))return toast("Permission denied");
+  subSel.value=subs.includes(p.subcategory)?p.subcategory:"__new__";
+  if(p.subcategory&&!subs.includes(p.subcategory)){
+   document.getElementById("pfSubcategoryNew").classList.remove("hidden");
+   document.getElementById("pfSubcategoryNew").value=p.subcategory;
+  }
 
-  const p=productId ? db.products.find(x=>x.id===productId) : null;
+  unitSel.value=units.includes(p.unit)?p.unit:"__new__";
+  if(!units.includes(p.unit)){
+   document.getElementById("pfUnitNew").classList.remove("hidden");
+   document.getElementById("pfUnitNew").value=p.unit;
+  }
+ }
 
-  openModal(
-    p?"Edit Product":"Add Product",
-    `
-    <div class="form-grid">
-      <div class="field">
-        <label>Product Name *</label>
-        <input id="mProductName" value="${escapeHTML(p?.name||"")}">
-      </div>
+ nameSel.addEventListener("change",()=>{
+  if(!nameSel.value||nameSel.value==="__new__")return;
 
-      <div class="field">
-        <label>Barcode</label>
-        <input id="mProductBarcode" value="${escapeHTML(p?.barcode||"")}">
-      </div>
+  const same=db.products.find(x=>x.name===nameSel.value);
+  if(!same)return;
 
-      <div class="field">
-        <label>Category</label>
-        <input id="mProductCategory" value="${escapeHTML(p?.category||"")} list="categoryList">
-        <datalist id="categoryList">
-          ${[...new Set(db.products.map(x=>x.category).filter(Boolean))].map(x=>`<option value="${escapeHTML(x)}">`).join("")}
-        </datalist>
-      </div>
+  document.getElementById("pfCategory").value=same.category;
+  document.getElementById("pfSubcategory").value=same.subcategory||"";
+  document.getElementById("pfUnit").value=same.unit||"";
+  document.getElementById("pfBuy").value=same.buyPrice;
+  document.getElementById("pfRetail").value=same.retailPrice;
+  document.getElementById("pfWholesale").value=same.wholesalePrice;
+ });
 
-      <div class="field">
-        <label>Subcategory</label>
-        <input id="mProductSubcategory" value="${escapeHTML(p?.subcategory||"")}">
-      </div>
+ document.getElementById("productForm").onsubmit=e=>{
+  e.preventDefault();
 
-      <div class="field">
-        <label>Unit</label>
-        <input id="mProductUnit" value="${escapeHTML(p?.unit||"pcs")}">
-      </div>
-
-      <div class="field">
-        <label>Variant</label>
-        <input id="mProductVariant" value="${escapeHTML(p?.variant||"")}">
-      </div>
-
-      <div class="field">
-        <label>Buy Price</label>
-        <input id="mProductBuy" type="number" value="${p?.buyPrice||0}">
-      </div>
-
-      <div class="field">
-        <label>Retail Price</label>
-        <input id="mProductRetail" type="number" value="${p?.retailPrice||0}">
-      </div>
-
-      <div class="field">
-        <label>Wholesale Price</label>
-        <input id="mProductWholesale" type="number" value="${p?.wholesalePrice||0}">
-      </div>
-
-      <div class="field">
-        <label>Stock</label>
-        <input id="mProductStock" type="number" value="${p?.stock||0}">
-      </div>
-
-      <div class="field">
-        <label>Minimum Stock</label>
-        <input id="mProductMin" type="number" value="${p?.minStock||0}">
-      </div>
-
-      <div class="field">
-        <label>Expiry</label>
-        <input id="mProductExpiry" type="date" value="${p?.expiry||""}">
-      </div>
-    </div>
-    `,
-    `
-      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="saveProduct('${productId||""}')">Save Product</button>
-    `
-  );
-}
-
-function saveProduct(id){
-  const name=document.getElementById("mProductName").value.trim();
-
-  if(!name)return toast("Product Name ဖြည့်ပါ");
-
-  const data={
-    name,
-    barcode:document.getElementById("mProductBarcode").value.trim(),
-    category:document.getElementById("mProductCategory").value.trim(),
-    subcategory:document.getElementById("mProductSubcategory").value.trim(),
-    unit:document.getElementById("mProductUnit").value.trim()||"pcs",
-    variant:document.getElementById("mProductVariant").value.trim(),
-    buyPrice:Number(document.getElementById("mProductBuy").value||0),
-    retailPrice:Number(document.getElementById("mProductRetail").value||0),
-    wholesalePrice:Number(document.getElementById("mProductWholesale").value||0),
-    stock:Number(document.getElementById("mProductStock").value||0),
-    minStock:Number(document.getElementById("mProductMin").value||0),
-    expiry:document.getElementById("mProductExpiry").value,
-    updatedAt:new Date().toISOString()
+  const getVal=(sel,newId)=>{
+   if(sel.value==="__new__")
+    return document.getElementById(newId).value.trim();
+   return sel.value.trim();
   };
 
-  if(id){
-    const index=db.products.findIndex(p=>p.id===id);
-    if(index>=0)db.products[index]={...db.products[index],...data};
+  const data={
+   name:getVal(nameSel,"pfNameNew"),
+   barcode:document.getElementById("pfBarcode").value.trim(),
+   category:getVal(catSel,"pfCategoryNew"),
+   subcategory:getVal(subSel,"pfSubcategoryNew"),
+   unit:getVal(unitSel,"pfUnitNew"),
+   variant:document.getElementById("pfVariant").value.trim(),
+   buyPrice:num(document.getElementById("pfBuy").value),
+   retailPrice:num(document.getElementById("pfRetail").value),
+   wholesalePrice:num(document.getElementById("pfWholesale").value),
+   stock:num(document.getElementById("pfStock").value),
+   minStock:num(document.getElementById("pfMinStock").value),
+   expiry:document.getElementById("pfExpiry").value
+  };
+
+  if(!data.name||!data.category||!data.unit){
+   toast("Product Name, Category, Unit ဖြည့်ပါ");
+   return;
+  }
+
+  if(product){
+   Object.assign(product,data,{updatedAt:nowISO()});
   }else{
-    db.products.push({
-      id:uid("PRD"),
-      ...data,
-      createdAt:new Date().toISOString()
-    });
+   db.products.push({
+    id:uid("PRD"),
+    ...data,
+    createdAt:nowISO(),
+    updatedAt:nowISO()
+   });
   }
 
   saveDB();
   closeModal();
-  renderAll();
-  toast("Product သိမ်းပြီးပါပြီ");
+  refreshAll();
+  toast(product?"Product ပြင်ပြီးပါပြီ":"Product ထည့်ပြီးပါပြီ");
+ };
 }
 
-function renderProductsTable(){
-  const search=(document.getElementById("productSearch").value||"").toLowerCase();
-  const category=document.getElementById("productCategoryFilter").value;
-  const filter=document.getElementById("stockFilter").value;
+document.getElementById("addProductBtn").onclick=()=>{
+ if(!can("products"))return;
+ productForm();
+};
 
-  const products=db.products.filter(p=>{
-    const ms=!search || p.name.toLowerCase().includes(search);
-    const mc=!category || p.category===category;
-    const mf=
-      !filter ||
-      (filter==="low" && Number(p.stock)<=Number(p.minStock||0)) ||
-      (filter==="out" && Number(p.stock)<=0);
+window.editProduct=id=>{
+ if(!can("products"))return;
+ const p=db.products.find(x=>x.id===id);
+ if(p)productForm(p);
+};
 
-    return ms&&mc&&mf;
-  });
+window.deleteProduct=id=>{
+ if(!can("products"))return;
+ const p=db.products.find(x=>x.id===id);
+ if(!p)return;
 
-  const body=document.getElementById("productsTableBody");
+ if(!confirm(p.name+" ကို ဖျက်မလား?"))return;
 
-  body.innerHTML=products.length ? products.map(p=>`
-    <tr>
-      <td>
-        <strong>${escapeHTML(p.name)}</strong>
-        ${p.variant?`<small style="display:block;color:#64748b">${escapeHTML(p.variant)}</small>`:""}
-      </td>
-      <td>${escapeHTML(p.category)}</td>
-      <td>${escapeHTML(p.unit)}</td>
-      <td>${money(p.buyPrice)}</td>
-      <td>${money(p.retailPrice)}</td>
-      <td>${p.stock}</td>
-      <td>${formatDate(p.expiry)}</td>
-      <td>
-        <button class="btn btn-secondary btn-sm" onclick="openProductModal('${p.id}')">Edit</button>
-        <button class="btn btn-danger btn-sm" onclick="deleteProduct('${p.id}')">Delete</button>
-      </td>
-    </tr>
-  `).join(""):`<tr><td colspan="8"><div class="empty">Product မရှိသေးပါ</div></td></tr>`;
-}
-
-function deleteProduct(id){
-  if(!can("products"))return toast("Permission denied");
-
-  if(!confirm("ဒီ Product ကိုဖျက်မလား?"))return;
-
-  db.products=db.products.filter(p=>p.id!==id);
-  saveDB();
-  renderAll();
-  toast("Product ဖျက်ပြီးပါပြီ");
-}
+ db.products=db.products.filter(x=>x.id!==id);
+ saveDB();
+ refreshAll();
+ toast("Product ဖျက်ပြီးပါပြီ");
+};
 
 /* =========================================================
-   CART / SALES
+   SALES
 ========================================================= */
 
-function addToCart(productId){
-  const p=db.products.find(x=>x.id===productId);
-  if(!p)return;
+function renderSalesProducts(){
+ const q=document.getElementById("salesSearch").value.trim().toLowerCase();
+ const cat=document.getElementById("salesCategory").value;
 
-  if(Number(p.stock)<=0){
-    return toast("Stock မရှိပါ");
-  }
+ const list=db.products.filter(p=>{
+  const qmatch=!q ||
+   p.name.toLowerCase().includes(q) ||
+   (p.barcode||"").toLowerCase().includes(q);
+  const cmatch=!cat||p.category===cat;
+  return qmatch&&cmatch;
+ });
 
-  const item=cart.find(x=>x.productId===productId);
-
-  if(item){
-    if(item.qty+1>Number(p.stock)){
-      return toast("Stock မလုံလောက်ပါ");
-    }
-    item.qty++;
-    item.total=item.qty*item.price;
-  }else{
-    cart.push({
-      productId:p.id,
-      name:p.name,
-      qty:1,
-      price:Number(p.retailPrice),
-      buyPrice:Number(p.buyPrice),
-      total:Number(p.retailPrice)
-    });
-  }
-
-  renderCart();
+ document.getElementById("salesProducts").innerHTML=
+ list.map(p=>`
+  <div class="product-card">
+   <h4>${escapeHTML(p.name)}</h4>
+   <div class="pmeta">${escapeHTML(p.category)} · ${escapeHTML(p.unit)}</div>
+   <div class="pprice">${money(p.retailPrice)}</div>
+   <div style="display:flex;justify-content:space-between;align-items:center">
+    <small>Stock: ${num(p.stock)}</small>
+    <button class="btn btn-primary btn-sm"
+     onclick="addToCart('${p.id}')"
+     ${num(p.stock)<=0?"disabled":""}>
+     Add
+    </button>
+   </div>
+  </div>
+ `).join("") ||
+ `<div class="muted">Product မတွေ့ပါ</div>`;
 }
+
+window.addToCart=id=>{
+ const p=db.products.find(x=>x.id===id);
+ if(!p)return;
+
+ if(num(p.stock)<=0){
+  toast("Stock မရှိပါ");
+  return;
+ }
+
+ const existing=cart.find(x=>x.productId===id);
+
+ if(existing){
+  if(existing.qty+1>num(p.stock)){
+   toast("Stock မလုံလောက်ပါ");
+   return;
+  }
+  existing.qty++;
+ }else{
+  cart.push({
+   productId:p.id,
+   name:p.name,
+   qty:1,
+   price:num(p.retailPrice),
+   buyPrice:num(p.buyPrice)
+  });
+ }
+
+ renderCart();
+};
 
 function renderCart(){
-  const container=document.getElementById("cartItems");
+ const box=document.getElementById("cartItems");
 
-  if(!cart.length){
-    container.innerHTML=`<div class="empty">Cart ထဲမှာ Product မရှိသေးပါ</div>`;
-  }else{
-    container.innerHTML=cart.map((item,index)=>`
-      <div class="cart-item">
-        <div>
-          <strong>${escapeHTML(item.name)}</strong>
-          <div style="font-size:12px;color:#64748b">${money(item.price)} × ${item.qty}</div>
-        </div>
-        <div style="text-align:right">
-          <strong>${money(item.total)}</strong>
-          <div class="qty-controls">
-            <button onclick="changeCartQty(${index},-1)">−</button>
-            <span>${item.qty}</span>
-            <button onclick="changeCartQty(${index},1)">+</button>
-            <button onclick="removeCartItem(${index})">×</button>
-          </div>
-        </div>
-      </div>
-    `).join("");
-  }
+ document.getElementById("cartCount").textContent=
+  cart.reduce((a,b)=>a+b.qty,0);
 
-  const subtotal=cart.reduce((a,b)=>a+b.total,0);
-  const discount=Math.max(0,Number(document.getElementById("saleDiscount").value||0));
-  const total=Math.max(0,subtotal-discount);
+ if(!cart.length){
+  box.innerHTML=`<div class="muted">Cart ထဲတွင် Product မရှိသေးပါ</div>`;
+ }else{
+  box.innerHTML=cart.map((x,i)=>`
+   <div class="cart-row">
+    <div class="cart-info">
+     <strong>${escapeHTML(x.name)}</strong>
+     <small>${money(x.price)} × ${x.qty}</small>
+    </div>
 
-  document.getElementById("cartCount").textContent=cart.reduce((a,b)=>a+b.qty,0)+" Items";
-  document.getElementById("cartSubtotal").textContent=money(subtotal);
-  document.getElementById("cartTotal").textContent=money(total);
+    <div class="qty">
+     <button onclick="changeCartQty(${i},-1)">−</button>
+     <b>${x.qty}</b>
+     <button onclick="changeCartQty(${i},1)">＋</button>
+    </div>
+
+    <div style="font-weight:800">${money(x.price*x.qty)}</div>
+
+    <button class="btn btn-danger btn-sm" onclick="removeCart(${i})">×</button>
+   </div>
+  `).join("");
+ }
+
+ const subtotal=cart.reduce((a,b)=>a+b.price*b.qty,0);
+ const discount=num(document.getElementById("saleDiscount").value);
+ const total=Math.max(0,subtotal-discount);
+
+ document.getElementById("cartTotal").textContent=money(total);
 }
 
-function changeCartQty(index,delta){
-  const item=cart[index];
-  const p=db.products.find(x=>x.id===item.productId);
+window.changeCartQty=(index,delta)=>{
+ const item=cart[index];
+ if(!item)return;
 
-  item.qty+=delta;
+ const p=db.products.find(x=>x.id===item.productId);
+ const newQty=item.qty+delta;
 
-  if(item.qty<=0){
-    cart.splice(index,1);
-  }else if(item.qty>Number(p.stock)){
-    item.qty=Number(p.stock);
-    toast("Stock မလုံလောက်ပါ");
-  }else{
-    item.total=item.qty*item.price;
-  }
-
-  renderCart();
-}
-
-function removeCartItem(index){
+ if(newQty<=0){
   cart.splice(index,1);
-  renderCart();
+ }else if(newQty>num(p.stock)){
+  toast("Stock မလုံလောက်ပါ");
+  return;
+ }else{
+  item.qty=newQty;
+ }
+
+ renderCart();
+};
+
+window.removeCart=index=>{
+ cart.splice(index,1);
+ renderCart();
+};
+
+document.getElementById("saleDiscount").oninput=renderCart;
+
+document.getElementById("clearCartBtn").onclick=()=>{
+ cart=[];
+ renderCart();
+};
+
+document.getElementById("checkoutBtn").onclick=()=>{
+ if(!cart.length){
+  toast("Cart ထဲတွင် Product ထည့်ပါ");
+  return;
+ }
+
+ const subtotal=cart.reduce((a,b)=>a+b.price*b.qty,0);
+ const discount=num(document.getElementById("saleDiscount").value);
+ const total=Math.max(0,subtotal-discount);
+ const payment=document.getElementById("salePayment").value;
+ const customerId=document.getElementById("saleCustomer").value;
+
+ if(payment==="Credit-Due"&&!customerId){
+  toast("Credit Sale အတွက် Customer ရွေးပါ");
+  return;
+ }
+
+ const invoice="INV-"+Date.now().toString().slice(-8);
+
+ const sale={
+  id:uid("SAL"),
+  invoice,
+  date:nowISO(),
+  customerId,
+  items:cart.map(x=>({...x,total:x.price*x.qty})),
+  subtotal,
+  discount,
+  total,
+  paymentMethod:payment,
+  userId:currentUser.id
+ };
+
+ sale.items.forEach(item=>{
+  const p=db.products.find(x=>x.id===item.productId);
+  if(p)p.stock=Math.max(0,num(p.stock)-num(item.qty));
+ });
+
+ if(payment==="Credit-Due"&&customerId){
+  const c=db.customers.find(x=>x.id===customerId);
+  if(c)c.due=num(c.due)+total;
+ }
+
+ db.sales.push(sale);
+ saveDB();
+
+ printReceipt(sale);
+
+ cart=[];
+ document.getElementById("saleDiscount").value=0;
+ document.getElementById("saleCustomer").value="";
+
+ refreshAll();
+ toast("Sale ပြီးပါပြီ · "+invoice);
+};
+
+/* =========================================================
+   CUSTOMER
+========================================================= */
+
+function refreshCustomerSelect(){
+ const select=document.getElementById("saleCustomer");
+ const old=select.value;
+
+ select.innerHTML=`<option value="">Walk-in Customer</option>`+
+ db.customers.map(c=>
+  `<option value="${c.id}">${escapeHTML(c.name)}${num(c.due)>0?" · Due "+money(c.due):""}</option>`
+ ).join("");
+
+ select.value=old;
 }
 
-function clearCart(){
-  cart=[];
-  document.getElementById("saleDiscount").value=0;
-  renderCart();
+function renderCustomers(){
+ const q=document.getElementById("customerSearch").value.trim().toLowerCase();
+
+ const list=db.customers.filter(c=>
+  !q ||
+  c.name.toLowerCase().includes(q) ||
+  (c.phone||"").includes(q)
+ );
+
+ const total=db.customers.reduce((a,b)=>a+num(b.due),0);
+
+ document.getElementById("customerCount").textContent=db.customers.length;
+ document.getElementById("customerReceivable").textContent=money(total);
+
+ document.getElementById("customerTableBody").innerHTML=
+ list.map(c=>`
+  <tr>
+   <td><b>${escapeHTML(c.name)}</b></td>
+   <td>${escapeHTML(c.phone||"-")}</td>
+   <td>${escapeHTML(c.address||"-")}</td>
+   <td>${money(c.due)}</td>
+   <td>
+    <button class="btn btn-light btn-sm" onclick="editCustomer('${c.id}')">Edit</button>
+    ${num(c.due)>0?`<button class="btn btn-success btn-sm" onclick="receiveCustomerPayment('${c.id}')">Receive</button>`:""}
+   </td>
+  </tr>
+ `).join("") ||
+ `<tr><td colspan="5" class="muted">Customer မရှိသေးပါ</td></tr>`;
 }
 
-function checkout(){
-  if(!cart.length)return toast("Cart ထဲမှာ Product မရှိပါ");
+function customerForm(customer=null){
+ const c=customer||{name:"",phone:"",address:"",due:0};
 
-  if(!subscriptionActive()){
-    return toast("Subscription Expired — Subscription ပြန်ဝယ်ပါ");
-  }
+ openModal(
+  customer?"Edit Customer":"Add Customer",
+  "Customer Information",
+ `
+ <form id="customerForm">
+  <div class="form-grid">
 
-  const subtotal=cart.reduce((a,b)=>a+b.total,0);
-  const discount=Math.max(0,Number(document.getElementById("saleDiscount").value||0));
-  const total=Math.max(0,subtotal-discount);
+   <div class="field">
+    <label>Name</label>
+    <input id="cfName" value="${escapeHTML(c.name)}">
+   </div>
 
-  const customerId=document.getElementById("saleCustomer").value;
-  const paymentMethod=document.getElementById("salePayment").value;
+   <div class="field">
+    <label>Phone</label>
+    <input id="cfPhone" value="${escapeHTML(c.phone)}">
+   </div>
 
-  const invoice="INV-"+Date.now().toString().slice(-8);
+   <div class="field full">
+    <label>Address</label>
+    <textarea id="cfAddress">${escapeHTML(c.address)}</textarea>
+   </div>
 
-  const sale={
-    id:uid("SAL"),
-    invoice,
-    date:new Date().toISOString(),
-    customerId,
-    items:cart.map(x=>({...x})),
-    subtotal,
-    discount,
-    total,
-    paymentMethod,
-    userId:currentUser.id
+  </div>
+
+  <div class="actions">
+   <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+   <button class="btn btn-primary">Save</button>
+  </div>
+ </form>
+ `
+ );
+
+ document.getElementById("customerForm").onsubmit=e=>{
+  e.preventDefault();
+
+  const data={
+   name:document.getElementById("cfName").value.trim(),
+   phone:document.getElementById("cfPhone").value.trim(),
+   address:document.getElementById("cfAddress").value.trim()
   };
 
-  cart.forEach(item=>{
-    const p=db.products.find(x=>x.id===item.productId);
-    if(p)p.stock=Math.max(0,Number(p.stock)-Number(item.qty));
+  if(!data.name){
+   toast("Customer Name ဖြည့်ပါ");
+   return;
+  }
+
+  if(customer)Object.assign(customer,data);
+  else db.customers.push({id:uid("CUS"),...data,due:0});
+
+  saveDB();
+  closeModal();
+  refreshAll();
+  toast("Customer သိမ်းပြီးပါပြီ");
+ };
+}
+
+document.getElementById("addCustomerBtn").onclick=()=>customerForm();
+
+window.editCustomer=id=>{
+ const c=db.customers.find(x=>x.id===id);
+ if(c)customerForm(c);
+};
+
+window.receiveCustomerPayment=id=>{
+ const c=db.customers.find(x=>x.id===id);
+ if(!c)return;
+
+ openModal(
+  "Receive Customer Payment",
+  c.name,
+ `
+ <form id="receiveForm">
+  <div class="notice">Current Due: <b>${money(c.due)}</b></div>
+
+  <div class="field">
+   <label>Amount</label>
+   <input id="receiveAmount" type="number" min="1" max="${c.due}">
+  </div>
+
+  <div class="field">
+   <label>Note</label>
+   <input id="receiveNote">
+  </div>
+
+  <div class="actions">
+   <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+   <button class="btn btn-success">Receive Payment</button>
+  </div>
+ </form>
+ `
+ );
+
+ document.getElementById("receiveForm").onsubmit=e=>{
+  e.preventDefault();
+
+  const amount=num(document.getElementById("receiveAmount").value);
+
+  if(amount<=0||amount>num(c.due)){
+   toast("Amount မှားနေပါသည်");
+   return;
+  }
+
+  c.due=Math.max(0,num(c.due)-amount);
+
+  db.customerPayments.push({
+   id:uid("CP"),
+   date:nowISO(),
+   customerId:id,
+   amount,
+   note:document.getElementById("receiveNote").value.trim(),
+   userId:currentUser.id
   });
 
-  if(customerId && paymentMethod==="Credit"){
-    const customer=db.customers.find(c=>c.id===customerId);
-    if(customer)customer.due=Number(customer.due||0)+total;
+  saveDB();
+  closeModal();
+  refreshAll();
+  toast("Payment လက်ခံပြီးပါပြီ");
+ };
+};
+
+/* =========================================================
+   SUPPLIERS
+========================================================= */
+
+function renderSuppliers(){
+ const total=db.suppliers.reduce((a,b)=>a+num(b.payable),0);
+ document.getElementById("supplierPayable").textContent=money(total);
+
+ document.getElementById("supplierTableBody").innerHTML=
+ db.suppliers.map(s=>`
+  <tr>
+   <td><b>${escapeHTML(s.name)}</b></td>
+   <td>${escapeHTML(s.phone||"-")}</td>
+   <td>${escapeHTML(s.address||"-")}</td>
+   <td>${money(s.payable)}</td>
+   <td>
+    <button class="btn btn-light btn-sm" onclick="editSupplier('${s.id}')">Edit</button>
+    ${num(s.payable)>0?`<button class="btn btn-success btn-sm" onclick="paySupplier('${s.id}')">Pay</button>`:""}
+   </td>
+  </tr>
+ `).join("") ||
+ `<tr><td colspan="5" class="muted">Supplier မရှိသေးပါ</td></tr>`;
+}
+
+function supplierForm(supplier=null){
+ const s=supplier||{name:"",phone:"",address:"",payable:0};
+
+ openModal(
+  supplier?"Edit Supplier":"Add Supplier",
+  "Supplier Information",
+ `
+ <form id="supplierForm">
+  <div class="form-grid">
+
+   <div class="field">
+    <label>Name</label>
+    <input id="sfName" value="${escapeHTML(s.name)}">
+   </div>
+
+   <div class="field">
+    <label>Phone</label>
+    <input id="sfPhone" value="${escapeHTML(s.phone)}">
+   </div>
+
+   <div class="field full">
+    <label>Address</label>
+    <textarea id="sfAddress">${escapeHTML(s.address)}</textarea>
+   </div>
+
+  </div>
+
+  <div class="actions">
+   <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+   <button class="btn btn-primary">Save</button>
+  </div>
+ </form>
+ `
+ );
+
+ document.getElementById("supplierForm").onsubmit=e=>{
+  e.preventDefault();
+
+  const data={
+   name:document.getElementById("sfName").value.trim(),
+   phone:document.getElementById("sfPhone").value.trim(),
+   address:document.getElementById("sfAddress").value.trim()
+  };
+
+  if(!data.name){
+   toast("Supplier Name ဖြည့်ပါ");
+   return;
   }
 
-  db.sales.push(sale);
+  if(supplier)Object.assign(supplier,data);
+  else db.suppliers.push({id:uid("SUP"),...data,payable:0});
+
   saveDB();
-
-  printReceipt(sale);
-
-  clearCart();
-  renderAll();
-
-  toast("Sale Complete");
+  closeModal();
+  refreshAll();
+  toast("Supplier သိမ်းပြီးပါပြီ");
+ };
 }
+
+document.getElementById("addSupplierBtn").onclick=()=>supplierForm();
+
+window.editSupplier=id=>{
+ const s=db.suppliers.find(x=>x.id===id);
+ if(s)supplierForm(s);
+};
+
+window.paySupplier=id=>{
+ const s=db.suppliers.find(x=>x.id===id);
+ if(!s)return;
+
+ openModal(
+  "Pay Supplier",
+  s.name,
+ `
+ <form id="supplierPayForm">
+  <div class="notice">Current Payable: <b>${money(s.payable)}</b></div>
+
+  <div class="field">
+   <label>Amount</label>
+   <input id="supplierPayAmount" type="number" min="1" max="${s.payable}">
+  </div>
+
+  <div class="field">
+   <label>Note</label>
+   <input id="supplierPayNote">
+  </div>
+
+  <div class="actions">
+   <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+   <button class="btn btn-success">Pay Supplier</button>
+  </div>
+ </form>
+ `
+ );
+
+ document.getElementById("supplierPayForm").onsubmit=e=>{
+  e.preventDefault();
+
+  const amount=num(document.getElementById("supplierPayAmount").value);
+
+  if(amount<=0||amount>s.payable){
+   toast("Amount မှားနေပါသည်");
+   return;
+  }
+
+  s.payable=Math.max(0,num(s.payable)-amount);
+
+  db.supplierPayments.push({
+   id:uid("SP"),
+   date:nowISO(),
+   supplierId:id,
+   amount,
+   note:document.getElementById("supplierPayNote").value.trim(),
+   userId:currentUser.id
+  });
+
+  saveDB();
+  closeModal();
+  refreshAll();
+  toast("Supplier Payment ပြီးပါပြီ");
+ };
+};
 
 /* =========================================================
-   RECEIPT
+   PURCHASE
 ========================================================= */
 
-function printReceipt(sale){
-  const customer=db.customers.find(c=>c.id===sale.customerId);
+function purchaseForm(){
+ if(!db.products.length){
+  toast("အရင် Product ထည့်ပါ");
+  return;
+ }
 
-  const rows=sale.items.map(i=>`
-    <div style="margin:5px 0">
-      <div>${escapeHTML(i.name)}</div>
-      <div class="receipt-row">
-        <span>${i.qty} × ${money(i.price)}</span>
-        <span>${money(i.total)}</span>
-      </div>
-    </div>
-  `).join("");
+ openModal(
+  "New Purchase",
+  "Stock တိုးရန် Purchase ထည့်ပါ",
+ `
+ <form id="purchaseForm">
 
-  document.getElementById("printArea").innerHTML=`
-    <div class="receipt center">
-      <div class="receipt-logo">${escapeHTML(db.shop.name||"AUNG POS")}</div>
-      ${db.shop.address?`<div>${escapeHTML(db.shop.address)}</div>`:""}
-      ${db.shop.phone?`<div>${escapeHTML(db.shop.phone)}</div>`:""}
+  <div class="form-grid">
 
-      <div class="receipt-line"></div>
+   <div class="field">
+    <label>Invoice</label>
+    <input id="pInvoice" value="PUR-${Date.now().toString().slice(-8)}">
+   </div>
 
-      <div class="receipt-row">
-        <span>Invoice</span>
-        <span>${escapeHTML(sale.invoice)}</span>
-      </div>
+   <div class="field">
+    <label>Date</label>
+    <input id="pDate" type="date" value="${today()}">
+   </div>
 
-      <div class="receipt-row">
-        <span>Date</span>
-        <span>${new Date(sale.date).toLocaleString()}</span>
-      </div>
+   <div class="field">
+    <label>Supplier</label>
+    <select id="pSupplier">
+     <option value="">Supplier ရွေးပါ</option>
+     ${db.suppliers.map(s=>`<option value="${s.id}">${escapeHTML(s.name)}</option>`).join("")}
+    </select>
+   </div>
 
-      <div class="receipt-row">
-        <span>Cashier</span>
-        <span>${escapeHTML(currentUser.name)}</span>
-      </div>
+   <div class="field">
+    <label>Product</label>
+    <select id="pProduct">
+     ${db.products.map(p=>`<option value="${p.id}">${escapeHTML(p.name)} · ${escapeHTML(p.unit)}</option>`).join("")}
+    </select>
+   </div>
 
-      ${customer?`
-      <div class="receipt-row">
-        <span>Customer</span>
-        <span>${escapeHTML(customer.name)}</span>
-      </div>`:""}
+   <div class="field">
+    <label>Quantity</label>
+    <input id="pQty" type="number" min="1" value="1">
+   </div>
 
-      <div class="receipt-line"></div>
+   <div class="field">
+    <label>Purchase Price</label>
+    <input id="pPrice" type="number" min="0">
+   </div>
 
-      <div style="text-align:left">${rows}</div>
+   <div class="field">
+    <label>Paid</label>
+    <input id="pPaid" type="number" min="0" value="0">
+   </div>
 
-      <div class="receipt-line"></div>
+  </div>
 
-      <div class="receipt-row">
-        <span>Subtotal</span>
-        <span>${money(sale.subtotal)}</span>
-      </div>
+  <div class="actions">
+   <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+   <button class="btn btn-primary">Save Purchase</button>
+  </div>
+ </form>
+ `
+ );
 
-      <div class="receipt-row">
-        <span>Discount</span>
-        <span>${money(sale.discount)}</span>
-      </div>
+ const pSelect=document.getElementById("pProduct");
 
-      <div class="receipt-row receipt-total">
-        <span>TOTAL</span>
-        <span>${money(sale.total)}</span>
-      </div>
+ function setPrice(){
+  const p=db.products.find(x=>x.id===pSelect.value);
+  if(p)document.getElementById("pPrice").value=p.buyPrice;
+ }
+ pSelect.onchange=setPrice;
+ setPrice();
 
-      <div class="receipt-line"></div>
+ document.getElementById("purchaseForm").onsubmit=e=>{
+  e.preventDefault();
 
-      <div class="receipt-row">
-        <span>Payment</span>
-        <span>${escapeHTML(sale.paymentMethod)}</span>
-      </div>
+  const product=db.products.find(x=>x.id===pSelect.value);
+  if(!product)return;
 
-      <div class="receipt-line"></div>
+  const supplierId=document.getElementById("pSupplier").value;
+  const qty=num(document.getElementById("pQty").value);
+  const price=num(document.getElementById("pPrice").value);
+  const paid=num(document.getElementById("pPaid").value);
 
-      <div style="margin-top:10px">
-        ${escapeHTML(db.shop.footer||"Thank you")}
-      </div>
+  if(qty<=0){
+   toast("Quantity မှန်ကန်စွာထည့်ပါ");
+   return;
+  }
 
-      <div style="margin-top:6px">
-        Powered by Aung POS V2
-      </div>
-    </div>
-  `;
-
-  setTimeout(()=>window.print(),100);
-}
-
-/* =========================================================
-   PURCHASES
-========================================================= */
-
-function openPurchaseModal(){
-  if(!can("purchases"))return toast("Permission denied");
-
-  const productOptions=db.products.map(p=>
-    `<option value="${p.id}">${escapeHTML(p.name)} — Stock ${p.stock}</option>`
-  ).join("");
-
-  const supplierOptions=db.suppliers.map(s=>
-    `<option value="${s.id}">${escapeHTML(s.name)}</option>`
-  ).join("");
-
-  openModal(
-    "Add Purchase",
-    `
-    <div class="form-grid">
-      <div class="field">
-        <label>Supplier</label>
-        <select id="mPurchaseSupplier">
-          <option value="">Supplier ရွေးပါ</option>
-          ${supplierOptions}
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Product</label>
-        <select id="mPurchaseProduct">
-          <option value="">Product ရွေးပါ</option>
-          ${productOptions}
-        </select>
-      </div>
-
-      <div class="field">
-        <label>Quantity</label>
-        <input id="mPurchaseQty" type="number" min="1" value="1">
-      </div>
-
-      <div class="field">
-        <label>Purchase Price</label>
-        <input id="mPurchasePrice" type="number" min="0" value="0">
-      </div>
-
-      <div class="field">
-        <label>Paid</label>
-        <input id="mPurchasePaid" type="number" min="0" value="0">
-      </div>
-
-      <div class="field">
-        <label>Invoice</label>
-        <input id="mPurchaseInvoice" value="PUR-${Date.now().toString().slice(-6)}">
-      </div>
-    </div>
-    `,
-    `
-      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-primary" onclick="savePurchase()">Save Purchase</button>
-    `
-  );
-}
-
-function savePurchase(){
-  const supplierId=document.getElementById("mPurchaseSupplier").value;
-  const productId=document.getElementById("mPurchaseProduct").value;
-  const qty=Number(document.getElementById("mPurchaseQty").value||0);
-  const buyPrice=Number(document.getElementById("mPurchasePrice").value||0);
-  const paid=Number(document.getElementById("mPurchasePaid").value||0);
-  const invoice=document.getElementById("mPurchaseInvoice").value.trim();
-
-  if(!productId || qty<=0)return toast("Product နှင့် Quantity ဖြည့်ပါ");
-
-  const product=db.products.find(p=>p.id===productId);
-  const total=qty*buyPrice;
+  const total=qty*price;
   const due=Math.max(0,total-paid);
 
-  if(product){
-    product.stock=Number(product.stock)+qty;
-    product.buyPrice=buyPrice;
-  }
+  product.stock=num(product.stock)+qty;
+  product.buyPrice=price;
 
   if(supplierId){
-    const supplier=db.suppliers.find(s=>s.id===supplierId);
-    if(supplier)supplier.payable=Number(supplier.payable||0)+due;
+   const s=db.suppliers.find(x=>x.id===supplierId);
+   if(s)s.payable=num(s.payable)+due;
   }
 
   db.purchases.push({
-    id:uid("PUR"),
-    invoice,
-    date:new Date().toISOString(),
-    supplierId,
-    productId,
-    productName:product?.name||"",
-    qty,
-    unit:product?.unit||"pcs",
-    buyPrice,
-    total,
-    paid,
-    due
+   id:uid("PUR"),
+   invoice:document.getElementById("pInvoice").value.trim(),
+   date:document.getElementById("pDate").value,
+   supplierId,
+   productId:product.id,
+   productName:product.name,
+   qty,
+   unit:product.unit,
+   buyPrice:price,
+   total,
+   paid,
+   due,
+   userId:currentUser.id
   });
 
   saveDB();
   closeModal();
-  renderAll();
+  refreshAll();
   toast("Purchase သိမ်းပြီး Stock တိုးပြီးပါပြီ");
+ };
 }
 
+document.getElementById("newPurchaseBtn").onclick=()=>{
+ if(can("purchases"))purchaseForm();
+};
+
 function renderPurchases(){
-  const today=db.purchases.filter(p=>isToday(p.date));
+ const todayTotal=db.purchases
+  .filter(p=>dateMatch(p.date,"today"))
+  .reduce((a,b)=>a+num(b.total),0);
 
-  document.getElementById("purchaseTodayTotal").textContent=
-    money(today.reduce((a,b)=>a+b.total,0));
+ document.getElementById("purchaseTodayTotal").textContent=money(todayTotal);
+ document.getElementById("purchaseInvoiceCount").textContent=db.purchases.length;
 
-  document.getElementById("purchaseInvoiceCount").textContent=db.purchases.length;
-
-  document.getElementById("supplierPayable").textContent=
-    money(db.suppliers.reduce((a,b)=>a+Number(b.payable||0),0));
-
-  const body=document.getElementById("purchaseTableBody");
-
-  body.innerHTML=db.purchases.length
-    ? [...db.purchases].reverse().map(p=>{
-        const supplier=db.suppliers.find(s=>s.id===p.supplierId);
-        return `
-        <tr>
-          <td>${formatDate(p.date)}</td>
-          <td>${escapeHTML(p.invoice)}</td>
-          <td>${escapeHTML(supplier?.name||"-")}</td>
-          <td>${escapeHTML(p.productName)}</td>
-          <td>${p.qty}</td>
-          <td>${money(p.total)}</td>
-          <td>${money(p.due)}</td>
-        </tr>`;
-      }).join("")
-    : `<tr><td colspan="7"><div class="empty">Purchase မရှိသေးပါ</div></td></tr>`;
+ document.getElementById("purchaseTableBody").innerHTML=
+ db.purchases.slice().reverse().map(p=>{
+  const s=db.suppliers.find(x=>x.id===p.supplierId);
+  return `
+   <tr>
+    <td>${escapeHTML(p.date)}</td>
+    <td>${escapeHTML(p.invoice)}</td>
+    <td>${escapeHTML(s?s.name:"-")}</td>
+    <td>${escapeHTML(p.productName)}</td>
+    <td>${p.qty} ${escapeHTML(p.unit)}</td>
+    <td>${money(p.total)}</td>
+    <td>${money(p.paid)}</td>
+    <td>${money(p.due)}</td>
+   </tr>
+  `;
+ }).join("") ||
+ `<tr><td colspan="8" class="muted">Purchase မရှိသေးပါ</td></tr>`;
 }
 
 /* =========================================================
@@ -2376,443 +2700,384 @@ function renderPurchases(){
 ========================================================= */
 
 function renderStock(){
-  const totalUnits=db.products.reduce((a,b)=>a+Number(b.stock||0),0);
-  const costValue=db.products.reduce((a,b)=>a+(Number(b.stock||0)*Number(b.buyPrice||0)),0);
-  const low=db.products.filter(p=>Number(p.stock)<=Number(p.minStock||0));
+ const units=db.products.reduce((a,b)=>a+num(b.stock),0);
+ const cost=db.products.reduce((a,b)=>a+num(b.stock)*num(b.buyPrice),0);
+ const low=db.products.filter(p=>num(p.stock)<=num(p.minStock));
 
-  document.getElementById("stockProductCount").textContent=db.products.length;
-  document.getElementById("stockUnitCount").textContent=totalUnits;
-  document.getElementById("stockCostValue").textContent=money(costValue);
-  document.getElementById("stockLowCount").textContent=low.length;
+ document.getElementById("stockProductCount").textContent=db.products.length;
+ document.getElementById("stockUnitCount").textContent=units;
+ document.getElementById("stockCostValue").textContent=money(cost);
+ document.getElementById("stockLowCount").textContent=low.length;
 
-  document.getElementById("stockTableBody").innerHTML=db.products.length
-    ? db.products.map(p=>{
-      const low=Number(p.stock)<=Number(p.minStock||0);
-      return `
-      <tr>
-        <td>${escapeHTML(p.name)}</td>
-        <td>${escapeHTML(p.category)}</td>
-        <td>${p.stock} ${escapeHTML(p.unit)}</td>
-        <td>${p.minStock}</td>
-        <td>${money(p.buyPrice)}</td>
-        <td>${money(Number(p.stock)*Number(p.buyPrice))}</td>
-        <td>${low?`<span class="badge badge-red">LOW</span>`:`<span class="badge badge-green">OK</span>`}</td>
-      </tr>`;
-    }).join("")
-    : `<tr><td colspan="7"><div class="empty">Stock မရှိသေးပါ</div></td></tr>`;
+ document.getElementById("stockTableBody").innerHTML=
+ db.products.map(p=>{
+  const isLow=num(p.stock)<=num(p.minStock);
+  const isOut=num(p.stock)<=0;
+
+  return `
+   <tr>
+    <td><b>${escapeHTML(p.name)}</b></td>
+    <td>${escapeHTML(p.category)}</td>
+    <td>${num(p.stock)}</td>
+    <td>${num(p.minStock)}</td>
+    <td>${escapeHTML(p.unit)}</td>
+    <td>${money(num(p.stock)*num(p.buyPrice))}</td>
+    <td>
+     ${isOut?
+      `<span class="badge danger">OUT</span>`:
+      isLow?
+      `<span class="badge warning">LOW</span>`:
+      `<span class="badge success">OK</span>`
+     }
+    </td>
+   </tr>
+  `;
+ }).join("") ||
+ `<tr><td colspan="7" class="muted">Product မရှိသေးပါ</td></tr>`;
 }
 
-function openAdjustmentModal(){
-  if(!can("stock"))return toast("Permission denied");
+function stockAdjustmentForm(){
+ if(!db.products.length){
+  toast("Product မရှိသေးပါ");
+  return;
+ }
 
-  const options=db.products.map(p=>
-    `<option value="${p.id}">${escapeHTML(p.name)} — ${p.stock}</option>`
-  ).join("");
+ openModal(
+  "Stock Adjustment",
+  "Stock ကို + / - ပြင်ဆင်ပါ",
+ `
+ <form id="adjustmentForm">
 
-  openModal(
-    "Stock Adjustment",
-    `
-    <div class="field">
-      <label>Product</label>
-      <select id="mAdjustProduct">
-        <option value="">ရွေးပါ</option>${options}
-      </select>
-    </div>
+  <div class="field">
+   <label>Product</label>
+   <select id="aProduct">
+    ${db.products.map(p=>`
+     <option value="${p.id}">
+      ${escapeHTML(p.name)} · Current ${p.stock} ${escapeHTML(p.unit)}
+     </option>
+    `).join("")}
+   </select>
+  </div>
 
-    <div class="field">
-      <label>Quantity (+ / -)</label>
-      <input id="mAdjustQty" type="number" value="0">
-    </div>
+  <div class="field">
+   <label>Adjustment Qty</label>
+   <input id="aQty" type="number" placeholder="ဥပမာ +10 သို့ -5">
+  </div>
 
-    <div class="field">
-      <label>Reason</label>
-      <input id="mAdjustReason" placeholder="Damage / Count Correction / Other">
-    </div>
-    `,
-    `
-      <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-      <button class="btn btn-warning" onclick="saveAdjustment()">Save</button>
-    `
-  );
-}
+  <div class="field">
+   <label>Reason</label>
+   <input id="aReason" placeholder="Damage / Count Correction / Opening Stock">
+  </div>
 
-function saveAdjustment(){
-  const productId=document.getElementById("mAdjustProduct").value;
-  const qty=Number(document.getElementById("mAdjustQty").value||0);
-  const reason=document.getElementById("mAdjustReason").value.trim();
+  <div class="actions">
+   <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+   <button class="btn btn-primary">Save Adjustment</button>
+  </div>
 
-  if(!productId || !qty)return toast("Product နှင့် Qty ဖြည့်ပါ");
+ </form>
+ `
+ );
 
-  const p=db.products.find(x=>x.id===productId);
+ document.getElementById("adjustmentForm").onsubmit=e=>{
+  e.preventDefault();
 
-  if(!p)return;
+  const p=db.products.find(x=>x.id===document.getElementById("aProduct").value);
+  const delta=num(document.getElementById("aQty").value);
 
-  p.stock=Math.max(0,Number(p.stock)+qty);
+  if(!p||delta===0){
+   toast("Adjustment မှန်ကန်စွာထည့်ပါ");
+   return;
+  }
+
+  if(num(p.stock)+delta<0){
+   toast("Stock 0 အောက်မကျနိုင်ပါ");
+   return;
+  }
+
+  p.stock=num(p.stock)+delta;
 
   db.adjustments.push({
-    id:uid("ADJ"),
-    date:new Date().toISOString(),
-    productId,
-    qtyDelta:qty,
-    reason,
-    userId:currentUser.id
+   id:uid("ADJ"),
+   date:nowISO(),
+   productId:p.id,
+   qtyDelta:delta,
+   reason:document.getElementById("aReason").value.trim(),
+   userId:currentUser.id
   });
 
   saveDB();
   closeModal();
-  renderAll();
-  toast("Stock Adjustment သိမ်းပြီးပါပြီ");
+  refreshAll();
+  toast("Stock Adjustment ပြီးပါပြီ");
+ };
 }
+
+document.getElementById("stockAdjustmentBtn").onclick=()=>{
+ if(can("stock"))stockAdjustmentForm();
+};
 
 /* =========================================================
-   CUSTOMERS
+   EXPENSE
 ========================================================= */
 
-function populateCustomerSelect(){
-  const select=document.getElementById("saleCustomer");
-  if(!select)return;
+function expenseForm(){
+ openModal(
+  "Add Expense",
+  "Business Expense",
+ `
+ <form id="expenseForm">
+  <div class="form-grid">
 
-  select.innerHTML=`<option value="">Walk-in Customer</option>`+
-    db.customers.map(c=>`<option value="${c.id}">${escapeHTML(c.name)}</option>`).join("");
-}
+   <div class="field">
+    <label>Date</label>
+    <input id="eDate" type="date" value="${today()}">
+   </div>
 
-function openCustomerModal(id=null){
-  const c=id?db.customers.find(x=>x.id===id):null;
+   <div class="field">
+    <label>Category</label>
+    <select id="eCategory">
+     <option>Rent</option>
+     <option>Electricity</option>
+     <option>Transport</option>
+     <option>Salary</option>
+     <option>Marketing</option>
+     <option>Other</option>
+    </select>
+   </div>
 
-  openModal(
-    c?"Edit Customer":"Add Customer",
-    `
-    <div class="field"><label>Name *</label><input id="mCustomerName" value="${escapeHTML(c?.name||"")}"></div>
-    <div class="field"><label>Phone</label><input id="mCustomerPhone" value="${escapeHTML(c?.phone||"")}"></div>
-    <div class="field"><label>Address</label><input id="mCustomerAddress" value="${escapeHTML(c?.address||"")}"></div>
-    `,
-    `
-    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-    <button class="btn btn-primary" onclick="saveCustomer('${id||""}')">Save</button>
-    `
-  );
-}
+   <div class="field full">
+    <label>Description</label>
+    <input id="eDescription">
+   </div>
 
-function saveCustomer(id){
-  const name=document.getElementById("mCustomerName").value.trim();
-  if(!name)return toast("Customer Name ဖြည့်ပါ");
+   <div class="field">
+    <label>Amount</label>
+    <input id="eAmount" type="number" min="1">
+   </div>
 
-  const data={
-    name,
-    phone:document.getElementById("mCustomerPhone").value.trim(),
-    address:document.getElementById("mCustomerAddress").value.trim()
-  };
+  </div>
 
-  if(id){
-    const c=db.customers.find(x=>x.id===id);
-    Object.assign(c,data);
-  }else{
-    db.customers.push({id:uid("CUS"),...data,due:0});
+  <div class="actions">
+   <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+   <button class="btn btn-primary">Save Expense</button>
+  </div>
+ </form>
+ `
+ );
+
+ document.getElementById("expenseForm").onsubmit=e=>{
+  e.preventDefault();
+
+  const amount=num(document.getElementById("eAmount").value);
+
+  if(amount<=0){
+   toast("Amount ဖြည့်ပါ");
+   return;
   }
 
-  saveDB();
-  closeModal();
-  renderAll();
-  toast("Customer သိမ်းပြီးပါပြီ");
-}
-
-function renderCustomers(){
-  const search=(document.getElementById("customerSearch").value||"").toLowerCase();
-
-  const list=db.customers.filter(c=>
-    !search ||
-    c.name.toLowerCase().includes(search) ||
-    String(c.phone||"").includes(search)
-  );
-
-  document.getElementById("customerCount").textContent=db.customers.length;
-
-  document.getElementById("customerReceivable").textContent=
-    money(db.customers.reduce((a,b)=>a+Number(b.due||0),0));
-
-  document.getElementById("customerTableBody").innerHTML=list.length
-    ? list.map(c=>`
-      <tr>
-        <td>${escapeHTML(c.name)}</td>
-        <td>${escapeHTML(c.phone)}</td>
-        <td>${escapeHTML(c.address)}</td>
-        <td>${money(c.due)}</td>
-        <td>
-          <button class="btn btn-secondary btn-sm" onclick="openCustomerModal('${c.id}')">Edit</button>
-          <button class="btn btn-success btn-sm" onclick="receiveCustomerPayment('${c.id}')">Receive</button>
-        </td>
-      </tr>
-    `).join("")
-    : `<tr><td colspan="5"><div class="empty">Customer မရှိသေးပါ</div></td></tr>`;
-}
-
-function receiveCustomerPayment(id){
-  const c=db.customers.find(x=>x.id===id);
-  if(!c)return;
-
-  const amount=Number(prompt(`လက်ခံရရှိငွေ (${c.name})\nDue: ${c.due}`)||0);
-
-  if(amount<=0)return;
-
-  c.due=Math.max(0,Number(c.due)-amount);
-
-  db.customerPayments.push({
-    id:uid("CP"),
-    date:new Date().toISOString(),
-    customerId:id,
-    amount,
-    note:"Customer Payment",
-    userId:currentUser.id
+  db.expenses.push({
+   id:uid("EXP"),
+   date:document.getElementById("eDate").value,
+   category:document.getElementById("eCategory").value,
+   description:document.getElementById("eDescription").value.trim(),
+   amount,
+   userId:currentUser.id
   });
 
   saveDB();
-  renderAll();
-  toast("Customer Payment သိမ်းပြီးပါပြီ");
+  closeModal();
+  refreshAll();
+  toast("Expense သိမ်းပြီးပါပြီ");
+ };
 }
+
+document.getElementById("addExpenseBtn").onclick=()=>{
+ if(can("expenses"))expenseForm();
+};
+
+function renderExpenses(){
+ const todayTotal=db.expenses.filter(e=>dateMatch(e.date,"today"))
+  .reduce((a,b)=>a+num(b.amount),0);
+
+ const monthTotal=db.expenses.filter(e=>dateMatch(e.date,"month"))
+  .reduce((a,b)=>a+num(b.amount),0);
+
+ const yearTotal=db.expenses.filter(e=>dateMatch(e.date,"year"))
+  .reduce((a,b)=>a+num(b.amount),0);
+
+ document.getElementById("expenseToday").textContent=money(todayTotal);
+ document.getElementById("expenseMonth").textContent=money(monthTotal);
+ document.getElementById("expenseYear").textContent=money(yearTotal);
+
+ document.getElementById("expenseTableBody").innerHTML=
+ db.expenses.slice().reverse().map(e=>`
+  <tr>
+   <td>${escapeHTML(e.date)}</td>
+   <td>${escapeHTML(e.category)}</td>
+   <td>${escapeHTML(e.description||"-")}</td>
+   <td>${money(e.amount)}</td>
+   <td>
+    <button class="btn btn-danger btn-sm" onclick="deleteExpense('${e.id}')">Delete</button>
+   </td>
+  </tr>
+ `).join("") ||
+ `<tr><td colspan="5" class="muted">Expense မရှိသေးပါ</td></tr>`;
+}
+
+window.deleteExpense=id=>{
+ if(!can("expenses"))return;
+ if(!confirm("Expense ဖျက်မလား?"))return;
+ db.expenses=db.expenses.filter(x=>x.id!==id);
+ saveDB();
+ refreshAll();
+};
 
 /* =========================================================
-   SUPPLIERS
+   EMPLOYEES
 ========================================================= */
 
-function openSupplierModal(id=null){
-  const s=id?db.suppliers.find(x=>x.id===id):null;
+function employeeForm(employee=null){
+ const e=employee||{name:"",role:"",phone:"",salary:0};
 
-  openModal(
-    s?"Edit Supplier":"Add Supplier",
-    `
-    <div class="field"><label>Name *</label><input id="mSupplierName" value="${escapeHTML(s?.name||"")}"></div>
-    <div class="field"><label>Phone</label><input id="mSupplierPhone" value="${escapeHTML(s?.phone||"")}"></div>
-    <div class="field"><label>Address</label><input id="mSupplierAddress" value="${escapeHTML(s?.address||"")}"></div>
-    `,
-    `
-    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-    <button class="btn btn-primary" onclick="saveSupplier('${id||""}')">Save</button>
-    `
-  );
-}
+ openModal(
+  employee?"Edit Employee":"Add Employee",
+  "Staff Information",
+ `
+ <form id="employeeForm">
 
-function saveSupplier(id){
-  const name=document.getElementById("mSupplierName").value.trim();
-  if(!name)return toast("Supplier Name ဖြည့်ပါ");
+  <div class="form-grid">
+
+   <div class="field">
+    <label>Name</label>
+    <input id="emName" value="${escapeHTML(e.name)}">
+   </div>
+
+   <div class="field">
+    <label>Role</label>
+    <input id="emRole" value="${escapeHTML(e.role)}">
+   </div>
+
+   <div class="field">
+    <label>Phone</label>
+    <input id="emPhone" value="${escapeHTML(e.phone)}">
+   </div>
+
+   <div class="field">
+    <label>Salary</label>
+    <input id="emSalary" type="number" value="${e.salary}">
+   </div>
+
+  </div>
+
+  <div class="actions">
+   <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+   <button class="btn btn-primary">Save</button>
+  </div>
+
+ </form>
+ `
+ );
+
+ document.getElementById("employeeForm").onsubmit=ev=>{
+  ev.preventDefault();
 
   const data={
-    name,
-    phone:document.getElementById("mSupplierPhone").value.trim(),
-    address:document.getElementById("mSupplierAddress").value.trim()
+   name:document.getElementById("emName").value.trim(),
+   role:document.getElementById("emRole").value.trim(),
+   phone:document.getElementById("emPhone").value.trim(),
+   salary:num(document.getElementById("emSalary").value)
   };
 
-  if(id){
-    const s=db.suppliers.find(x=>x.id===id);
-    Object.assign(s,data);
-  }else{
-    db.suppliers.push({id:uid("SUP"),...data,payable:0});
+  if(!data.name){
+   toast("Employee Name ဖြည့်ပါ");
+   return;
   }
+
+  if(employee)Object.assign(employee,data);
+  else db.employees.push({id:uid("EMP"),...data});
 
   saveDB();
   closeModal();
-  renderAll();
-  toast("Supplier သိမ်းပြီးပါပြီ");
+  refreshAll();
+  toast("Employee သိမ်းပြီးပါပြီ");
+ };
 }
 
-function renderSuppliers(){
-  document.getElementById("supplierTableBody").innerHTML=db.suppliers.length
-    ? db.suppliers.map(s=>`
-      <tr>
-        <td>${escapeHTML(s.name)}</td>
-        <td>${escapeHTML(s.phone)}</td>
-        <td>${escapeHTML(s.address)}</td>
-        <td>${money(s.payable)}</td>
-        <td>
-          <button class="btn btn-secondary btn-sm" onclick="openSupplierModal('${s.id}')">Edit</button>
-          <button class="btn btn-success btn-sm" onclick="paySupplier('${s.id}')">Pay</button>
-        </td>
-      </tr>
-    `).join("")
-    : `<tr><td colspan="5"><div class="empty">Supplier မရှိသေးပါ</div></td></tr>`;
+document.getElementById("addEmployeeBtn").onclick=()=>{
+ if(can("employees"))employeeForm();
+};
+
+function renderEmployees(){
+ document.getElementById("employeeTableBody").innerHTML=
+ db.employees.map(e=>`
+  <tr>
+   <td>${escapeHTML(e.name)}</td>
+   <td>${escapeHTML(e.role||"-")}</td>
+   <td>${escapeHTML(e.phone||"-")}</td>
+   <td>${money(e.salary)}</td>
+   <td>
+    <button class="btn btn-light btn-sm" onclick="editEmployee('${e.id}')">Edit</button>
+    <button class="btn btn-success btn-sm" onclick="paySalary('${e.id}')">Pay Salary</button>
+   </td>
+  </tr>
+ `).join("") ||
+ `<tr><td colspan="5" class="muted">Employee မရှိသေးပါ</td></tr>`;
 }
 
-function paySupplier(id){
-  const s=db.suppliers.find(x=>x.id===id);
-  if(!s)return;
+window.editEmployee=id=>{
+ const e=db.employees.find(x=>x.id===id);
+ if(e)employeeForm(e);
+};
 
-  const amount=Number(prompt(`Supplier Payment (${s.name})\nPayable: ${s.payable}`)||0);
+window.paySalary=id=>{
+ const e=db.employees.find(x=>x.id===id);
+ if(!e)return;
 
-  if(amount<=0)return;
+ if(!confirm(e.name+" အတွက် "+money(e.salary)+" Salary Payment အဖြစ် Expense ထည့်မလား?"))
+  return;
 
-  s.payable=Math.max(0,Number(s.payable)-amount);
+ db.expenses.push({
+  id:uid("EXP"),
+  date:today(),
+  category:"Salary",
+  description:e.name+" Salary",
+  amount:num(e.salary),
+  userId:currentUser.id
+ });
 
-  db.supplierPayments.push({
-    id:uid("SP"),
-    date:new Date().toISOString(),
-    supplierId:id,
-    amount,
-    note:"Supplier Payment",
-    userId:currentUser.id
-  });
-
-  saveDB();
-  renderAll();
-  toast("Supplier Payment သိမ်းပြီးပါပြီ");
-}
+ saveDB();
+ refreshAll();
+ toast("Salary Expense ထည့်ပြီးပါပြီ");
+};
 
 /* =========================================================
    DEBTS
 ========================================================= */
 
 function renderDebts(){
-  const receivable=db.customers.reduce((a,b)=>a+Number(b.due||0),0);
-  const payable=db.suppliers.reduce((a,b)=>a+Number(b.payable||0),0);
+ const receivable=db.customers.reduce((a,b)=>a+num(b.due),0);
+ const payable=db.suppliers.reduce((a,b)=>a+num(b.payable),0);
 
-  document.getElementById("totalReceivable").textContent=money(receivable);
-  document.getElementById("totalPayable").textContent=money(payable);
+ document.getElementById("totalReceivable").textContent=money(receivable);
+ document.getElementById("totalPayable").textContent=money(payable);
 
-  document.getElementById("receivableList").innerHTML=
-    db.customers.filter(c=>Number(c.due)>0).map(c=>
-      `<div class="receipt-row" style="padding:9px 0;border-bottom:1px solid #e2e8f0">
-        <span>${escapeHTML(c.name)}</span>
-        <strong>${money(c.due)}</strong>
-      </div>`
-    ).join("") || `<div class="empty">No Receivable</div>`;
+ document.getElementById("receivableList").innerHTML=
+ db.customers.filter(c=>num(c.due)>0).map(c=>`
+  <div style="padding:9px 0;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between">
+   <span>${escapeHTML(c.name)}</span>
+   <b>${money(c.due)}</b>
+  </div>
+ `).join("") ||
+ `<div class="muted">Customer Due မရှိပါ</div>`;
 
-  document.getElementById("payableList").innerHTML=
-    db.suppliers.filter(s=>Number(s.payable)>0).map(s=>
-      `<div class="receipt-row" style="padding:9px 0;border-bottom:1px solid #e2e8f0">
-        <span>${escapeHTML(s.name)}</span>
-        <strong>${money(s.payable)}</strong>
-      </div>`
-    ).join("") || `<div class="empty">No Payable</div>`;
-}
-
-/* =========================================================
-   EXPENSES
-========================================================= */
-
-function openExpenseModal(){
-  if(!can("expenses"))return toast("Permission denied");
-
-  openModal(
-    "Add Expense",
-    `
-    <div class="field"><label>Date</label><input id="mExpenseDate" type="date" value="${dateOnly()}"></div>
-    <div class="field"><label>Category</label><input id="mExpenseCategory" placeholder="Rent / Electricity / Transport"></div>
-    <div class="field"><label>Description</label><input id="mExpenseDescription"></div>
-    <div class="field"><label>Amount</label><input id="mExpenseAmount" type="number"></div>
-    `,
-    `
-    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-    <button class="btn btn-primary" onclick="saveExpense()">Save</button>
-    `
-  );
-}
-
-function saveExpense(){
-  const amount=Number(document.getElementById("mExpenseAmount").value||0);
-  if(amount<=0)return toast("Amount ဖြည့်ပါ");
-
-  db.expenses.push({
-    id:uid("EXP"),
-    date:document.getElementById("mExpenseDate").value,
-    category:document.getElementById("mExpenseCategory").value.trim(),
-    description:document.getElementById("mExpenseDescription").value.trim(),
-    amount,
-    userId:currentUser.id
-  });
-
-  saveDB();
-  closeModal();
-  renderAll();
-  toast("Expense သိမ်းပြီးပါပြီ");
-}
-
-function renderExpenses(){
-  const today=db.expenses.filter(e=>isToday(e.date)).reduce((a,b)=>a+b.amount,0);
-  const month=db.expenses.filter(e=>isThisMonth(e.date)).reduce((a,b)=>a+b.amount,0);
-  const year=db.expenses.filter(e=>isThisYear(e.date)).reduce((a,b)=>a+b.amount,0);
-
-  document.getElementById("expenseToday").textContent=money(today);
-  document.getElementById("expenseMonth").textContent=money(month);
-  document.getElementById("expenseYear").textContent=money(year);
-
-  document.getElementById("expenseTableBody").innerHTML=db.expenses.length
-    ? [...db.expenses].reverse().map(e=>`
-      <tr>
-        <td>${formatDate(e.date)}</td>
-        <td>${escapeHTML(e.category)}</td>
-        <td>${escapeHTML(e.description)}</td>
-        <td>${money(e.amount)}</td>
-        <td><button class="btn btn-danger btn-sm" onclick="deleteExpense('${e.id}')">Delete</button></td>
-      </tr>
-    `).join("")
-    : `<tr><td colspan="5"><div class="empty">Expense မရှိသေးပါ</div></td></tr>`;
-}
-
-function deleteExpense(id){
-  if(!confirm("Expense ဖျက်မလား?"))return;
-  db.expenses=db.expenses.filter(e=>e.id!==id);
-  saveDB();
-  renderAll();
-}
-
-/* =========================================================
-   EMPLOYEES
-========================================================= */
-
-function openEmployeeModal(id=null){
-  if(!can("employees"))return toast("Permission denied");
-
-  const e=id?db.employees.find(x=>x.id===id):null;
-
-  openModal(
-    e?"Edit Employee":"Add Employee",
-    `
-    <div class="field"><label>Name</label><input id="mEmployeeName" value="${escapeHTML(e?.name||"")}"></div>
-    <div class="field"><label>Role</label><input id="mEmployeeRole" value="${escapeHTML(e?.role||"")}"></div>
-    <div class="field"><label>Phone</label><input id="mEmployeePhone" value="${escapeHTML(e?.phone||"")}"></div>
-    <div class="field"><label>Salary</label><input id="mEmployeeSalary" type="number" value="${e?.salary||0}"></div>
-    `,
-    `
-    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-    <button class="btn btn-primary" onclick="saveEmployee('${id||""}')">Save</button>
-    `
-  );
-}
-
-function saveEmployee(id){
-  const data={
-    name:document.getElementById("mEmployeeName").value.trim(),
-    role:document.getElementById("mEmployeeRole").value.trim(),
-    phone:document.getElementById("mEmployeePhone").value.trim(),
-    salary:Number(document.getElementById("mEmployeeSalary").value||0)
-  };
-
-  if(!data.name)return toast("Name ဖြည့်ပါ");
-
-  if(id){
-    const e=db.employees.find(x=>x.id===id);
-    Object.assign(e,data);
-  }else{
-    db.employees.push({id:uid("EMP"),...data});
-  }
-
-  saveDB();
-  closeModal();
-  renderAll();
-}
-
-function renderEmployees(){
-  document.getElementById("employeeTableBody").innerHTML=db.employees.length
-    ? db.employees.map(e=>`
-      <tr>
-        <td>${escapeHTML(e.name)}</td>
-        <td>${escapeHTML(e.role)}</td>
-        <td>${escapeHTML(e.phone)}</td>
-        <td>${money(e.salary)}</td>
-        <td>
-          <button class="btn btn-secondary btn-sm" onclick="openEmployeeModal('${e.id}')">Edit</button>
-        </td>
-      </tr>
-    `).join("")
-    : `<tr><td colspan="5"><div class="empty">Employee မရှိသေးပါ</div></td></tr>`;
+ document.getElementById("payableList").innerHTML=
+ db.suppliers.filter(s=>num(s.payable)>0).map(s=>`
+  <div style="padding:9px 0;border-bottom:1px solid #e5e7eb;display:flex;justify-content:space-between">
+   <span>${escapeHTML(s.name)}</span>
+   <b>${money(s.payable)}</b>
+  </div>
+ `).join("") ||
+ `<div class="muted">Supplier Payable မရှိပါ</div>`;
 }
 
 /* =========================================================
@@ -2820,519 +3085,819 @@ function renderEmployees(){
 ========================================================= */
 
 function renderReports(){
-  const period=document.getElementById("reportPeriod").value;
+ const period=document.getElementById("reportPeriod").value;
 
-  const filter=d=>{
-    if(period==="today")return isToday(d);
-    if(period==="month")return isThisMonth(d);
-    if(period==="year")return isThisYear(d);
-    return true;
-  };
+ const sales=db.sales.filter(s=>dateMatch(s.date,period));
+ const purchases=db.purchases.filter(p=>dateMatch(p.date,period));
+ const expenses=db.expenses.filter(e=>dateMatch(e.date,period));
 
-  const sales=db.sales.filter(s=>filter(s.date));
-  const purchases=db.purchases.filter(p=>filter(p.date));
-  const expenses=db.expenses.filter(e=>filter(e.date));
+ const salesTotal=sales.reduce((a,b)=>a+num(b.total),0);
+ const purchaseTotal=purchases.reduce((a,b)=>a+num(b.total),0);
+ const expenseTotal=expenses.reduce((a,b)=>a+num(b.amount),0);
+ const profit=sales.reduce((a,b)=>a+saleGrossProfit(b),0);
 
-  const salesTotal=sales.reduce((a,b)=>a+b.total,0);
-  const purchaseTotal=purchases.reduce((a,b)=>a+b.total,0);
-  const expenseTotal=expenses.reduce((a,b)=>a+b.amount,0);
+ document.getElementById("reportSales").textContent=money(salesTotal);
+ document.getElementById("reportPurchase").textContent=money(purchaseTotal);
+ document.getElementById("reportExpenses").textContent=money(expenseTotal);
+ document.getElementById("reportProfit").textContent=money(profit);
 
-  const gross=sales.reduce((sum,s)=>{
-    return sum+s.items.reduce((x,i)=>
-      x+(Number(i.price)-Number(i.buyPrice))*Number(i.qty),0
-    )-Number(s.discount||0);
-  },0);
+ document.getElementById("salesReportSummary").innerHTML=
+  `<div class="notice">Sales Transactions: <b>${sales.length}</b> · Purchase Transactions: <b>${purchases.length}</b></div>`;
 
-  document.getElementById("reportSales").textContent=money(salesTotal);
-  document.getElementById("reportPurchase").textContent=money(purchaseTotal);
-  document.getElementById("reportExpenses").textContent=money(expenseTotal);
-  document.getElementById("reportProfit").textContent=money(gross);
-
-  document.getElementById("salesReportSummary").innerHTML=`
-    <div class="panel" style="background:#f8fafc">
-      <strong>Sales Summary</strong>
-      <p>Invoices: ${sales.length}</p>
-      <p>Average Sale: ${money(sales.length?salesTotal/sales.length:0)}</p>
-    </div>
-  `;
-
-  document.getElementById("profitReportSummary").innerHTML=`
-    <div class="panel" style="background:#f8fafc;margin-top:12px">
-      <strong>Profit Summary</strong>
-      <p>Gross Profit: ${money(gross)}</p>
-      <p>Net Profit after Expenses: ${money(gross-expenseTotal)}</p>
-    </div>
-  `;
+ document.getElementById("profitReportSummary").innerHTML=
+  `<div class="notice ${profit-expenseTotal<0?"danger":"success"}">
+   Estimated Net Profit after Expenses:
+   <b>${money(profit-expenseTotal)}</b>
+  </div>`;
 }
+
+document.getElementById("reportPeriod").onchange=renderReports;
+
+document.getElementById("printReportBtn").onclick=()=>{
+ const period=document.getElementById("reportPeriod").value;
+ const sales=db.sales.filter(s=>dateMatch(s.date,period));
+ const expenses=db.expenses.filter(e=>dateMatch(e.date,period));
+
+ const salesTotal=sales.reduce((a,b)=>a+num(b.total),0);
+ const profit=sales.reduce((a,b)=>a+saleGrossProfit(b),0);
+ const exp=expenses.reduce((a,b)=>a+num(b.amount),0);
+
+ document.getElementById("printArea").innerHTML=`
+  <div class="receipt">
+   <h2>${escapeHTML(db.shop.name)}</h2>
+   <div class="center">Business Report</div>
+   <hr>
+   <div>Period: ${escapeHTML(period)}</div>
+   <hr>
+   <div class="receipt-row"><span>Sales</span><b>${money(salesTotal)}</b></div>
+   <div class="receipt-row"><span>Gross Profit</span><b>${money(profit)}</b></div>
+   <div class="receipt-row"><span>Expenses</span><b>${money(exp)}</b></div>
+   <hr>
+   <div class="receipt-row"><span>Net Profit</span><b>${money(profit-exp)}</b></div>
+   <hr>
+   <div class="center">${escapeHTML(db.shop.footer)}</div>
+  </div>
+ `;
+
+ window.print();
+};
+
+/* =========================================================
+   RECEIPT
+========================================================= */
+
+function printReceipt(sale){
+ const customer=db.customers.find(c=>c.id===sale.customerId);
+
+ document.getElementById("printArea").innerHTML=`
+  <div class="receipt">
+   <h2>${escapeHTML(db.shop.name)}</h2>
+   <div class="center">${escapeHTML(db.shop.address||"")}</div>
+   <div class="center">${escapeHTML(db.shop.phone||"")}</div>
+   <hr>
+
+   <div>Invoice: ${escapeHTML(sale.invoice)}</div>
+   <div>Date: ${escapeHTML(new Date(sale.date).toLocaleString())}</div>
+   <div>Customer: ${escapeHTML(customer?customer.name:"Walk-in Customer")}</div>
+   <hr>
+
+   ${sale.items.map(item=>`
+    <div>
+     <div>${escapeHTML(item.name)}</div>
+     <div class="receipt-row">
+      <span>${item.qty} × ${money(item.price)}</span>
+      <b>${money(item.total)}</b>
+     </div>
+    </div>
+   `).join("")}
+
+   <hr>
+   <div class="receipt-row">
+    <span>Subtotal</span>
+    <b>${money(sale.subtotal)}</b>
+   </div>
+   <div class="receipt-row">
+    <span>Discount</span>
+    <b>${money(sale.discount)}</b>
+   </div>
+   <div class="receipt-row">
+    <span>TOTAL</span>
+    <b>${money(sale.total)}</b>
+   </div>
+   <div class="receipt-row">
+    <span>Payment</span>
+    <b>${escapeHTML(sale.paymentMethod)}</b>
+   </div>
+
+   <hr>
+   <div class="center">${escapeHTML(db.shop.footer)}</div>
+  </div>
+ `;
+
+ window.print();
+}
+
+/* =========================================================
+   USERS
+========================================================= */
+
+function renderUsers(){
+ document.getElementById("usersTableBody").innerHTML=
+ db.users.map(u=>`
+  <tr>
+   <td>${escapeHTML(u.name)}</td>
+   <td>${escapeHTML(u.username)}</td>
+   <td>
+    <span class="badge ${u.role==="Admin"?"danger":u.role==="Manager"?"blue":"success"}">
+     ${u.role}
+    </span>
+   </td>
+   <td>
+    <button class="btn btn-light btn-sm" onclick="editUser('${u.id}')">Edit</button>
+    ${u.id!==currentUser.id?
+      `<button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">Delete</button>`:""}
+   </td>
+  </tr>
+ `).join("");
+}
+
+function userForm(user=null){
+ if(!user&&db.users.length>=5){
+  toast("User အများဆုံး 5 ယောက်သာ ထည့်နိုင်ပါသည်");
+  return;
+ }
+
+ const u=user||{name:"",username:"",role:"Cashier"};
+
+ openModal(
+  user?"Edit User":"Add User",
+  "Maximum 5 Users",
+ `
+ <form id="userForm">
+
+  <div class="form-grid">
+
+   <div class="field">
+    <label>Name</label>
+    <input id="ufName" value="${escapeHTML(u.name)}">
+   </div>
+
+   <div class="field">
+    <label>Username</label>
+    <input id="ufUsername" value="${escapeHTML(u.username)}">
+   </div>
+
+   <div class="field">
+    <label>Role</label>
+    <select id="ufRole">
+     <option value="Admin">Admin</option>
+     <option value="Manager">Manager</option>
+     <option value="Cashier">Cashier</option>
+    </select>
+   </div>
+
+   <div class="field">
+    <label>${user?"New Password (မပြောင်းလဲပါက အလွတ်ထားပါ)":"Password"}</label>
+    <input id="ufPassword" type="password">
+   </div>
+
+  </div>
+
+  <div class="actions">
+   <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+   <button class="btn btn-primary">Save User</button>
+  </div>
+
+ </form>
+ `
+ );
+
+ document.getElementById("ufRole").value=u.role;
+
+ document.getElementById("userForm").onsubmit=async e=>{
+  e.preventDefault();
+
+  const name=document.getElementById("ufName").value.trim();
+  const username=document.getElementById("ufUsername").value.trim();
+  const role=document.getElementById("ufRole").value;
+  const password=document.getElementById("ufPassword").value;
+
+  if(!name||!username){
+   toast("Name နှင့် Username ဖြည့်ပါ");
+   return;
+  }
+
+  const duplicate=db.users.find(x=>
+   x.username.toLowerCase()===username.toLowerCase() &&
+   (!user||x.id!==user.id)
+  );
+
+  if(duplicate){
+   toast("ဒီ Username အသုံးပြုပြီးသားပါ");
+   return;
+  }
+
+  if(user){
+   user.name=name;
+   user.username=username;
+   user.role=role;
+
+   if(password){
+    if(password.length<4){
+     toast("Password အနည်းဆုံး 4 လုံးထားပါ");
+     return;
+    }
+    user.passwordHash=await hashPassword(password);
+   }
+
+   if(user.id===currentUser.id){
+    currentUser=user;
+    sessionStorage.setItem("aung_pos_session",user.id);
+   }
+  }else{
+   if(!password||password.length<4){
+    toast("Password အနည်းဆုံး 4 လုံးထားပါ");
+    return;
+   }
+
+   db.users.push({
+    id:uid("USR"),
+    name,
+    username,
+    role,
+    passwordHash:await hashPassword(password),
+    createdAt:nowISO()
+   });
+  }
+
+  saveDB();
+  closeModal();
+  refreshAll();
+  updateUserUI();
+  toast("User သိမ်းပြီးပါပြီ");
+ };
+}
+
+document.getElementById("addUserBtn").onclick=()=>{
+ if(can("users"))userForm();
+};
+
+window.editUser=id=>{
+ if(!can("users"))return;
+ const u=db.users.find(x=>x.id===id);
+ if(u)userForm(u);
+};
+
+window.deleteUser=id=>{
+ if(!can("users"))return;
+
+ const u=db.users.find(x=>x.id===id);
+ if(!u)return;
+
+ if(u.role==="Admin" &&
+   db.users.filter(x=>x.role==="Admin").length<=1){
+  toast("နောက်ဆုံး Admin ကို ဖျက်လို့မရပါ");
+  return;
+ }
+
+ if(!confirm(u.name+" ကို ဖျက်မလား?"))return;
+
+ db.users=db.users.filter(x=>x.id!==id);
+ saveDB();
+ refreshAll();
+};
 
 /* =========================================================
    SUBSCRIPTION
 ========================================================= */
 
-function selectSubscription(months,amount){
-  selectedSubscription={months,amount};
-
-  document.getElementById("paymentPanel").classList.remove("hidden");
-
-  document.getElementById("selectedPackageText").textContent=
-    `${months} Months Package — ${money(amount)}`;
-
-  document.getElementById("paymentPanel").scrollIntoView({
-    behavior:"smooth",
-    block:"start"
-  });
-}
-
-function choosePayment(method){
-  selectedPaymentMethod=method;
-  document.getElementById("paymentMethod").value=method;
-
-  document.getElementById("kpayMethod").classList.toggle("selected",method==="KPay");
-  document.getElementById("waveMethod").classList.toggle("selected",method==="WavePay");
-}
-
-function submitPayment(){
-  if(!selectedSubscription){
-    return toast("Package ရွေးပါ");
-  }
-
-  const method=document.getElementById("paymentMethod").value;
-  const reference=document.getElementById("paymentReference").value.trim();
-
-  if(!method)return toast("KPay သို့မဟုတ် WavePay ရွေးပါ");
-  if(!reference)return toast("Transaction ID / Reference ထည့်ပါ");
-
-  db.payments.push({
-    id:uid("PAY"),
-    date:new Date().toISOString(),
-    userId:currentUser.id,
-    months:selectedSubscription.months,
-    amount:selectedSubscription.amount,
-    method,
-    reference,
-    status:"Pending"
-  });
-
-  saveDB();
-
-  document.getElementById("paymentReference").value="";
-  selectedSubscription=null;
-
-  renderPaymentHistory();
-
-  toast("Payment Submit လုပ်ပြီးပါပြီ။ Admin Approval စောင့်ပါ");
-}
-
-function getActiveSubscription(){
-  const approved=db.subscriptions
-    .filter(s=>s.status==="Active")
-    .sort((a,b)=>new Date(b.expiry)-new Date(a.expiry));
-
-  return approved[0]||null;
-}
-
-function subscriptionExpired(){
-  const sub=getActiveSubscription();
-
-  if(!sub)return true;
-
-  return new Date(sub.expiry)<new Date();
-}
+const PLANS={
+ "1":{months:1,price:100000,name:"1 Month"},
+ "3":{months:3,price:270000,name:"3 Months"},
+ "6":{months:6,price:480000,name:"6 Months"}
+};
 
 function subscriptionActive(){
-  return !subscriptionExpired();
-}
-
-function daysUntil(date){
-  const now=new Date();
-  const target=new Date(date);
-  return Math.ceil((target-now)/(1000*60*60*24));
+ const s=db.subscription;
+ if(s.status!=="active")return false;
+ if(!s.endDate)return false;
+ return new Date(s.endDate)>new Date();
 }
 
 function renderSubscription(){
-  const sub=getActiveSubscription();
+ const s=db.subscription;
 
-  if(sub && new Date(sub.expiry)>=new Date()){
-    const days=daysUntil(sub.expiry);
+ let html="";
 
-    document.getElementById("currentPlan").textContent=
-      `${sub.months} Months — ACTIVE`;
+ if(subscriptionActive()){
+  const end=new Date(s.endDate).toLocaleDateString();
 
-    document.getElementById("subscriptionExpiry").textContent=
-      `Expiry: ${formatDate(sub.expiry)}`;
+  html=`
+   <div class="notice">
+    <b>🟢 Subscription Active</b><br>
+    Plan: ${escapeHTML(PLANS[s.planId]?.name||"Subscription")}<br>
+    Expiry: <b>${end}</b>
+   </div>
+  `;
+ }else if(s.status==="pending"){
+  html=`
+   <div class="notice warning">
+    <b>🟡 Payment Request Pending</b><br>
+    ${escapeHTML(s.paymentMethod||"")} · ${escapeHTML(s.transactionId||"")}
+   </div>
+  `;
+ }else{
+  html=`
+   <div class="notice danger">
+    <b>Subscription မ Active ဖြစ်သေးပါ</b><br>
+    Plan တစ်ခုရွေးပြီး Payment Activation Request တင်ပါ
+   </div>
+  `;
+ }
 
-    document.getElementById("daysRemaining").textContent=Math.max(0,days);
-  }else{
-    document.getElementById("currentPlan").textContent="Not Active / Expired";
-    document.getElementById("subscriptionExpiry").textContent="Expiry: -";
-    document.getElementById("daysRemaining").textContent="0";
-  }
+ document.getElementById("subscriptionStatusBox").innerHTML=html;
 }
 
-function renderPaymentHistory(){
-  const body=document.getElementById("paymentHistoryBody");
+document.querySelectorAll("[data-plan]").forEach(btn=>{
+ btn.onclick=()=>{
+  selectedPlan=btn.dataset.plan;
+  openPaymentModal();
+ };
+});
 
-  const payments=[...db.payments].reverse();
+function openPaymentModal(){
+ const p=PLANS[selectedPlan];
 
-  body.innerHTML=payments.length
-    ? payments.map(p=>`
-      <tr>
-        <td>${formatDate(p.date)}</td>
-        <td>${p.months} Months</td>
-        <td>${money(p.amount)}</td>
-        <td>${escapeHTML(p.method)}</td>
-        <td>${escapeHTML(p.reference)}</td>
-        <td>
-          ${p.status==="Approved"
-            ? `<span class="badge badge-green">Approved</span>`
-            : p.status==="Rejected"
-            ? `<span class="badge badge-red">Rejected</span>`
-            : `<span class="badge badge-orange">Pending</span>`
-          }
-        </td>
-      </tr>
-    `).join("")
-    : `<tr><td colspan="6"><div class="empty">Payment History မရှိသေးပါ</div></td></tr>`;
-}
+ openModal(
+  p.name+" Subscription",
+  money(p.price),
+ `
+ <form id="paymentForm">
 
-/* =========================================================
-   USER MANAGEMENT
-========================================================= */
+  <div class="notice">
+   <b>${p.name}</b><br>
+   Total: <b>${money(p.price)}</b>
+  </div>
 
-function openUserModal(id=null){
-  if(currentUser.role!=="Admin")return toast("Admin Only");
+  <div class="field">
+   <label>Payment Method</label>
+   <select id="pmMethod">
+    <option value="KPay">KPay</option>
+    <option value="WavePay">WavePay</option>
+   </select>
+  </div>
 
-  const u=id?db.users.find(x=>x.id===id):null;
+  <div class="field">
+   <label>Payment Number</label>
+   <input value="0943016420" readonly>
+  </div>
 
-  if(!id && db.users.length>=5){
-    return toast("User 5 ယောက်အထိသာ ထည့်နိုင်ပါတယ်");
+  <div class="field">
+   <label>Customer Name</label>
+   <input id="pmName" value="${escapeHTML(db.shop.name)}">
+  </div>
+
+  <div class="field">
+   <label>Transaction ID / Reference</label>
+   <input id="pmTransaction" placeholder="Transaction ID">
+  </div>
+
+  <div class="field">
+   <label>Payment Note</label>
+   <textarea id="pmNote" placeholder="လိုအပ်ပါက မှတ်ချက်ရေးပါ"></textarea>
+  </div>
+
+  <div class="actions">
+   <button type="button" class="btn btn-light" onclick="closeModal()">Cancel</button>
+   <button class="btn btn-primary">Submit Activation Request</button>
+  </div>
+
+ </form>
+ `
+ );
+
+ document.getElementById("paymentForm").onsubmit=e=>{
+  e.preventDefault();
+
+  const transaction=document.getElementById("pmTransaction").value.trim();
+
+  if(!transaction){
+   toast("Transaction ID ထည့်ပါ");
+   return;
   }
 
-  openModal(
-    u?"Edit User":"Add User",
-    `
-    <div class="field">
-      <label>Name</label>
-      <input id="mUserName" value="${escapeHTML(u?.name||"")}">
-    </div>
+  const request={
+   id:uid("PAY"),
+   planId:selectedPlan,
+   planName:p.name,
+   amount:p.price,
+   paymentMethod:document.getElementById("pmMethod").value,
+   paymentNumber:"0943016420",
+   customerName:document.getElementById("pmName").value.trim(),
+   transactionId:transaction,
+   note:document.getElementById("pmNote").value.trim(),
+   requestDate:nowISO(),
+   status:"pending"
+  };
 
-    <div class="field">
-      <label>Username</label>
-      <input id="mUserUsername" value="${escapeHTML(u?.username||"")}">
-    </div>
+  db.paymentRequests.push(request);
 
-    <div class="field">
-      <label>Password ${u?"(မပြောင်းလျှင် အလွတ်ထားပါ)":""}</label>
-      <input id="mUserPassword" type="password">
-    </div>
-
-    <div class="field">
-      <label>Role</label>
-      <select id="mUserRole">
-        <option value="Admin" ${u?.role==="Admin"?"selected":""}>Admin</option>
-        <option value="Manager" ${u?.role==="Manager"?"selected":""}>Manager</option>
-        <option value="Cashier" ${u?.role==="Cashier"?"selected":""}>Cashier</option>
-      </select>
-    </div>
-
-    ${u?`
-    <div class="field">
-      <label>Status</label>
-      <select id="mUserActive">
-        <option value="true" ${u.active!==false?"selected":""}>Active</option>
-        <option value="false" ${u.active===false?"selected":""}>Inactive</option>
-      </select>
-    </div>`:""}
-    `,
-    `
-    <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-    <button class="btn btn-primary" onclick="saveUser('${id||""}')">Save User</button>
-    `
-  );
-}
-
-async function saveUser(id){
-  const name=document.getElementById("mUserName").value.trim();
-  const username=document.getElementById("mUserUsername").value.trim();
-  const password=document.getElementById("mUserPassword").value;
-  const role=document.getElementById("mUserRole").value;
-
-  if(!name || !username)return toast("Name နှင့် Username ဖြည့်ပါ");
-
-  const duplicate=db.users.find(u=>u.username===username && u.id!==id);
-  if(duplicate)return toast("Username အသုံးပြုပြီးသားပါ");
-
-  if(!id && !password)return toast("Password ဖြည့်ပါ");
-
-  if(id){
-    const u=db.users.find(x=>x.id===id);
-    u.name=name;
-    u.username=username;
-    u.role=role;
-
-    if(password){
-      u.passwordHash=await hashPassword(password);
-    }
-
-    const activeEl=document.getElementById("mUserActive");
-    if(activeEl){
-      const newActive=activeEl.value==="true";
-
-      if(u.role==="Admin" && !newActive){
-        const activeAdmins=db.users.filter(x=>x.role==="Admin" && x.active!==false && x.id!==id);
-        if(!activeAdmins.length){
-          return toast("နောက်ဆုံး Admin ကို Inactive မလုပ်နိုင်ပါ");
-        }
-      }
-
-      u.active=newActive;
-    }
-  }else{
-    db.users.push({
-      id:uid("USR"),
-      name,
-      username,
-      passwordHash:await hashPassword(password),
-      role,
-      active:true,
-      createdAt:new Date().toISOString()
-    });
-  }
+  db.subscription={
+   ...db.subscription,
+   status:"pending",
+   planId:selectedPlan,
+   paymentMethod:request.paymentMethod,
+   transactionId:transaction,
+   customerName:request.customerName,
+   requestDate:request.requestDate
+  };
 
   saveDB();
   closeModal();
-  renderUsers();
-  toast("User သိမ်းပြီးပါပြီ");
+  refreshAll();
+  toast("Activation Request တင်ပြီးပါပြီ");
+ };
 }
 
-function renderUsers(){
-  document.getElementById("usersTableBody").innerHTML=db.users.map(u=>`
-    <tr>
-      <td>${escapeHTML(u.name)}</td>
-      <td>${escapeHTML(u.username)}</td>
-      <td>
-        <span class="badge ${
-          u.role==="Admin"?"badge-purple":
-          u.role==="Manager"?"badge-blue":"badge-green"
-        }">${u.role}</span>
-      </td>
-      <td>${u.active!==false?`<span class="badge badge-green">Active</span>`:`<span class="badge badge-red">Inactive</span>`}</td>
-      <td>
-        <button class="btn btn-secondary btn-sm" onclick="openUserModal('${u.id}')">Edit</button>
-        ${u.id!==currentUser.id?`
-        <button class="btn btn-danger btn-sm" onclick="deleteUser('${u.id}')">Delete</button>`:""}
-      </td>
-    </tr>
-  `).join("");
+document.getElementById("paymentRequestBtn").onclick=()=>{
+ openPaymentModal();
+};
+
+document.getElementById("copyPaymentBtn").onclick=async()=>{
+ try{
+  await navigator.clipboard.writeText("0943016420");
+  toast("Payment Number Copy ပြီးပါပြီ");
+ }catch(e){
+  toast("0943016420");
+ }
+};
+
+/* =========================================================
+   ADMIN SUBSCRIPTION ACTIVATION
+========================================================= */
+
+function subscriptionAdminPanel(){
+ if(!can("users"))return;
+
+ const pending=db.paymentRequests.filter(x=>x.status==="pending");
+
+ if(!pending.length){
+  openModal(
+   "Subscription Requests",
+   "Admin Activation",
+   `<div class="muted">Pending Request မရှိသေးပါ</div>`
+  );
+  return;
+ }
+
+ openModal(
+  "Subscription Requests",
+  "Manual Activation",
+  pending.map(r=>`
+   <div class="card" style="margin-bottom:10px;box-shadow:none">
+    <b>${escapeHTML(r.planName)}</b>
+    <div class="muted">${money(r.amount)}</div>
+    <div style="margin-top:7px">
+     ${escapeHTML(r.paymentMethod)} · ${escapeHTML(r.transactionId)}
+    </div>
+    <div class="muted">${escapeHTML(r.customerName)}</div>
+
+    <div class="actions" style="justify-content:flex-start">
+     <button class="btn btn-success btn-sm"
+      onclick="activateSubscription('${r.id}')">
+      Activate
+     </button>
+     <button class="btn btn-danger btn-sm"
+      onclick="rejectSubscription('${r.id}')">
+      Reject
+     </button>
+    </div>
+   </div>
+  `).join("")
+ );
 }
 
-function deleteUser(id){
-  if(currentUser.role!=="Admin")return toast("Admin Only");
+window.activateSubscription=id=>{
+ if(!can("users"))return;
 
-  const u=db.users.find(x=>x.id===id);
-  if(!u)return;
+ const r=db.paymentRequests.find(x=>x.id===id);
+ if(!r)return;
 
-  if(u.role==="Admin"){
-    const adminCount=db.users.filter(x=>x.role==="Admin").length;
-    if(adminCount<=1)return toast("နောက်ဆုံး Admin ကိုဖျက်လို့မရပါ");
-  }
+ const start=new Date();
+ const end=new Date(start);
+ end.setMonth(end.getMonth()+PLANS[r.planId].months);
 
-  if(!confirm(`${u.name} ကိုဖျက်မလား?`))return;
+ db.subscription={
+  status:"active",
+  planId:r.planId,
+  startDate:start.toISOString(),
+  endDate:end.toISOString(),
+  paymentMethod:r.paymentMethod,
+  transactionId:r.transactionId,
+  customerName:r.customerName,
+  requestDate:r.requestDate
+ };
 
-  db.users=db.users.filter(x=>x.id!==id);
-  saveDB();
-  renderUsers();
-}
+ r.status="approved";
+ r.approvedDate=nowISO();
+
+ saveDB();
+ closeModal();
+ refreshAll();
+ toast("Subscription Activate ပြီးပါပြီ");
+};
+
+window.rejectSubscription=id=>{
+ if(!can("users"))return;
+
+ const r=db.paymentRequests.find(x=>x.id===id);
+ if(!r)return;
+
+ r.status="rejected";
+ db.subscription.status="unsubscribed";
+
+ saveDB();
+ closeModal();
+ refreshAll();
+ toast("Payment Request Reject ပြီးပါပြီ");
+};
 
 /* =========================================================
    SETTINGS
 ========================================================= */
 
 function loadSettings(){
-  document.getElementById("shopName").value=db.shop.name||"";
-  document.getElementById("shopAddress").value=db.shop.address||"";
-  document.getElementById("shopPhone").value=db.shop.phone||"";
-  document.getElementById("shopFooter").value=db.shop.footer||"";
+ document.getElementById("settingShopName").value=db.shop.name||"";
+ document.getElementById("settingAddress").value=db.shop.address||"";
+ document.getElementById("settingPhone").value=db.shop.phone||"";
+ document.getElementById("settingFooter").value=db.shop.footer||"";
+
+ if(currentUser){
+  document.getElementById("accountName").value=currentUser.name||"";
+ }
 }
 
-function saveShopSettings(){
-  db.shop.name=document.getElementById("shopName").value.trim();
-  db.shop.address=document.getElementById("shopAddress").value.trim();
-  db.shop.phone=document.getElementById("shopPhone").value.trim();
-  db.shop.footer=document.getElementById("shopFooter").value.trim();
+document.getElementById("saveShopSettings").onclick=()=>{
+ if(!can("settings"))return;
 
-  saveDB();
+ db.shop.name=document.getElementById("settingShopName").value.trim();
+ db.shop.address=document.getElementById("settingAddress").value.trim();
+ db.shop.phone=document.getElementById("settingPhone").value.trim();
+ db.shop.footer=document.getElementById("settingFooter").value.trim();
 
-  document.getElementById("sideShopName").textContent=db.shop.name;
-  document.getElementById("welcomeShopName").textContent=db.shop.name;
+ saveDB();
 
-  toast("Shop Settings သိမ်းပြီးပါပြီ");
-}
+ document.getElementById("sideShopName").textContent=db.shop.name;
+ document.getElementById("topShopName").textContent=db.shop.name;
 
-async function changePassword(){
-  const p1=document.getElementById("newPassword").value;
-  const p2=document.getElementById("newPassword2").value;
+ toast("Shop Settings သိမ်းပြီးပါပြီ");
+};
 
-  if(!p1 || p1.length<6)return toast("Password အနည်းဆုံး 6 လုံးထားပါ");
-  if(p1!==p2)return toast("Password မတူပါ");
+document.getElementById("changePasswordBtn").onclick=async()=>{
+ const current=document.getElementById("currentPassword").value;
+ const next=document.getElementById("newPassword").value;
+ const next2=document.getElementById("newPassword2").value;
+ const name=document.getElementById("accountName").value.trim();
 
-  const user=db.users.find(u=>u.id===currentUser.id);
+ if(!current||!next){
+  toast("Password ဖြည့်ပါ");
+  return;
+ }
 
-  if(!user)return;
+ if(next.length<4){
+  toast("Password အနည်းဆုံး 4 လုံးထားပါ");
+  return;
+ }
 
-  user.passwordHash=await hashPassword(p1);
+ if(next!==next2){
+  toast("New Password မတူပါ");
+  return;
+ }
 
-  saveDB();
+ const currentHash=await hashPassword(current);
 
-  document.getElementById("newPassword").value="";
-  document.getElementById("newPassword2").value="";
+ if(currentHash!==currentUser.passwordHash){
+  toast("Current Password မှားနေပါသည်");
+  return;
+ }
 
-  toast("Password ပြောင်းပြီးပါပြီ");
-}
+ currentUser.name=name||currentUser.name;
+ currentUser.passwordHash=await hashPassword(next);
 
-function backupData(){
-  if(currentUser.role!=="Admin")return toast("Admin Only");
+ const saved=db.users.find(x=>x.id===currentUser.id);
+ if(saved)Object.assign(saved,currentUser);
 
-  const blob=new Blob(
-    [JSON.stringify(db,null,2)],
-    {type:"application/json"}
-  );
+ saveDB();
 
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
+ document.getElementById("currentPassword").value="";
+ document.getElementById("newPassword").value="";
+ document.getElementById("newPassword2").value="";
 
-  a.href=url;
-  a.download="aung-pos-backup-"+dateOnly()+".json";
-  a.click();
+ updateUserUI();
+ toast("Password ပြောင်းပြီးပါပြီ");
+};
 
-  URL.revokeObjectURL(url);
-}
+document.getElementById("backupBtn").onclick=()=>{
+ if(!can("settings"))return;
 
-function restoreData(){
-  if(currentUser.role!=="Admin")return toast("Admin Only");
+ const blob=new Blob(
+  [JSON.stringify(db,null,2)],
+  {type:"application/json"}
+ );
 
-  const file=document.getElementById("restoreFile").files[0];
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download="aung-pos-backup-"+today()+".json";
+ a.click();
+ URL.revokeObjectURL(url);
 
-  if(!file)return toast("Backup JSON File ရွေးပါ");
+ toast("Backup Download ပြီးပါပြီ");
+};
 
-  const reader=new FileReader();
+document.getElementById("restoreInput").onchange=e=>{
+ if(!can("settings"))return;
 
-  reader.onload=e=>{
-    try{
-      const restored=JSON.parse(e.target.result);
+ const file=e.target.files[0];
+ if(!file)return;
 
-      if(!restored.users || !restored.products){
-        return toast("Invalid Backup File");
-      }
+ const reader=new FileReader();
 
-      if(!confirm("Backup Data ဖြင့် လက်ရှိ Data အားလုံးကို Replace လုပ်မလား?")){
-        return;
-      }
+ reader.onload=()=>{
+  try{
+   const restored=JSON.parse(reader.result);
 
-      db=restored;
-      saveDB();
+   if(!restored.shop||!restored.users){
+    throw new Error("Invalid");
+   }
 
-      alert("Restore Complete. Page Reload လုပ်ပါမယ်။");
-      location.reload();
-
-    }catch(err){
-      toast("Backup File ဖတ်မရပါ");
-    }
-  };
-
-  reader.readAsText(file);
-}
-
-function clearBusinessData(){
-  if(currentUser.role!=="Admin")return toast("Admin Only");
-
-  if(!confirm("Business Data အားလုံးဖျက်မလား?"))return;
-  if(!confirm("ဒီလုပ်ဆောင်ချက်ကို ပြန် Undo လုပ်လို့မရပါ။ ဆက်လုပ်မလား?"))return;
-
-  db.products=[];
-  db.sales=[];
-  db.purchases=[];
-  db.customers=[];
-  db.suppliers=[];
-  db.expenses=[];
-  db.employees=[];
-  db.adjustments=[];
-  db.customerPayments=[];
-  db.supplierPayments=[];
-
-  saveDB();
-  renderAll();
-
-  toast("Business Data ဖျက်ပြီးပါပြီ");
-}
-
-/* =========================================================
-   MODAL
-========================================================= */
-
-function openModal(title,body,footer){
-  document.getElementById("modalTitle").textContent=title;
-  document.getElementById("modalBody").innerHTML=body;
-  document.getElementById("modalFoot").innerHTML=footer;
-  document.getElementById("modalOverlay").classList.add("show");
-}
-
-function closeModal(){
-  document.getElementById("modalOverlay").classList.remove("show");
-}
-
-/* =========================================================
-   TOAST
-========================================================= */
-
-function toast(message){
-  const box=document.getElementById("toastContainer");
-
-  const el=document.createElement("div");
-  el.className="toast";
-  el.textContent=message;
-
-  box.appendChild(el);
-
-  setTimeout(()=>el.remove(),3000);
-}
-
-/* =========================================================
-   UTILITIES
-========================================================= */
-
-function toggleSidebar(){
-  document.getElementById("sidebar").classList.toggle("open");
-}
-
-/* =========================================================
-   STARTUP
-========================================================= */
-
-document.addEventListener("DOMContentLoaded",()=>{
-  loadDB();
-
-  if(!db.setupComplete || !db.users.length){
-    document.getElementById("setupScreen").classList.remove("hidden");
+   if(!confirm("လက်ရှိ Data ကို Restore Data ဖြင့် အစားထိုးမလား?"))
     return;
-  }
 
-  if(restoreSession()){
-    document.getElementById("app").classList.remove("hidden");
-    initializeApp();
-  }else{
-    document.getElementById("loginScreen").classList.remove("hidden");
-    document.getElementById("loginShopName").textContent=db.shop.name||"Aung POS";
+   db=Object.assign(defaultDB(),restored);
+   saveDB();
+
+   toast("Restore ပြီးပါပြီ");
+   setTimeout(()=>location.reload(),700);
+
+  }catch(err){
+   toast("Backup File မမှန်ပါ");
   }
+ };
+
+ reader.readAsText(file);
+};
+
+document.getElementById("clearDataBtn").onclick=()=>{
+ if(!can("settings"))return;
+
+ const word=prompt("Data အားလုံးဖျက်ရန် CLEAR ဟု ရိုက်ပါ");
+
+ if(word!=="CLEAR"){
+  toast("Clear မလုပ်ပါ");
+  return;
+ }
+
+ const keepShop=db.shop;
+ const keepUsers=db.users;
+
+ db=defaultDB();
+ db.setupComplete=true;
+ db.shop=keepShop;
+ db.users=keepUsers;
+
+ saveDB();
+ refreshAll();
+
+ toast("Business Data Clear ပြီးပါပြီ");
+};
+
+/* =========================================================
+   REFRESH
+========================================================= */
+
+function refreshSection(section){
+ switch(section){
+  case"dashboard":renderDashboard();break;
+  case"sales":
+   refreshProductFilters();
+   refreshCustomerSelect();
+   renderSalesProducts();
+   renderCart();
+   break;
+  case"products":
+   refreshProductFilters();
+   renderProducts();
+   break;
+  case"purchases":
+   renderPurchases();
+   break;
+  case"stock":
+   renderStock();
+   break;
+  case"customers":
+   renderCustomers();
+   break;
+  case"suppliers":
+   renderSuppliers();
+   break;
+  case"debts":
+   renderDebts();
+   break;
+  case"expenses":
+   renderExpenses();
+   break;
+  case"employees":
+   renderEmployees();
+   break;
+  case"reports":
+   renderReports();
+   break;
+  case"subscription":
+   renderSubscription();
+   break;
+  case"users":
+   renderUsers();
+   break;
+  case"settings":
+   loadSettings();
+   break;
+ }
+}
+
+function refreshAll(){
+ refreshProductFilters();
+ refreshCustomerSelect();
+ renderDashboard();
+ renderSalesProducts();
+ renderCart();
+ renderProducts();
+ renderPurchases();
+ renderStock();
+ renderCustomers();
+ renderSuppliers();
+ renderDebts();
+ renderExpenses();
+ renderEmployees();
+ renderReports();
+ renderSubscription();
+ renderUsers();
+ loadSettings();
+}
+
+/* =========================================================
+   SEARCH EVENTS
+========================================================= */
+
+document.getElementById("salesSearch").oninput=renderSalesProducts;
+document.getElementById("salesCategory").onchange=renderSalesProducts;
+document.getElementById("productSearch").oninput=renderProducts;
+document.getElementById("productCategoryFilter").onchange=renderProducts;
+document.getElementById("stockFilter").onchange=renderProducts;
+document.getElementById("customerSearch").oninput=renderCustomers;
+
+/* =========================================================
+   SUBSCRIPTION ADMIN ACCESS FROM SETTINGS / USERS
+========================================================= */
+
+document.getElementById("subscription").addEventListener("dblclick",()=>{
+ if(can("users"))subscriptionAdminPanel();
 });
 
-document.getElementById("modalOverlay").addEventListener("click",e=>{
-  if(e.target.id==="modalOverlay")closeModal();
-});
+/* =========================================================
+   KEYBOARD SHORTCUTS
+========================================================= */
 
 document.addEventListener("keydown",e=>{
-  if(e.key==="Escape")closeModal();
+ if(e.key==="Escape")closeModal();
+
+ if(e.ctrlKey&&e.key.toLowerCase()==="k"){
+  e.preventDefault();
+  if(can("sales")){
+   showSection("sales");
+   document.getElementById("salesSearch").focus();
+  }
+ }
 });
+
+/* =========================================================
+   START
+========================================================= */
+
+(function init(){
+
+ if(!db.setupComplete || !db.users.length){
+  showSetup();
+  return;
+ }
+
+ if(restoreSession()){
+  showApp();
+ }else{
+  showLogin();
+ }
+
+})();
 </script>
 
 </body>
