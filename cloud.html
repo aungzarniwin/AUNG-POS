@@ -1,0 +1,2631 @@
+<!DOCTYPE html>
+<html lang="my">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+
+<title>AUNG POS Cloud</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0
+}
+
+:root{
+  --bg:#f5f7fb;
+  --card:#fff;
+  --text:#172033;
+  --muted:#718096;
+  --line:#e5e9f0;
+  --primary:#111827;
+  --accent:#2563eb;
+  --danger:#dc2626;
+  --success:#059669;
+  --radius:18px
+}
+
+body{
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "Noto Sans Myanmar",
+    "Myanmar Text",
+    sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  min-height:100vh
+}
+
+button,input,select{
+  font:inherit
+}
+
+button{
+  cursor:pointer
+}
+
+.hidden{
+  display:none!important
+}
+
+/* AUTH */
+
+.auth-page{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:
+    radial-gradient(circle at top left,#dbeafe,transparent 35%),
+    var(--bg)
+}
+
+.auth-card{
+  width:100%;
+  max-width:470px;
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:28px;
+  padding:30px;
+  box-shadow:0 20px 60px rgba(15,23,42,.10)
+}
+
+.brand{
+  text-align:center;
+  margin-bottom:26px
+}
+
+.brand-logo{
+  width:62px;
+  height:62px;
+  margin:auto;
+  border-radius:18px;
+  background:#111827;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:24px;
+  font-weight:800
+}
+
+.brand h1{
+  margin-top:14px;
+  font-size:25px
+}
+
+.brand p{
+  color:var(--muted);
+  font-size:13px;
+  margin-top:6px
+}
+
+.tabs{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:6px;
+  background:#f1f5f9;
+  padding:5px;
+  border-radius:12px;
+  margin-bottom:22px
+}
+
+.tabs button{
+  border:0;
+  background:transparent;
+  padding:11px;
+  border-radius:9px;
+  color:var(--muted)
+}
+
+.tabs button.active{
+  background:#fff;
+  color:#111827;
+  box-shadow:0 2px 8px rgba(0,0,0,.06);
+  font-weight:700
+}
+
+.form-grid{
+  display:grid;
+  gap:14px
+}
+
+.field{
+  display:grid;
+  gap:6px
+}
+
+.field label{
+  font-size:13px;
+  font-weight:700
+}
+
+.field input,
+.field select{
+  width:100%;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:13px 14px;
+  outline:none;
+  background:#fff
+}
+
+.field input:focus,
+.field select:focus{
+  border-color:var(--accent);
+  box-shadow:0 0 0 3px rgba(37,99,235,.08)
+}
+
+.primary-btn{
+  border:0;
+  background:#111827;
+  color:#fff;
+  border-radius:13px;
+  padding:14px 18px;
+  font-weight:700;
+  width:100%
+}
+
+.primary-btn:disabled{
+  opacity:.55;
+  cursor:not-allowed
+}
+
+.message{
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:11px;
+  font-size:13px;
+  display:none
+}
+
+.message.show{
+  display:block
+}
+
+.message.error{
+  background:#fef2f2;
+  color:#b91c1c
+}
+
+.message.success{
+  background:#ecfdf5;
+  color:#047857
+}
+
+/* APP */
+
+.app{
+  min-height:100vh
+}
+
+.sidebar{
+  position:fixed;
+  left:0;
+  top:0;
+  bottom:0;
+  width:255px;
+  background:#111827;
+  color:#fff;
+  padding:22px 15px;
+  z-index:50;
+  overflow:auto
+}
+
+.side-brand{
+  padding:4px 10px 24px
+}
+
+.side-brand strong{
+  display:block;
+  font-size:19px
+}
+
+.side-brand span{
+  color:#9ca3af;
+  font-size:12px
+}
+
+.nav{
+  display:grid;
+  gap:5px
+}
+
+.nav button{
+  width:100%;
+  text-align:left;
+  border:0;
+  color:#cbd5e1;
+  background:transparent;
+  padding:12px 13px;
+  border-radius:11px
+}
+
+.nav button:hover,
+.nav button.active{
+  background:#1f2937;
+  color:#fff
+}
+
+.logout{
+  margin-top:20px;
+  width:100%;
+  border:1px solid #374151;
+  color:#fff;
+  background:transparent;
+  border-radius:11px;
+  padding:11px
+}
+
+.main{
+  margin-left:255px;
+  min-height:100vh
+}
+
+.topbar{
+  height:70px;
+  background:#fff;
+  border-bottom:1px solid var(--line);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  position:sticky;
+  top:0;
+  z-index:20
+}
+
+.menu-btn{
+  display:none;
+  border:0;
+  background:#f1f5f9;
+  border-radius:10px;
+  padding:9px 12px
+}
+
+.user-box{
+  display:flex;
+  align-items:center;
+  gap:10px
+}
+
+.avatar{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  background:#111827;
+  color:#fff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:700
+}
+
+.content{
+  padding:28px;
+  max-width:1400px;
+  margin:auto
+}
+
+.section{
+  display:none
+}
+
+.section.active{
+  display:block
+}
+
+.page-title{
+  margin-bottom:22px
+}
+
+.page-title h2{
+  font-size:25px
+}
+
+.page-title p{
+  color:var(--muted);
+  margin-top:4px;
+  font-size:13px
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px;
+  margin-bottom:20px
+}
+
+.stat{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:20px
+}
+
+.stat .label{
+  color:var(--muted);
+  font-size:13px
+}
+
+.stat .value{
+  margin-top:8px;
+  font-size:25px;
+  font-weight:800
+}
+
+.card{
+  background:#fff;
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  padding:20px;
+  margin-bottom:18px
+}
+
+.card-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:12px;
+  margin-bottom:17px
+}
+
+.card-head h3{
+  font-size:17px
+}
+
+.small-btn{
+  border:0;
+  background:#111827;
+  color:#fff;
+  padding:9px 13px;
+  border-radius:10px;
+  font-size:13px
+}
+
+.products-grid{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:15px
+}
+
+.product-card{
+  border:1px solid var(--line);
+  border-radius:15px;
+  overflow:hidden;
+  background:#fff
+}
+
+.product-photo{
+  width:100%;
+  height:170px;
+  object-fit:cover;
+  background:#f1f5f9
+}
+
+.product-info{
+  padding:14px
+}
+
+.product-info h4{
+  font-size:15px;
+  margin-bottom:5px
+}
+
+.product-info p{
+  color:var(--muted);
+  font-size:12px;
+  margin-bottom:8px
+}
+
+.price{
+  font-weight:800
+}
+
+.product-actions{
+  display:flex;
+  gap:7px;
+  margin-top:12px
+}
+
+.product-actions button{
+  flex:1;
+  border:0;
+  padding:9px;
+  border-radius:9px;
+  background:#f1f5f9
+}
+
+.product-actions button.delete{
+  color:#b91c1c;
+  background:#fef2f2
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(15,23,42,.55);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:100
+}
+
+.modal.show{
+  display:flex
+}
+
+.modal-card{
+  width:100%;
+  max-width:620px;
+  max-height:90vh;
+  overflow:auto;
+  background:#fff;
+  border-radius:22px;
+  padding:23px
+}
+
+.modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:20px
+}
+
+.close-btn{
+  border:0;
+  background:#f1f5f9;
+  border-radius:9px;
+  padding:8px 11px
+}
+
+.two{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:13px
+}
+
+.photo-preview{
+  width:100%;
+  height:180px;
+  border:1px dashed #cbd5e1;
+  border-radius:13px;
+  object-fit:contain;
+  background:#f8fafc;
+  margin-top:7px
+}
+
+.plan-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px
+}
+
+.plan{
+  border:1px solid var(--line);
+  border-radius:17px;
+  padding:20px
+}
+
+.plan h3{
+  margin-bottom:8px
+}
+
+.plan .amount{
+  font-size:24px;
+  font-weight:800;
+  margin-bottom:13px
+}
+
+.plan button{
+  width:100%;
+  border:0;
+  border-radius:10px;
+  background:#111827;
+  color:#fff;
+  padding:11px
+}
+
+.empty{
+  text-align:center;
+  color:var(--muted);
+  padding:35px
+}
+
+.alert{
+  padding:14px;
+  border-radius:12px;
+  background:#fff7ed;
+  color:#9a3412;
+  margin-bottom:18px;
+  font-size:13px
+}
+
+@media(max-width:1000px){
+  .stats{
+    grid-template-columns:repeat(2,1fr)
+  }
+
+  .products-grid{
+    grid-template-columns:repeat(3,1fr)
+  }
+}
+
+@media(max-width:700px){
+  .sidebar{
+    transform:translateX(-100%);
+    transition:.25s
+  }
+
+  .sidebar.open{
+    transform:translateX(0)
+  }
+
+  .main{
+    margin-left:0
+  }
+
+  .menu-btn{
+    display:block
+  }
+
+  .topbar{
+    padding:0 15px
+  }
+
+  .content{
+    padding:17px
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
+    gap:10px
+  }
+
+  .stat{
+    padding:15px
+  }
+
+  .stat .value{
+    font-size:20px
+  }
+
+  .products-grid{
+    grid-template-columns:1fr 1fr
+  }
+
+  .two{
+    grid-template-columns:1fr
+  }
+
+  .plan-grid{
+    grid-template-columns:1fr
+  }
+}
+
+@media(max-width:430px){
+  .auth-card{
+    padding:22px
+  }
+
+  .products-grid{
+    grid-template-columns:1fr
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- AUTH -->
+<div id="authPage" class="auth-page">
+
+  <div class="auth-card">
+
+    <div class="brand">
+      <div class="brand-logo">AP</div>
+      <h1>AUNG POS</h1>
+      <p>Commercial Cloud POS</p>
+    </div>
+
+    <div class="tabs">
+      <button id="loginTab" class="active" onclick="showAuth('login')">
+        Login
+      </button>
+
+      <button id="registerTab" onclick="showAuth('register')">
+        Register
+      </button>
+    </div>
+
+    <!-- LOGIN -->
+    <form id="loginForm" class="form-grid">
+
+      <div class="field">
+        <label>Email</label>
+        <input id="loginEmail" type="email" required placeholder="Email">
+      </div>
+
+      <div class="field">
+        <label>Password</label>
+        <input id="loginPassword" type="password" required placeholder="Password">
+      </div>
+
+      <button class="primary-btn" type="submit">
+        Login
+      </button>
+
+    </form>
+
+    <!-- REGISTER -->
+    <form id="registerForm" class="form-grid hidden">
+
+      <div class="field">
+        <label>Business / Shop Name</label>
+        <input id="regBusiness" required>
+      </div>
+
+      <div class="field">
+        <label>Admin Name</label>
+        <input id="regAdmin" required>
+      </div>
+
+      <div class="field">
+        <label>Username</label>
+        <input id="regUsername" required>
+      </div>
+
+      <div class="two">
+
+        <div class="field">
+          <label>Phone</label>
+          <input id="regPhone">
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input id="regEmail" type="email" required>
+        </div>
+
+      </div>
+
+      <div class="field">
+        <label>Address</label>
+        <input id="regAddress">
+      </div>
+
+      <div class="two">
+
+        <div class="field">
+          <label>Password</label>
+          <input id="regPassword" type="password" required minlength="6">
+        </div>
+
+        <div class="field">
+          <label>Confirm Password</label>
+          <input id="regConfirm" type="password" required minlength="6">
+        </div>
+
+      </div>
+
+      <button class="primary-btn" type="submit">
+        Create Business Account
+      </button>
+
+    </form>
+
+    <div id="authMessage" class="message"></div>
+
+  </div>
+</div>
+
+
+<!-- APP -->
+<div id="app" class="app hidden">
+
+  <aside id="sidebar" class="sidebar">
+
+    <div class="side-brand">
+      <strong>AUNG POS</strong>
+      <span>Commercial Cloud POS</span>
+    </div>
+
+    <nav class="nav">
+
+      <button data-section="dashboard" onclick="openSection('dashboard')">
+        📊 Dashboard
+      </button>
+
+      <button data-section="products" onclick="openSection('products')">
+        📦 Products
+      </button>
+
+      <button data-section="sales" onclick="openSection('sales')">
+        🛒 Sales / POS
+      </button>
+
+      <button data-section="inventory" onclick="openSection('inventory')">
+        🏷️ Inventory
+      </button>
+
+      <button data-section="customers" onclick="openSection('customers')">
+        👥 Customers
+      </button>
+
+      <button data-section="suppliers" onclick="openSection('suppliers')">
+        🚚 Suppliers
+      </button>
+
+      <button data-section="reports" onclick="openSection('reports')">
+        📈 Reports
+      </button>
+
+      <button data-section="subscription" onclick="openSection('subscription')">
+        💳 Subscription
+      </button>
+
+      <button data-section="settings" onclick="openSection('settings')">
+        ⚙️ Settings
+      </button>
+
+    </nav>
+
+    <button class="logout" onclick="logout()">
+      Logout
+    </button>
+
+  </aside>
+
+
+  <main class="main">
+
+    <header class="topbar">
+
+      <div style="display:flex;align-items:center;gap:10px">
+
+        <button class="menu-btn" onclick="toggleSidebar()">
+          ☰
+        </button>
+
+        <strong id="pageName">Dashboard</strong>
+
+      </div>
+
+      <div class="user-box">
+
+        <div class="avatar" id="avatar">A</div>
+
+        <div>
+          <strong id="userName">Admin</strong>
+          <div style="font-size:11px;color:#718096" id="userRole">
+            Admin
+          </div>
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <div class="content">
+
+      <!-- DASHBOARD -->
+      <section id="section-dashboard" class="section active">
+
+        <div class="page-title">
+          <h2>Dashboard</h2>
+          <p id="businessTitle">Cloud Business Dashboard</p>
+        </div>
+
+        <div id="subscriptionAlert" class="alert hidden"></div>
+
+        <div class="stats">
+
+          <div class="stat">
+            <div class="label">Today Sales</div>
+            <div class="value" id="statSales">0 Ks</div>
+          </div>
+
+          <div class="stat">
+            <div class="label">Today Orders</div>
+            <div class="value" id="statOrders">0</div>
+          </div>
+
+          <div class="stat">
+            <div class="label">Products</div>
+            <div class="value" id="statProducts">0</div>
+          </div>
+
+          <div class="stat">
+            <div class="label">Low Stock</div>
+            <div class="value" id="statLowStock">0</div>
+          </div>
+
+        </div>
+
+        <div class="card">
+
+          <div class="card-head">
+            <h3>Business Account</h3>
+          </div>
+
+          <div id="businessInfo">
+            Loading...
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- PRODUCTS -->
+      <section id="section-products" class="section">
+
+        <div class="page-title">
+          <h2>Products</h2>
+          <p>Cloud Product Management</p>
+        </div>
+
+        <div class="card">
+
+          <div class="card-head">
+
+            <h3>Product List</h3>
+
+            <button class="small-btn" onclick="openProductModal()">
+              ＋ Add Product
+            </button>
+
+          </div>
+
+          <div id="productsGrid" class="products-grid"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- SALES -->
+      <section id="section-sales" class="section">
+
+        <div class="page-title">
+          <h2>Sales / POS</h2>
+          <p>Sales module will be connected to cloud database</p>
+        </div>
+
+        <div class="card">
+          <div class="empty">
+            Sales / POS module — Next Upgrade
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- INVENTORY -->
+      <section id="section-inventory" class="section">
+
+        <div class="page-title">
+          <h2>Inventory</h2>
+          <p>Cloud Stock Management</p>
+        </div>
+
+        <div class="card">
+
+          <div class="card-head">
+            <h3>Current Stock</h3>
+          </div>
+
+          <div id="inventoryList"></div>
+
+        </div>
+
+      </section>
+
+
+      <!-- CUSTOMERS -->
+      <section id="section-customers" class="section">
+
+        <div class="page-title">
+          <h2>Customers</h2>
+          <p>Customer management</p>
+        </div>
+
+        <div class="card">
+          <div class="empty">
+            Customer module — Next Upgrade
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- SUPPLIERS -->
+      <section id="section-suppliers" class="section">
+
+        <div class="page-title">
+          <h2>Suppliers</h2>
+          <p>Supplier management</p>
+        </div>
+
+        <div class="card">
+          <div class="empty">
+            Supplier module — Next Upgrade
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- REPORTS -->
+      <section id="section-reports" class="section">
+
+        <div class="page-title">
+          <h2>Reports</h2>
+          <p>Business reports</p>
+        </div>
+
+        <div class="card">
+          <div class="empty">
+            Reports module — Next Upgrade
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- SUBSCRIPTION -->
+      <section id="section-subscription" class="section">
+
+        <div class="page-title">
+          <h2>Subscription</h2>
+          <p>Choose your AUNG POS plan</p>
+        </div>
+
+        <div class="plan-grid">
+
+          <div class="plan">
+            <h3>1 Month</h3>
+            <div class="amount">100,000 Ks</div>
+            <p style="color:#718096;font-size:13px;margin-bottom:15px">
+              Monthly plan
+            </p>
+            <button onclick="requestPlan('1m','100000')">
+              Request Plan
+            </button>
+          </div>
+
+          <div class="plan">
+            <h3>3 Months</h3>
+            <div class="amount">270,000 Ks</div>
+            <p style="color:#718096;font-size:13px;margin-bottom:15px">
+              3 month plan
+            </p>
+            <button onclick="requestPlan('3m','270000')">
+              Request Plan
+            </button>
+          </div>
+
+          <div class="plan">
+            <h3>6 Months</h3>
+            <div class="amount">480,000 Ks</div>
+            <p style="color:#718096;font-size:13px;margin-bottom:15px">
+              6 month plan
+            </p>
+            <button onclick="requestPlan('6m','480000')">
+              Request Plan
+            </button>
+          </div>
+
+        </div>
+
+        <div class="card" style="margin-top:18px">
+
+          <h3 style="margin-bottom:12px">
+            Payment
+          </h3>
+
+          <p style="font-size:14px;line-height:1.8">
+            KPay / WavePay
+            <br>
+            Payment Number: <strong>0943016420</strong>
+          </p>
+
+          <p style="margin-top:12px;color:#718096;font-size:13px">
+            Payment ပြီးပါက Transaction ID ဖြည့်ပြီး Admin Activation တောင်းနိုင်ပါသည်
+          </p>
+
+        </div>
+
+      </section>
+
+
+      <!-- SETTINGS -->
+      <section id="section-settings" class="section">
+
+        <div class="page-title">
+          <h2>Settings</h2>
+          <p>Business account information</p>
+        </div>
+
+        <div class="card">
+
+          <div class="form-grid">
+
+            <div class="field">
+              <label>Business Name</label>
+              <input id="settingBusiness">
+            </div>
+
+            <div class="field">
+              <label>Phone</label>
+              <input id="settingPhone">
+            </div>
+
+            <div class="field">
+              <label>Address</label>
+              <input id="settingAddress">
+            </div>
+
+            <button class="primary-btn" onclick="saveBusinessSettings()">
+              Save Settings
+            </button>
+
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+</div>
+
+
+<!-- PRODUCT MODAL -->
+<div id="productModal" class="modal">
+
+  <div class="modal-card">
+
+    <div class="modal-head">
+
+      <h3 id="productModalTitle">
+        Add Product
+      </h3>
+
+      <button class="close-btn" onclick="closeProductModal()">
+        ✕
+      </button>
+
+    </div>
+
+    <form id="productForm" class="form-grid">
+
+      <input id="productId" type="hidden">
+
+      <div class="field">
+        <label>Product Name</label>
+        <input id="productName" required>
+      </div>
+
+      <div class="two">
+
+        <div class="field">
+          <label>Barcode</label>
+          <input id="productBarcode">
+        </div>
+
+        <div class="field">
+          <label>Category</label>
+          <input id="productCategory">
+        </div>
+
+      </div>
+
+      <div class="two">
+
+        <div class="field">
+          <label>Subcategory</label>
+          <input id="productSubcategory">
+        </div>
+
+        <div class="field">
+          <label>Unit</label>
+          <input id="productUnit" placeholder="pcs / box / bottle">
+        </div>
+
+      </div>
+
+      <div class="two">
+
+        <div class="field">
+          <label>Buy Price</label>
+          <input id="productBuy" type="number" min="0" value="0">
+        </div>
+
+        <div class="field">
+          <label>Retail Price</label>
+          <input id="productRetail" type="number" min="0" value="0">
+        </div>
+
+      </div>
+
+      <div class="two">
+
+        <div class="field">
+          <label>Wholesale Price</label>
+          <input id="productWholesale" type="number" min="0" value="0">
+        </div>
+
+        <div class="field">
+          <label>Stock</label>
+          <input id="productStock" type="number" min="0" value="0">
+        </div>
+
+      </div>
+
+      <div class="two">
+
+        <div class="field">
+          <label>Minimum Stock</label>
+          <input id="productMinStock" type="number" min="0" value="0">
+        </div>
+
+        <div class="field">
+          <label>Expiry</label>
+          <input id="productExpiry" type="date">
+        </div>
+
+      </div>
+
+      <div class="field">
+        <label>Variant</label>
+        <input id="productVariant" placeholder="Color / Size / Model">
+      </div>
+
+      <div class="field">
+
+        <label>Product Photo</label>
+
+        <input
+          id="productPhoto"
+          type="file"
+          accept="image/*"
+        >
+
+        <img
+          id="photoPreview"
+          class="photo-preview hidden"
+          alt="Preview"
+        >
+
+      </div>
+
+      <button class="primary-btn" type="submit">
+        Save Product
+      </button>
+
+    </form>
+
+  </div>
+
+</div>
+
+
+<script>
+
+/* =========================================================
+   SUPABASE
+========================================================= */
+
+const SUPABASE_URL =
+  "https://bguonfdxhbxwgsqibppp.supabase.co";
+
+const SUPABASE_PUBLISHABLE_KEY =
+  "sb_publishable_3ioj1nwzoQWk4CWMjayu1w_EmlU4D1Z";
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/* =========================================================
+   STATE
+========================================================= */
+
+let currentUser = null;
+let currentBusiness = null;
+let currentProfile = null;
+let products = [];
+let editingProduct = null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function money(value){
+  return Number(value || 0).toLocaleString("en-US") + " Ks";
+}
+
+function showMessage(text,type="error"){
+  const box = $("authMessage");
+
+  box.textContent = text;
+  box.className = "message show " + type;
+}
+
+function clearMessage(){
+  $("authMessage").className = "message";
+  $("authMessage").textContent = "";
+}
+
+
+/* =========================================================
+   AUTH TABS
+========================================================= */
+
+function showAuth(type){
+
+  clearMessage();
+
+  if(type === "login"){
+
+    $("loginForm").classList.remove("hidden");
+    $("registerForm").classList.add("hidden");
+
+    $("loginTab").classList.add("active");
+    $("registerTab").classList.remove("active");
+
+  }else{
+
+    $("loginForm").classList.add("hidden");
+    $("registerForm").classList.remove("hidden");
+
+    $("loginTab").classList.remove("active");
+    $("registerTab").classList.add("active");
+
+  }
+}
+
+
+/* =========================================================
+   REGISTER
+========================================================= */
+
+$("registerForm").addEventListener("submit",async e=>{
+
+  e.preventDefault();
+
+  clearMessage();
+
+  const business =
+    $("regBusiness").value.trim();
+
+  const admin =
+    $("regAdmin").value.trim();
+
+  const username =
+    $("regUsername").value.trim();
+
+  const phone =
+    $("regPhone").value.trim();
+
+  const address =
+    $("regAddress").value.trim();
+
+  const email =
+    $("regEmail").value.trim();
+
+  const password =
+    $("regPassword").value;
+
+  const confirm =
+    $("regConfirm").value;
+
+  if(password !== confirm){
+
+    showMessage(
+      "Password နှစ်ခု မတူပါ",
+      "error"
+    );
+
+    return;
+  }
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.signUp({
+        email,
+        password
+      });
+
+    if(error) throw error;
+
+    if(!data.user){
+
+      throw new Error(
+        "Account creation failed"
+      );
+
+    }
+
+    currentUser = data.user;
+
+    const {
+      data:businessId,
+      error:businessError
+    } =
+      await supabaseClient.rpc(
+        "create_business",
+        {
+          p_name:business,
+          p_phone:phone || null,
+          p_address:address || null,
+          p_full_name:admin,
+          p_username:username
+        }
+      );
+
+    if(businessError){
+
+      console.error(businessError);
+
+      showMessage(
+        "Account ရပြီး Business setup မပြီးသေးပါ — " +
+        businessError.message,
+        "error"
+      );
+
+      return;
+    }
+
+    showMessage(
+      "Business Account ဖန်တီးပြီးပါပြီ",
+      "success"
+    );
+
+    setTimeout(
+      ()=>loadApp(),
+      800
+    );
+
+  }catch(error){
+
+    console.error(error);
+
+    showMessage(
+      error.message || "Register failed",
+      "error"
+    );
+
+  }
+
+});
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+$("loginForm").addEventListener("submit",async e=>{
+
+  e.preventDefault();
+
+  clearMessage();
+
+  const email =
+    $("loginEmail").value.trim();
+
+  const password =
+    $("loginPassword").value;
+
+  try{
+
+    const {
+      data,
+      error
+    } =
+      await supabaseClient.auth.signInWithPassword({
+        email,
+        password
+      });
+
+    if(error) throw error;
+
+    currentUser = data.user;
+
+    await loadApp();
+
+  }catch(error){
+
+    console.error(error);
+
+    showMessage(
+      error.message || "Login failed",
+      "error"
+    );
+
+  }
+
+});
+
+
+/* =========================================================
+   LOAD APP
+========================================================= */
+
+async function loadApp(){
+
+  const {
+    data:{
+      user
+    }
+  } =
+    await supabaseClient.auth.getUser();
+
+  if(!user){
+
+    $("authPage").classList.remove("hidden");
+    $("app").classList.add("hidden");
+
+    return;
+  }
+
+  currentUser = user;
+
+  const {
+    data:profile,
+    error
+  } =
+    await supabaseClient
+      .from("business_users")
+      .select("*")
+      .eq("auth_user_id",user.id)
+      .maybeSingle();
+
+  if(error){
+
+    console.error(error);
+
+    showMessage(
+      error.message,
+      "error"
+    );
+
+    return;
+  }
+
+  if(!profile){
+
+    showAuth("register");
+
+    showMessage(
+      "Business profile မတွေ့ပါ",
+      "error"
+    );
+
+    return;
+  }
+
+  currentProfile = profile;
+
+  const {
+    data:business,
+    error:businessError
+  } =
+    await supabaseClient
+      .from("businesses")
+      .select("*")
+      .eq("id",profile.business_id)
+      .single();
+
+  if(businessError){
+
+    console.error(businessError);
+
+    showMessage(
+      businessError.message,
+      "error"
+    );
+
+    return;
+  }
+
+  currentBusiness = business;
+
+  $("authPage").classList.add("hidden");
+  $("app").classList.remove("hidden");
+
+  $("userName").textContent =
+    profile.full_name || "Admin";
+
+  $("userRole").textContent =
+    profile.role || "Admin";
+
+  $("avatar").textContent =
+    (profile.full_name || "A")
+      .charAt(0)
+      .toUpperCase();
+
+  $("businessTitle").textContent =
+    business.name || "Business";
+
+  $("businessInfo").innerHTML = `
+    <div style="line-height:2;font-size:14px">
+      <strong>${escapeHtml(business.name || "")}</strong><br>
+      Phone: ${escapeHtml(business.phone || "-")}<br>
+      Address: ${escapeHtml(business.address || "-")}<br>
+      User: ${escapeHtml(profile.full_name || "-")}<br>
+      Role: ${escapeHtml(profile.role || "-")}
+    </div>
+  `;
+
+  $("settingBusiness").value =
+    business.name || "";
+
+  $("settingPhone").value =
+    business.phone || "";
+
+  $("settingAddress").value =
+    business.address || "";
+
+  await refreshProducts();
+
+  updateDashboard();
+
+}
+
+
+/* =========================================================
+   PRODUCTS
+========================================================= */
+
+async function refreshProducts(){
+
+  const {
+    data,
+    error
+  } =
+    await supabaseClient
+      .from("products")
+      .select("*")
+      .eq(
+        "business_id",
+        currentBusiness.id
+      )
+      .order(
+        "created_at",
+        {
+          ascending:false
+        }
+      );
+
+  if(error){
+
+    console.error(error);
+
+    $("productsGrid").innerHTML = `
+      <div class="empty">
+        Products load error<br>
+        ${escapeHtml(error.message)}
+      </div>
+    `;
+
+    return;
+  }
+
+  products = data || [];
+
+  renderProducts();
+  renderInventory();
+
+  $("statProducts").textContent =
+    products.length;
+
+  $("statLowStock").textContent =
+    products.filter(
+      p =>
+        Number(p.stock || 0) <=
+        Number(p.min_stock || 0)
+    ).length;
+
+}
+
+
+/* =========================================================
+   RENDER PRODUCTS
+========================================================= */
+
+function renderProducts(){
+
+  const grid = $("productsGrid");
+
+  if(!products.length){
+
+    grid.innerHTML = `
+      <div class="empty">
+        Product မရှိသေးပါ<br>
+        ＋ Add Product နှိပ်ပြီး စတင်ပါ
+      </div>
+    `;
+
+    return;
+  }
+
+  grid.innerHTML =
+    products.map(product=>{
+
+      const photo =
+        product.photo_path
+          ? supabaseClient
+              .storage
+              .from("product-images")
+              .getPublicUrl(product.photo_path)
+              .data
+              .publicUrl
+          : "";
+
+      return `
+        <div class="product-card">
+
+          ${
+            photo
+            ?
+            `<img class="product-photo"
+                  src="${photo}"
+                  alt="${escapeHtml(product.name)}">`
+            :
+            `<div class="product-photo"></div>`
+          }
+
+          <div class="product-info">
+
+            <h4>
+              ${escapeHtml(product.name)}
+            </h4>
+
+            <p>
+              ${escapeHtml(product.category || "")}
+              ${product.subcategory
+                ? " / " + escapeHtml(product.subcategory)
+                : ""}
+            </p>
+
+            <div class="price">
+              ${money(product.retail_price)}
+            </div>
+
+            <p>
+              Stock:
+              <strong>${Number(product.stock || 0)}</strong>
+              ${escapeHtml(product.unit || "")}
+            </p>
+
+            <div class="product-actions">
+
+              <button onclick="editProduct('${product.id}')">
+                Edit
+              </button>
+
+              <button
+                class="delete"
+                onclick="deleteProduct('${product.id}')">
+                Delete
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================================================
+   PRODUCT MODAL
+========================================================= */
+
+function openProductModal(product=null){
+
+  editingProduct = product;
+
+  $("productForm").reset();
+
+  $("productId").value =
+    product?.id || "";
+
+  $("productModalTitle").textContent =
+    product
+      ? "Edit Product"
+      : "Add Product";
+
+  $("photoPreview").classList.add("hidden");
+  $("photoPreview").src = "";
+
+  if(product){
+
+    $("productName").value =
+      product.name || "";
+
+    $("productBarcode").value =
+      product.barcode || "";
+
+    $("productCategory").value =
+      product.category || "";
+
+    $("productSubcategory").value =
+      product.subcategory || "";
+
+    $("productUnit").value =
+      product.unit || "";
+
+    $("productBuy").value =
+      product.buy_price || 0;
+
+    $("productRetail").value =
+      product.retail_price || 0;
+
+    $("productWholesale").value =
+      product.wholesale_price || 0;
+
+    $("productStock").value =
+      product.stock || 0;
+
+    $("productMinStock").value =
+      product.min_stock || 0;
+
+    $("productExpiry").value =
+      product.expiry || "";
+
+    $("productVariant").value =
+      product.variant || "";
+
+    if(product.photo_path){
+
+      const url =
+        supabaseClient
+          .storage
+          .from("product-images")
+          .getPublicUrl(product.photo_path)
+          .data
+          .publicUrl;
+
+      $("photoPreview").src = url;
+      $("photoPreview").classList.remove("hidden");
+
+    }
+
+  }
+
+  $("productModal").classList.add("show");
+
+}
+
+function closeProductModal(){
+
+  $("productModal").classList.remove("show");
+
+  editingProduct = null;
+
+}
+
+function editProduct(id){
+
+  const product =
+    products.find(p=>String(p.id)===String(id));
+
+  if(product){
+    openProductModal(product);
+  }
+
+}
+
+
+/* =========================================================
+   PHOTO PREVIEW
+========================================================= */
+
+$("productPhoto").addEventListener(
+  "change",
+  async e=>{
+
+    const file =
+      e.target.files?.[0];
+
+    if(!file) return;
+
+    try{
+
+      const compressed =
+        await compressImage(file);
+
+      const url =
+        URL.createObjectURL(compressed);
+
+      $("photoPreview").src = url;
+      $("photoPreview")
+        .classList
+        .remove("hidden");
+
+    }catch(error){
+
+      console.error(error);
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   IMAGE COMPRESS
+========================================================= */
+
+function compressImage(file){
+
+  return new Promise(
+    (resolve,reject)=>{
+
+      const img =
+        new Image();
+
+      const reader =
+        new FileReader();
+
+      reader.onload =
+        e=>{
+
+          img.onload =
+            ()=>{
+
+              const max =
+                1200;
+
+              let width =
+                img.width;
+
+              let height =
+                img.height;
+
+              if(width > max || height > max){
+
+                if(width > height){
+
+                  height =
+                    height * max / width;
+
+                  width = max;
+
+                }else{
+
+                  width =
+                    width * max / height;
+
+                  height = max;
+
+                }
+
+              }
+
+              const canvas =
+                document.createElement("canvas");
+
+              canvas.width =
+                Math.round(width);
+
+              canvas.height =
+                Math.round(height);
+
+              const ctx =
+                canvas.getContext("2d");
+
+              ctx.drawImage(
+                img,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+              );
+
+              canvas.toBlob(
+                blob=>{
+                  if(blob) resolve(blob);
+                  else reject(
+                    new Error("Image compression failed")
+                  );
+                },
+                "image/jpeg",
+                .82
+              );
+
+            };
+
+          img.onerror = reject;
+
+          img.src =
+            e.target.result;
+
+        };
+
+      reader.onerror = reject;
+
+      reader.readAsDataURL(file);
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   SAVE PRODUCT
+========================================================= */
+
+$("productForm").addEventListener(
+  "submit",
+  async e=>{
+
+    e.preventDefault();
+
+    if(!currentBusiness) return;
+
+    const productId =
+      $("productId").value;
+
+    const name =
+      $("productName").value.trim();
+
+    if(!name){
+
+      alert("Product Name ဖြည့်ပါ");
+
+      return;
+    }
+
+    try{
+
+      let photoPath =
+        editingProduct?.photo_path || null;
+
+      const file =
+        $("productPhoto").files?.[0];
+
+      if(file){
+
+        const blob =
+          await compressImage(file);
+
+        const filename =
+          currentBusiness.id +
+          "/" +
+          crypto.randomUUID() +
+          ".jpg";
+
+        const {
+          error:uploadError
+        } =
+          await supabaseClient
+            .storage
+            .from("product-images")
+            .upload(
+              filename,
+              blob,
+              {
+                contentType:"image/jpeg",
+                upsert:false
+              }
+            );
+
+        if(uploadError)
+          throw uploadError;
+
+        photoPath = filename;
+
+      }
+
+      const payload = {
+
+        business_id:
+          currentBusiness.id,
+
+        name,
+
+        barcode:
+          $("productBarcode").value.trim() || null,
+
+        category:
+          $("productCategory").value.trim() || null,
+
+        subcategory:
+          $("productSubcategory").value.trim() || null,
+
+        unit:
+          $("productUnit").value.trim() || null,
+
+        buy_price:
+          Number($("productBuy").value || 0),
+
+        retail_price:
+          Number($("productRetail").value || 0),
+
+        wholesale_price:
+          Number($("productWholesale").value || 0),
+
+        stock:
+          Number($("productStock").value || 0),
+
+        min_stock:
+          Number($("productMinStock").value || 0),
+
+        expiry:
+          $("productExpiry").value || null,
+
+        variant:
+          $("productVariant").value.trim() || null,
+
+        photo_path:
+          photoPath
+
+      };
+
+      let result;
+
+      if(productId){
+
+        result =
+          await supabaseClient
+            .from("products")
+            .update(payload)
+            .eq("id",productId)
+            .eq(
+              "business_id",
+              currentBusiness.id
+            );
+
+      }else{
+
+        result =
+          await supabaseClient
+            .from("products")
+            .insert(payload);
+
+      }
+
+      if(result.error)
+        throw result.error;
+
+      closeProductModal();
+
+      await refreshProducts();
+
+      updateDashboard();
+
+    }catch(error){
+
+      console.error(error);
+
+      alert(
+        "Product Save Error\n" +
+        error.message
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   DELETE PRODUCT
+========================================================= */
+
+async function deleteProduct(id){
+
+  if(!confirm(
+    "ဒီ Product ကို ဖျက်မှာသေချာပါသလား"
+  )) return;
+
+  try{
+
+    const product =
+      products.find(
+        p=>String(p.id)===String(id)
+      );
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("products")
+        .delete()
+        .eq("id",id)
+        .eq(
+          "business_id",
+          currentBusiness.id
+        );
+
+    if(error) throw error;
+
+    if(product?.photo_path){
+
+      await supabaseClient
+        .storage
+        .from("product-images")
+        .remove([
+          product.photo_path
+        ]);
+
+    }
+
+    await refreshProducts();
+
+    updateDashboard();
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Delete Error\n" +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   INVENTORY
+========================================================= */
+
+function renderInventory(){
+
+  const box =
+    $("inventoryList");
+
+  if(!products.length){
+
+    box.innerHTML =
+      `<div class="empty">Product မရှိသေးပါ</div>`;
+
+    return;
+  }
+
+  box.innerHTML =
+    products.map(p=>{
+
+      const low =
+        Number(p.stock || 0) <=
+        Number(p.min_stock || 0);
+
+      return `
+        <div style="
+          display:flex;
+          justify-content:space-between;
+          align-items:center;
+          padding:14px 0;
+          border-bottom:1px solid #e5e9f0;
+        ">
+
+          <div>
+            <strong>
+              ${escapeHtml(p.name)}
+            </strong>
+
+            <div style="
+              color:#718096;
+              font-size:12px;
+              margin-top:4px
+            ">
+              ${escapeHtml(p.category || "")}
+            </div>
+          </div>
+
+          <div style="
+            font-weight:800;
+            color:${low ? "#dc2626" : "#059669"}
+          ">
+            ${Number(p.stock || 0)}
+            ${escapeHtml(p.unit || "")}
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+async function updateDashboard(){
+
+  if(!currentBusiness) return;
+
+  const today =
+    new Date();
+
+  const start =
+    new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+    ).toISOString();
+
+  const {
+    data:sales
+  } =
+    await supabaseClient
+      .from("sales")
+      .select("*")
+      .eq(
+        "business_id",
+        currentBusiness.id
+      )
+      .gte("created_at",start);
+
+  const todaySales =
+    (sales || [])
+      .reduce(
+        (sum,s)=>
+          sum + Number(s.total || 0),
+        0
+      );
+
+  $("statSales").textContent =
+    money(todaySales);
+
+  $("statOrders").textContent =
+    (sales || []).length;
+
+  $("statProducts").textContent =
+    products.length;
+
+  $("statLowStock").textContent =
+    products.filter(
+      p =>
+        Number(p.stock || 0) <=
+        Number(p.min_stock || 0)
+    ).length;
+
+}
+
+
+/* =========================================================
+   BUSINESS SETTINGS
+========================================================= */
+
+async function saveBusinessSettings(){
+
+  if(!currentBusiness) return;
+
+  try{
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("businesses")
+        .update({
+          name:
+            $("settingBusiness").value.trim(),
+
+          phone:
+            $("settingPhone").value.trim(),
+
+          address:
+            $("settingAddress").value.trim()
+        })
+        .eq(
+          "id",
+          currentBusiness.id
+        );
+
+    if(error) throw error;
+
+    currentBusiness.name =
+      $("settingBusiness").value.trim();
+
+    currentBusiness.phone =
+      $("settingPhone").value.trim();
+
+    currentBusiness.address =
+      $("settingAddress").value.trim();
+
+    $("businessTitle").textContent =
+      currentBusiness.name;
+
+    $("businessInfo").innerHTML = `
+      <div style="line-height:2;font-size:14px">
+        <strong>
+          ${escapeHtml(currentBusiness.name)}
+        </strong><br>
+        Phone:
+        ${escapeHtml(currentBusiness.phone || "-")}<br>
+        Address:
+        ${escapeHtml(currentBusiness.address || "-")}
+      </div>
+    `;
+
+    alert("Settings သိမ်းပြီးပါပြီ");
+
+  }catch(error){
+
+    alert(
+      "Settings Save Error\n" +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SUBSCRIPTION
+========================================================= */
+
+async function requestPlan(
+  planId,
+  amount
+){
+
+  const method =
+    prompt(
+      "Payment Method ရွေးပါ\n\n1 = KPay\n2 = WavePay"
+    );
+
+  if(!method) return;
+
+  const paymentMethod =
+    method === "1"
+      ? "KPay"
+      : method === "2"
+        ? "WavePay"
+        : method;
+
+  const transactionId =
+    prompt(
+      "Transaction ID ထည့်ပါ"
+    );
+
+  if(!transactionId) return;
+
+  try{
+
+    const {
+      error
+    } =
+      await supabaseClient
+        .from("payment_requests")
+        .insert({
+
+          business_id:
+            currentBusiness.id,
+
+          plan_id:
+            planId,
+
+          amount:
+            Number(amount),
+
+          payment_method:
+            paymentMethod,
+
+          transaction_id:
+            transactionId,
+
+          status:
+            "pending"
+
+        });
+
+    if(error) throw error;
+
+    alert(
+      "Payment Request ပို့ပြီးပါပြီ\nAdmin Activation စောင့်ပါ"
+    );
+
+  }catch(error){
+
+    alert(
+      "Payment Request Error\n" +
+      error.message
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function openSection(name){
+
+  document
+    .querySelectorAll(".section")
+    .forEach(
+      section =>
+        section.classList.remove("active")
+    );
+
+  const target =
+    $("section-" + name);
+
+  if(target)
+    target.classList.add("active");
+
+  document
+    .querySelectorAll(".nav button")
+    .forEach(button=>{
+      button.classList.toggle(
+        "active",
+        button.dataset.section === name
+      );
+    });
+
+  const names = {
+    dashboard:"Dashboard",
+    products:"Products",
+    sales:"Sales / POS",
+    inventory:"Inventory",
+    customers:"Customers",
+    suppliers:"Suppliers",
+    reports:"Reports",
+    subscription:"Subscription",
+    settings:"Settings"
+  };
+
+  $("pageName").textContent =
+    names[name] || name;
+
+  $("sidebar").classList.remove("open");
+
+  if(name === "dashboard")
+    updateDashboard();
+
+  if(name === "products")
+    refreshProducts();
+
+  if(name === "inventory")
+    renderInventory();
+
+}
+
+
+/* =========================================================
+   SIDEBAR
+========================================================= */
+
+function toggleSidebar(){
+
+  $("sidebar")
+    .classList
+    .toggle("open");
+
+}
+
+
+/* =========================================================
+   LOGOUT
+========================================================= */
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  currentUser = null;
+  currentBusiness = null;
+  currentProfile = null;
+  products = [];
+
+  $("app").classList.add("hidden");
+  $("authPage").classList.remove("hidden");
+
+  showAuth("login");
+
+}
+
+
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
+
+function escapeHtml(value){
+
+  return String(value ?? "")
+    .replaceAll("&","&amp;")
+    .replaceAll("<","&lt;")
+    .replaceAll(">","&gt;")
+    .replaceAll('"',"&quot;")
+    .replaceAll("'","&#039;");
+
+}
+
+
+/* =========================================================
+   AUTH SESSION
+========================================================= */
+
+supabaseClient.auth.onAuthStateChange(
+  async (event,session)=>{
+
+    if(session){
+
+      setTimeout(
+        ()=>loadApp(),
+        0
+      );
+
+    }
+
+  }
+);
+
+
+/* =========================================================
+   START
+========================================================= */
+
+(async function(){
+
+  try{
+
+    const {
+      data:{
+        session
+      }
+    } =
+      await supabaseClient.auth.getSession();
+
+    if(session){
+
+      await loadApp();
+
+    }else{
+
+      $("authPage").classList.remove("hidden");
+      $("app").classList.add("hidden");
+
+    }
+
+  }catch(error){
+
+    console.error(error);
+
+  }
+
+})();
+
+</script>
+
+</body>
+</html>
