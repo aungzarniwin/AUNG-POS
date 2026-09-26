@@ -2,7 +2,7 @@
 <html lang="my">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
 <title>AUNG POS Cloud</title>
 
@@ -12,20 +12,27 @@
 *{
   box-sizing:border-box;
   margin:0;
-  padding:0
+  padding:0;
 }
 
 :root{
-  --bg:#f5f7fb;
-  --card:#fff;
+  --bg:#f4f6f8;
+  --card:#ffffff;
   --text:#172033;
-  --muted:#718096;
-  --line:#e5e9f0;
+  --muted:#6b7280;
+  --line:#e5e7eb;
   --primary:#111827;
-  --accent:#2563eb;
-  --danger:#dc2626;
-  --success:#059669;
-  --radius:18px
+  --primary2:#1f2937;
+  --green:#16a34a;
+  --red:#dc2626;
+  --orange:#ea580c;
+  --blue:#2563eb;
+  --shadow:0 10px 30px rgba(15,23,42,.07);
+  --radius:18px;
+}
+
+html,body{
+  min-height:100%;
 }
 
 body{
@@ -37,22 +44,26 @@ body{
     sans-serif;
   background:var(--bg);
   color:var(--text);
-  min-height:100vh
 }
 
-button,input,select{
-  font:inherit
+button,
+input,
+select,
+textarea{
+  font:inherit;
 }
 
 button{
-  cursor:pointer
+  cursor:pointer;
 }
 
 .hidden{
-  display:none!important
+  display:none!important;
 }
 
-/* AUTH */
+/* =========================
+   AUTH
+========================= */
 
 .auth-page{
   min-height:100vh;
@@ -61,210 +72,267 @@ button{
   justify-content:center;
   padding:20px;
   background:
-    radial-gradient(circle at top left,#dbeafe,transparent 35%),
-    var(--bg)
+    radial-gradient(circle at top right,#dbeafe,transparent 35%),
+    radial-gradient(circle at bottom left,#dcfce7,transparent 30%),
+    #f8fafc;
 }
 
 .auth-card{
   width:100%;
-  max-width:470px;
+  max-width:480px;
   background:#fff;
   border:1px solid var(--line);
-  border-radius:28px;
-  padding:30px;
-  box-shadow:0 20px 60px rgba(15,23,42,.10)
+  border-radius:26px;
+  box-shadow:0 20px 60px rgba(15,23,42,.12);
+  padding:28px;
 }
 
 .brand{
-  text-align:center;
-  margin-bottom:26px
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:24px;
 }
 
-.brand-logo{
-  width:62px;
-  height:62px;
-  margin:auto;
-  border-radius:18px;
+.brand-icon{
+  width:48px;
+  height:48px;
+  border-radius:14px;
   background:#111827;
   color:#fff;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:24px;
-  font-weight:800
+  font-weight:800;
+  font-size:18px;
 }
 
 .brand h1{
-  margin-top:14px;
-  font-size:25px
+  font-size:21px;
 }
 
 .brand p{
   color:var(--muted);
   font-size:13px;
-  margin-top:6px
+  margin-top:2px;
 }
 
-.tabs{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:6px;
-  background:#f1f5f9;
-  padding:5px;
-  border-radius:12px;
-  margin-bottom:22px
+.auth-title{
+  font-size:24px;
+  margin-bottom:7px;
 }
 
-.tabs button{
-  border:0;
-  background:transparent;
-  padding:11px;
-  border-radius:9px;
-  color:var(--muted)
-}
-
-.tabs button.active{
-  background:#fff;
-  color:#111827;
-  box-shadow:0 2px 8px rgba(0,0,0,.06);
-  font-weight:700
+.auth-subtitle{
+  color:var(--muted);
+  font-size:14px;
+  margin-bottom:20px;
+  line-height:1.6;
 }
 
 .form-grid{
   display:grid;
-  gap:14px
+  gap:14px;
 }
 
 .field{
   display:grid;
-  gap:6px
+  gap:7px;
 }
 
 .field label{
   font-size:13px;
-  font-weight:700
+  font-weight:700;
 }
 
 .field input,
-.field select{
+.field select,
+.field textarea{
   width:100%;
-  border:1px solid var(--line);
+  border:1px solid #d7dce3;
+  background:#fff;
   border-radius:12px;
-  padding:13px 14px;
+  padding:12px 13px;
   outline:none;
-  background:#fff
+  transition:.2s;
+}
+
+.field textarea{
+  min-height:90px;
+  resize:vertical;
 }
 
 .field input:focus,
-.field select:focus{
-  border-color:var(--accent);
-  box-shadow:0 0 0 3px rgba(37,99,235,.08)
+.field select:focus,
+.field textarea:focus{
+  border-color:#111827;
+  box-shadow:0 0 0 3px rgba(17,24,39,.07);
+}
+
+.two-col{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+}
+
+.primary-btn,
+.secondary-btn,
+.danger-btn,
+.success-btn{
+  border:0;
+  border-radius:12px;
+  padding:12px 15px;
+  font-weight:800;
 }
 
 .primary-btn{
-  border:0;
   background:#111827;
   color:#fff;
-  border-radius:13px;
-  padding:14px 18px;
-  font-weight:700;
-  width:100%
 }
 
-.primary-btn:disabled{
-  opacity:.55;
-  cursor:not-allowed
+.primary-btn:hover{
+  background:#000;
+}
+
+.secondary-btn{
+  background:#eef2f7;
+  color:#172033;
+}
+
+.success-btn{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.danger-btn{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.full{
+  width:100%;
+}
+
+.auth-switch{
+  text-align:center;
+  margin-top:18px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.auth-switch button{
+  border:0;
+  background:none;
+  color:#111827;
+  font-weight:800;
 }
 
 .message{
-  margin-top:14px;
-  padding:12px 14px;
-  border-radius:11px;
+  padding:11px 13px;
+  border-radius:12px;
   font-size:13px;
-  display:none
-}
-
-.message.show{
-  display:block
+  line-height:1.5;
+  margin-bottom:14px;
 }
 
 .message.error{
-  background:#fef2f2;
-  color:#b91c1c
+  background:#fee2e2;
+  color:#991b1b;
 }
 
 .message.success{
-  background:#ecfdf5;
-  color:#047857
+  background:#dcfce7;
+  color:#166534;
 }
 
-/* APP */
+.message.info{
+  background:#e0f2fe;
+  color:#075985;
+}
+
+/* =========================
+   APP
+========================= */
 
 .app{
-  min-height:100vh
+  min-height:100vh;
+  display:flex;
 }
 
 .sidebar{
-  position:fixed;
-  left:0;
-  top:0;
-  bottom:0;
-  width:255px;
+  width:260px;
+  flex:0 0 260px;
   background:#111827;
   color:#fff;
-  padding:22px 15px;
-  z-index:50;
-  overflow:auto
+  min-height:100vh;
+  padding:20px 14px;
+  position:sticky;
+  top:0;
+  height:100vh;
+  overflow-y:auto;
 }
 
-.side-brand{
-  padding:4px 10px 24px
+.sidebar-brand{
+  padding:8px 10px 20px;
 }
 
-.side-brand strong{
+.sidebar-brand strong{
+  font-size:18px;
+}
+
+.sidebar-brand span{
   display:block;
-  font-size:19px
-}
-
-.side-brand span{
   color:#9ca3af;
-  font-size:12px
+  font-size:12px;
+  margin-top:4px;
 }
 
 .nav{
   display:grid;
-  gap:5px
+  gap:6px;
 }
 
 .nav button{
-  width:100%;
-  text-align:left;
   border:0;
-  color:#cbd5e1;
   background:transparent;
+  color:#cbd5e1;
+  text-align:left;
   padding:12px 13px;
-  border-radius:11px
+  border-radius:11px;
+  font-weight:700;
 }
 
 .nav button:hover,
 .nav button.active{
   background:#1f2937;
-  color:#fff
+  color:#fff;
 }
 
-.logout{
-  margin-top:20px;
-  width:100%;
-  border:1px solid #374151;
-  color:#fff;
-  background:transparent;
-  border-radius:11px;
-  padding:11px
+.sidebar-bottom{
+  margin-top:24px;
+  padding-top:16px;
+  border-top:1px solid #374151;
+}
+
+.user-box{
+  padding:12px;
+  border-radius:12px;
+  background:#1f2937;
+  margin-bottom:10px;
+}
+
+.user-box strong{
+  display:block;
+  font-size:14px;
+}
+
+.user-box span{
+  color:#9ca3af;
+  font-size:12px;
 }
 
 .main{
-  margin-left:255px;
-  min-height:100vh
+  flex:1;
+  min-width:0;
 }
 
 .topbar{
@@ -274,348 +342,480 @@ button{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  padding:0 28px;
+  padding:0 24px;
   position:sticky;
   top:0;
-  z-index:20
+  z-index:20;
 }
 
 .menu-btn{
   display:none;
   border:0;
-  background:#f1f5f9;
-  border-radius:10px;
-  padding:9px 12px
+  background:#eef2f7;
+  width:42px;
+  height:42px;
+  border-radius:11px;
 }
 
-.user-box{
+.page{
+  padding:24px;
+  max-width:1500px;
+  margin:auto;
+}
+
+.page-head{
   display:flex;
+  justify-content:space-between;
   align-items:center;
-  gap:10px
+  gap:15px;
+  margin-bottom:20px;
 }
 
-.avatar{
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  background:#111827;
-  color:#fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-weight:700
+.page-head h2{
+  font-size:24px;
 }
 
-.content{
-  padding:28px;
-  max-width:1400px;
-  margin:auto
-}
-
-.section{
-  display:none
-}
-
-.section.active{
-  display:block
-}
-
-.page-title{
-  margin-bottom:22px
-}
-
-.page-title h2{
-  font-size:25px
-}
-
-.page-title p{
+.page-head p{
   color:var(--muted);
+  font-size:13px;
   margin-top:4px;
-  font-size:13px
+}
+
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
 }
 
 .stats{
   display:grid;
   grid-template-columns:repeat(4,1fr);
   gap:15px;
-  margin-bottom:20px
 }
 
 .stat{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:var(--radius);
-  padding:20px
-}
-
-.stat .label{
-  color:var(--muted);
-  font-size:13px
-}
-
-.stat .value{
-  margin-top:8px;
-  font-size:25px;
-  font-weight:800
-}
-
-.card{
-  background:#fff;
-  border:1px solid var(--line);
-  border-radius:var(--radius);
   padding:20px;
-  margin-bottom:18px
 }
 
-.card-head{
+.stat-label{
+  color:var(--muted);
+  font-size:13px;
+  font-weight:700;
+}
+
+.stat-value{
+  font-size:28px;
+  font-weight:900;
+  margin-top:8px;
+}
+
+.stat-small{
+  color:var(--muted);
+  font-size:12px;
+  margin-top:4px;
+}
+
+.section{
+  margin-top:20px;
+}
+
+.section-card{
+  padding:20px;
+}
+
+.section-title{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:12px;
-  margin-bottom:17px
+  gap:10px;
+  margin-bottom:15px;
 }
 
-.card-head h3{
-  font-size:17px
+.section-title h3{
+  font-size:17px;
 }
 
-.small-btn{
-  border:0;
-  background:#111827;
-  color:#fff;
-  padding:9px 13px;
-  border-radius:10px;
-  font-size:13px
+/* =========================
+   PRODUCTS
+========================= */
+
+.product-layout{
+  display:grid;
+  grid-template-columns:390px 1fr;
+  gap:20px;
+  align-items:start;
+}
+
+.product-form{
+  padding:20px;
+  position:sticky;
+  top:90px;
+}
+
+.photo-upload{
+  border:2px dashed #d1d5db;
+  border-radius:16px;
+  min-height:190px;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:8px;
+  overflow:hidden;
+  background:#f8fafc;
+  margin-bottom:16px;
+}
+
+.photo-upload img{
+  width:100%;
+  height:210px;
+  object-fit:cover;
+}
+
+.photo-upload strong{
+  font-size:14px;
+}
+
+.photo-upload span{
+  color:var(--muted);
+  font-size:12px;
+}
+
+.photo-actions{
+  display:flex;
+  gap:8px;
+  width:100%;
+  padding:0 12px 12px;
+}
+
+.photo-actions button{
+  flex:1;
+}
+
+.product-list-card{
+  padding:20px;
+}
+
+.search-row{
+  display:flex;
+  gap:10px;
+  margin-bottom:16px;
+}
+
+.search-row input,
+.search-row select{
+  flex:1;
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:11px 12px;
+  background:#fff;
+  outline:none;
 }
 
 .products-grid{
   display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:15px
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
 }
 
 .product-card{
   border:1px solid var(--line);
-  border-radius:15px;
+  border-radius:16px;
   overflow:hidden;
-  background:#fff
+  background:#fff;
+  transition:.2s;
+}
+
+.product-card:hover{
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
 }
 
 .product-photo{
   width:100%;
-  height:170px;
+  height:180px;
+  background:#f1f5f9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+
+.product-photo img{
+  width:100%;
+  height:100%;
   object-fit:cover;
-  background:#f1f5f9
 }
 
-.product-info{
-  padding:14px
+.no-photo{
+  color:#94a3b8;
+  font-size:35px;
 }
 
-.product-info h4{
-  font-size:15px;
-  margin-bottom:5px
+.product-body{
+  padding:14px;
 }
 
-.product-info p{
+.product-name{
+  font-weight:900;
+  font-size:16px;
+  line-height:1.4;
+}
+
+.product-meta{
   color:var(--muted);
   font-size:12px;
-  margin-bottom:8px
+  margin-top:5px;
 }
 
-.price{
-  font-weight:800
+.price-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:12px;
 }
 
-.product-actions{
+.price-box{
+  background:#f8fafc;
+  border-radius:10px;
+  padding:9px;
+}
+
+.price-box span{
+  display:block;
+  color:var(--muted);
+  font-size:10px;
+}
+
+.price-box strong{
+  font-size:14px;
+}
+
+.stock-row{
+  margin-top:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.stock-badge{
+  padding:5px 8px;
+  border-radius:8px;
+  font-size:11px;
+  font-weight:800;
+}
+
+.stock-ok{
+  background:#dcfce7;
+  color:#166534;
+}
+
+.stock-low{
+  background:#ffedd5;
+  color:#9a3412;
+}
+
+.stock-out{
+  background:#fee2e2;
+  color:#991b1b;
+}
+
+.card-actions{
   display:flex;
   gap:7px;
-  margin-top:12px
+  margin-top:12px;
 }
 
-.product-actions button{
+.card-actions button{
   flex:1;
-  border:0;
   padding:9px;
+  border:0;
   border-radius:9px;
-  background:#f1f5f9
+  font-size:12px;
+  font-weight:800;
 }
 
-.product-actions button.delete{
-  color:#b91c1c;
-  background:#fef2f2
+/* =========================
+   EMPTY
+========================= */
+
+.empty{
+  text-align:center;
+  padding:50px 20px;
+  color:var(--muted);
 }
 
-.modal{
+.empty-icon{
+  font-size:40px;
+  margin-bottom:10px;
+}
+
+/* =========================
+   MODAL
+========================= */
+
+.modal-backdrop{
   position:fixed;
   inset:0;
   background:rgba(15,23,42,.55);
-  display:none;
+  display:flex;
   align-items:center;
   justify-content:center;
   padding:20px;
-  z-index:100
+  z-index:100;
 }
 
-.modal.show{
-  display:flex
-}
-
-.modal-card{
+.modal{
   width:100%;
-  max-width:620px;
+  max-width:500px;
   max-height:90vh;
   overflow:auto;
   background:#fff;
-  border-radius:22px;
-  padding:23px
+  border-radius:20px;
+  padding:22px;
 }
 
 .modal-head{
   display:flex;
-  align-items:center;
   justify-content:space-between;
-  margin-bottom:20px
+  align-items:center;
+  margin-bottom:18px;
 }
 
 .close-btn{
   border:0;
   background:#f1f5f9;
-  border-radius:9px;
-  padding:8px 11px
-}
-
-.two{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:13px
-}
-
-.photo-preview{
-  width:100%;
-  height:180px;
-  border:1px dashed #cbd5e1;
-  border-radius:13px;
-  object-fit:contain;
-  background:#f8fafc;
-  margin-top:7px
-}
-
-.plan-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px
-}
-
-.plan{
-  border:1px solid var(--line);
-  border-radius:17px;
-  padding:20px
-}
-
-.plan h3{
-  margin-bottom:8px
-}
-
-.plan .amount{
-  font-size:24px;
-  font-weight:800;
-  margin-bottom:13px
-}
-
-.plan button{
-  width:100%;
-  border:0;
+  width:38px;
+  height:38px;
   border-radius:10px;
+}
+
+/* =========================
+   LOADING
+========================= */
+
+.loading{
+  position:fixed;
+  inset:0;
+  background:rgba(255,255,255,.75);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:200;
+}
+
+.loading-box{
   background:#111827;
   color:#fff;
-  padding:11px
+  padding:16px 20px;
+  border-radius:13px;
+  font-size:14px;
+  font-weight:700;
 }
 
-.empty{
-  text-align:center;
-  color:var(--muted);
-  padding:35px
-}
+/* =========================
+   RESPONSIVE
+========================= */
 
-.alert{
-  padding:14px;
-  border-radius:12px;
-  background:#fff7ed;
-  color:#9a3412;
-  margin-bottom:18px;
-  font-size:13px
-}
+@media(max-width:1100px){
+  .product-layout{
+    grid-template-columns:1fr;
+  }
 
-@media(max-width:1000px){
-  .stats{
-    grid-template-columns:repeat(2,1fr)
+  .product-form{
+    position:static;
   }
 
   .products-grid{
-    grid-template-columns:repeat(3,1fr)
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .stats{
+    grid-template-columns:repeat(2,1fr);
   }
 }
 
-@media(max-width:700px){
+@media(max-width:760px){
   .sidebar{
-    transform:translateX(-100%);
-    transition:.25s
+    position:fixed;
+    left:-280px;
+    top:0;
+    z-index:80;
+    transition:.25s;
   }
 
   .sidebar.open{
-    transform:translateX(0)
-  }
-
-  .main{
-    margin-left:0
+    left:0;
   }
 
   .menu-btn{
-    display:block
+    display:block;
   }
 
   .topbar{
-    padding:0 15px
+    padding:0 14px;
   }
 
-  .content{
-    padding:17px
+  .page{
+    padding:15px;
+  }
+
+  .page-head{
+    align-items:flex-start;
+  }
+
+  .page-head h2{
+    font-size:21px;
   }
 
   .stats{
     grid-template-columns:1fr 1fr;
-    gap:10px
+    gap:10px;
   }
 
   .stat{
-    padding:15px
+    padding:15px;
   }
 
-  .stat .value{
-    font-size:20px
+  .stat-value{
+    font-size:22px;
   }
 
   .products-grid{
-    grid-template-columns:1fr 1fr
+    grid-template-columns:1fr 1fr;
+    gap:10px;
   }
 
-  .two{
-    grid-template-columns:1fr
+  .product-photo{
+    height:145px;
   }
 
-  .plan-grid{
-    grid-template-columns:1fr
+  .product-body{
+    padding:11px;
+  }
+
+  .two-col{
+    grid-template-columns:1fr;
   }
 }
 
-@media(max-width:430px){
+@media(max-width:500px){
   .auth-card{
-    padding:22px
+    padding:20px;
+    border-radius:20px;
+  }
+
+  .stats{
+    grid-template-columns:1fr 1fr;
   }
 
   .products-grid{
-    grid-template-columns:1fr
+    grid-template-columns:1fr;
+  }
+
+  .search-row{
+    flex-direction:column;
   }
 }
 </style>
@@ -623,604 +823,297 @@ button{
 
 <body>
 
-<!-- AUTH -->
-<div id="authPage" class="auth-page">
+<!-- =========================
+     LOADING
+========================= -->
+
+<div id="loading" class="loading hidden">
+  <div class="loading-box" id="loadingText">လုပ်ဆောင်နေသည်...</div>
+</div>
+
+<!-- =========================
+     AUTH
+========================= -->
+
+<section id="authPage" class="auth-page">
 
   <div class="auth-card">
 
     <div class="brand">
-      <div class="brand-logo">AP</div>
-      <h1>AUNG POS</h1>
-      <p>Commercial Cloud POS</p>
+      <div class="brand-icon">AP</div>
+      <div>
+        <h1>AUNG POS</h1>
+        <p>Commercial Cloud POS</p>
+      </div>
     </div>
 
-    <div class="tabs">
-      <button id="loginTab" class="active" onclick="showAuth('login')">
-        Login
-      </button>
-
-      <button id="registerTab" onclick="showAuth('register')">
-        Register
-      </button>
-    </div>
+    <div id="authMessage"></div>
 
     <!-- LOGIN -->
-    <form id="loginForm" class="form-grid">
 
-      <div class="field">
-        <label>Email</label>
-        <input id="loginEmail" type="email" required placeholder="Email">
+    <div id="loginBox">
+
+      <h2 class="auth-title">Login</h2>
+
+      <p class="auth-subtitle">
+        သင့် Business Account ထဲသို့ ဝင်ပါ
+      </p>
+
+      <form id="loginForm" class="form-grid">
+
+        <div class="field">
+          <label>Email</label>
+          <input
+            id="loginEmail"
+            type="email"
+            required
+            autocomplete="email"
+            placeholder="example@email.com">
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <input
+            id="loginPassword"
+            type="password"
+            required
+            autocomplete="current-password"
+            placeholder="Password">
+        </div>
+
+        <button class="primary-btn full" type="submit">
+          Login
+        </button>
+
+      </form>
+
+      <div class="auth-switch">
+        Account မရှိသေးပါလား?
+        <button id="showRegisterBtn" type="button">
+          Register
+        </button>
       </div>
 
-      <div class="field">
-        <label>Password</label>
-        <input id="loginPassword" type="password" required placeholder="Password">
-      </div>
-
-      <button class="primary-btn" type="submit">
-        Login
-      </button>
-
-    </form>
+    </div>
 
     <!-- REGISTER -->
-    <form id="registerForm" class="form-grid hidden">
 
-      <div class="field">
-        <label>Business / Shop Name</label>
-        <input id="regBusiness" required>
-      </div>
+    <div id="registerBox" class="hidden">
 
-      <div class="field">
-        <label>Admin Name</label>
-        <input id="regAdmin" required>
-      </div>
+      <h2 class="auth-title">Create Business</h2>
 
-      <div class="field">
-        <label>Username</label>
-        <input id="regUsername" required>
-      </div>
+      <p class="auth-subtitle">
+        AUNG POS Cloud Business Account အသစ်ဖန်တီးပါ
+      </p>
 
-      <div class="two">
+      <form id="registerForm" class="form-grid">
+
+        <div class="field">
+          <label>Business / Shop Name</label>
+          <input id="regBusinessName" required placeholder="ဆိုင်အမည်">
+        </div>
+
+        <div class="two-col">
+
+          <div class="field">
+            <label>Admin Name</label>
+            <input id="regFullName" required placeholder="Admin Name">
+          </div>
+
+          <div class="field">
+            <label>Username</label>
+            <input id="regUsername" required placeholder="admin">
+          </div>
+
+        </div>
 
         <div class="field">
           <label>Phone</label>
-          <input id="regPhone">
+          <input id="regPhone" placeholder="09xxxxxxxxx">
+        </div>
+
+        <div class="field">
+          <label>Address</label>
+          <textarea id="regAddress" placeholder="ဆိုင်လိပ်စာ"></textarea>
         </div>
 
         <div class="field">
           <label>Email</label>
-          <input id="regEmail" type="email" required>
+          <input
+            id="regEmail"
+            type="email"
+            required
+            autocomplete="email"
+            placeholder="example@email.com">
         </div>
 
-      </div>
+        <div class="two-col">
 
-      <div class="field">
-        <label>Address</label>
-        <input id="regAddress">
-      </div>
+          <div class="field">
+            <label>Password</label>
+            <input
+              id="regPassword"
+              type="password"
+              required
+              minlength="6"
+              autocomplete="new-password">
+          </div>
 
-      <div class="two">
+          <div class="field">
+            <label>Confirm Password</label>
+            <input
+              id="regPassword2"
+              type="password"
+              required
+              minlength="6"
+              autocomplete="new-password">
+          </div>
 
-        <div class="field">
-          <label>Password</label>
-          <input id="regPassword" type="password" required minlength="6">
         </div>
 
-        <div class="field">
-          <label>Confirm Password</label>
-          <input id="regConfirm" type="password" required minlength="6">
-        </div>
+        <button class="primary-btn full" type="submit">
+          Create Business Account
+        </button>
 
+      </form>
+
+      <div class="auth-switch">
+        Account ရှိပြီးသားလား?
+        <button id="showLoginBtn" type="button">
+          Login
+        </button>
       </div>
 
-      <button class="primary-btn" type="submit">
-        Create Business Account
-      </button>
-
-    </form>
-
-    <div id="authMessage" class="message"></div>
+    </div>
 
   </div>
-</div>
 
+</section>
 
-<!-- APP -->
-<div id="app" class="app hidden">
+<!-- =========================
+     APP
+========================= -->
+
+<section id="app" class="app hidden">
 
   <aside id="sidebar" class="sidebar">
 
-    <div class="side-brand">
+    <div class="sidebar-brand">
       <strong>AUNG POS</strong>
       <span>Commercial Cloud POS</span>
     </div>
 
     <nav class="nav">
 
-      <button data-section="dashboard" onclick="openSection('dashboard')">
+      <button class="nav-btn active" data-page="dashboard">
         📊 Dashboard
       </button>
 
-      <button data-section="products" onclick="openSection('products')">
+      <button class="nav-btn" data-page="products">
         📦 Products
       </button>
 
-      <button data-section="sales" onclick="openSection('sales')">
+      <button class="nav-btn" data-page="sales">
         🛒 Sales / POS
       </button>
 
-      <button data-section="inventory" onclick="openSection('inventory')">
-        🏷️ Inventory
+      <button class="nav-btn" data-page="purchases">
+        📥 Purchases
       </button>
 
-      <button data-section="customers" onclick="openSection('customers')">
+      <button class="nav-btn" data-page="inventory">
+        📦 Inventory
+      </button>
+
+      <button class="nav-btn" data-page="customers">
         👥 Customers
       </button>
 
-      <button data-section="suppliers" onclick="openSection('suppliers')">
+      <button class="nav-btn" data-page="suppliers">
         🚚 Suppliers
       </button>
 
-      <button data-section="reports" onclick="openSection('reports')">
+      <button class="nav-btn" data-page="reports">
         📈 Reports
       </button>
 
-      <button data-section="subscription" onclick="openSection('subscription')">
+      <button class="nav-btn" data-page="subscription">
         💳 Subscription
       </button>
 
-      <button data-section="settings" onclick="openSection('settings')">
+      <button class="nav-btn" data-page="settings">
         ⚙️ Settings
       </button>
 
     </nav>
 
-    <button class="logout" onclick="logout()">
-      Logout
-    </button>
+    <div class="sidebar-bottom">
+
+      <div class="user-box">
+        <strong id="sideUserName">Admin</strong>
+        <span id="sideBusinessName">Business</span>
+      </div>
+
+      <button id="logoutBtn" class="danger-btn full">
+        Logout
+      </button>
+
+    </div>
 
   </aside>
-
 
   <main class="main">
 
     <header class="topbar">
 
-      <div style="display:flex;align-items:center;gap:10px">
+      <button id="menuBtn" class="menu-btn">
+        ☰
+      </button>
 
-        <button class="menu-btn" onclick="toggleSidebar()">
-          ☰
-        </button>
-
-        <strong id="pageName">Dashboard</strong>
-
+      <div>
+        <strong id="topBusinessName">AUNG POS</strong>
       </div>
 
-      <div class="user-box">
-
-        <div class="avatar" id="avatar">A</div>
-
-        <div>
-          <strong id="userName">Admin</strong>
-          <div style="font-size:11px;color:#718096" id="userRole">
-            Admin
-          </div>
-        </div>
-
+      <div>
+        <span id="topRole" style="font-size:12px;color:#6b7280">
+          Admin
+        </span>
       </div>
 
     </header>
 
+    <div id="pageContainer" class="page"></div>
 
-    <div class="content">
-
-      <!-- DASHBOARD -->
-      <section id="section-dashboard" class="section active">
-
-        <div class="page-title">
-          <h2>Dashboard</h2>
-          <p id="businessTitle">Cloud Business Dashboard</p>
-        </div>
-
-        <div id="subscriptionAlert" class="alert hidden"></div>
-
-        <div class="stats">
-
-          <div class="stat">
-            <div class="label">Today Sales</div>
-            <div class="value" id="statSales">0 Ks</div>
-          </div>
-
-          <div class="stat">
-            <div class="label">Today Orders</div>
-            <div class="value" id="statOrders">0</div>
-          </div>
-
-          <div class="stat">
-            <div class="label">Products</div>
-            <div class="value" id="statProducts">0</div>
-          </div>
-
-          <div class="stat">
-            <div class="label">Low Stock</div>
-            <div class="value" id="statLowStock">0</div>
-          </div>
-
-        </div>
-
-        <div class="card">
-
-          <div class="card-head">
-            <h3>Business Account</h3>
-          </div>
-
-          <div id="businessInfo">
-            Loading...
-          </div>
-
-        </div>
-
-      </section>
-
-
-      <!-- PRODUCTS -->
-      <section id="section-products" class="section">
-
-        <div class="page-title">
-          <h2>Products</h2>
-          <p>Cloud Product Management</p>
-        </div>
-
-        <div class="card">
-
-          <div class="card-head">
-
-            <h3>Product List</h3>
-
-            <button class="small-btn" onclick="openProductModal()">
-              ＋ Add Product
-            </button>
-
-          </div>
-
-          <div id="productsGrid" class="products-grid"></div>
-
-        </div>
-
-      </section>
-
-
-      <!-- SALES -->
-      <section id="section-sales" class="section">
-
-        <div class="page-title">
-          <h2>Sales / POS</h2>
-          <p>Sales module will be connected to cloud database</p>
-        </div>
-
-        <div class="card">
-          <div class="empty">
-            Sales / POS module — Next Upgrade
-          </div>
-        </div>
-
-      </section>
-
-
-      <!-- INVENTORY -->
-      <section id="section-inventory" class="section">
-
-        <div class="page-title">
-          <h2>Inventory</h2>
-          <p>Cloud Stock Management</p>
-        </div>
-
-        <div class="card">
-
-          <div class="card-head">
-            <h3>Current Stock</h3>
-          </div>
-
-          <div id="inventoryList"></div>
-
-        </div>
-
-      </section>
-
-
-      <!-- CUSTOMERS -->
-      <section id="section-customers" class="section">
-
-        <div class="page-title">
-          <h2>Customers</h2>
-          <p>Customer management</p>
-        </div>
-
-        <div class="card">
-          <div class="empty">
-            Customer module — Next Upgrade
-          </div>
-        </div>
-
-      </section>
-
-
-      <!-- SUPPLIERS -->
-      <section id="section-suppliers" class="section">
-
-        <div class="page-title">
-          <h2>Suppliers</h2>
-          <p>Supplier management</p>
-        </div>
-
-        <div class="card">
-          <div class="empty">
-            Supplier module — Next Upgrade
-          </div>
-        </div>
-
-      </section>
-
-
-      <!-- REPORTS -->
-      <section id="section-reports" class="section">
-
-        <div class="page-title">
-          <h2>Reports</h2>
-          <p>Business reports</p>
-        </div>
-
-        <div class="card">
-          <div class="empty">
-            Reports module — Next Upgrade
-          </div>
-        </div>
-
-      </section>
-
-
-      <!-- SUBSCRIPTION -->
-      <section id="section-subscription" class="section">
-
-        <div class="page-title">
-          <h2>Subscription</h2>
-          <p>Choose your AUNG POS plan</p>
-        </div>
-
-        <div class="plan-grid">
-
-          <div class="plan">
-            <h3>1 Month</h3>
-            <div class="amount">100,000 Ks</div>
-            <p style="color:#718096;font-size:13px;margin-bottom:15px">
-              Monthly plan
-            </p>
-            <button onclick="requestPlan('1m','100000')">
-              Request Plan
-            </button>
-          </div>
-
-          <div class="plan">
-            <h3>3 Months</h3>
-            <div class="amount">270,000 Ks</div>
-            <p style="color:#718096;font-size:13px;margin-bottom:15px">
-              3 month plan
-            </p>
-            <button onclick="requestPlan('3m','270000')">
-              Request Plan
-            </button>
-          </div>
-
-          <div class="plan">
-            <h3>6 Months</h3>
-            <div class="amount">480,000 Ks</div>
-            <p style="color:#718096;font-size:13px;margin-bottom:15px">
-              6 month plan
-            </p>
-            <button onclick="requestPlan('6m','480000')">
-              Request Plan
-            </button>
-          </div>
-
-        </div>
-
-        <div class="card" style="margin-top:18px">
-
-          <h3 style="margin-bottom:12px">
-            Payment
-          </h3>
-
-          <p style="font-size:14px;line-height:1.8">
-            KPay / WavePay
-            <br>
-            Payment Number: <strong>0943016420</strong>
-          </p>
-
-          <p style="margin-top:12px;color:#718096;font-size:13px">
-            Payment ပြီးပါက Transaction ID ဖြည့်ပြီး Admin Activation တောင်းနိုင်ပါသည်
-          </p>
-
-        </div>
-
-      </section>
-
-
-      <!-- SETTINGS -->
-      <section id="section-settings" class="section">
-
-        <div class="page-title">
-          <h2>Settings</h2>
-          <p>Business account information</p>
-        </div>
-
-        <div class="card">
-
-          <div class="form-grid">
-
-            <div class="field">
-              <label>Business Name</label>
-              <input id="settingBusiness">
-            </div>
-
-            <div class="field">
-              <label>Phone</label>
-              <input id="settingPhone">
-            </div>
-
-            <div class="field">
-              <label>Address</label>
-              <input id="settingAddress">
-            </div>
-
-            <button class="primary-btn" onclick="saveBusinessSettings()">
-              Save Settings
-            </button>
-
-          </div>
-
-        </div>
-
-      </section>
-
-    </div>
   </main>
 
-</div>
+</section>
 
+<!-- =========================
+     MODAL
+========================= -->
 
-<!-- PRODUCT MODAL -->
-<div id="productModal" class="modal">
+<div id="simpleModal" class="modal-backdrop hidden">
 
-  <div class="modal-card">
+  <div class="modal">
 
     <div class="modal-head">
+      <strong id="modalTitle">Information</strong>
 
-      <h3 id="productModalTitle">
-        Add Product
-      </h3>
-
-      <button class="close-btn" onclick="closeProductModal()">
+      <button
+        id="modalClose"
+        class="close-btn"
+        type="button">
         ✕
       </button>
-
     </div>
 
-    <form id="productForm" class="form-grid">
-
-      <input id="productId" type="hidden">
-
-      <div class="field">
-        <label>Product Name</label>
-        <input id="productName" required>
-      </div>
-
-      <div class="two">
-
-        <div class="field">
-          <label>Barcode</label>
-          <input id="productBarcode">
-        </div>
-
-        <div class="field">
-          <label>Category</label>
-          <input id="productCategory">
-        </div>
-
-      </div>
-
-      <div class="two">
-
-        <div class="field">
-          <label>Subcategory</label>
-          <input id="productSubcategory">
-        </div>
-
-        <div class="field">
-          <label>Unit</label>
-          <input id="productUnit" placeholder="pcs / box / bottle">
-        </div>
-
-      </div>
-
-      <div class="two">
-
-        <div class="field">
-          <label>Buy Price</label>
-          <input id="productBuy" type="number" min="0" value="0">
-        </div>
-
-        <div class="field">
-          <label>Retail Price</label>
-          <input id="productRetail" type="number" min="0" value="0">
-        </div>
-
-      </div>
-
-      <div class="two">
-
-        <div class="field">
-          <label>Wholesale Price</label>
-          <input id="productWholesale" type="number" min="0" value="0">
-        </div>
-
-        <div class="field">
-          <label>Stock</label>
-          <input id="productStock" type="number" min="0" value="0">
-        </div>
-
-      </div>
-
-      <div class="two">
-
-        <div class="field">
-          <label>Minimum Stock</label>
-          <input id="productMinStock" type="number" min="0" value="0">
-        </div>
-
-        <div class="field">
-          <label>Expiry</label>
-          <input id="productExpiry" type="date">
-        </div>
-
-      </div>
-
-      <div class="field">
-        <label>Variant</label>
-        <input id="productVariant" placeholder="Color / Size / Model">
-      </div>
-
-      <div class="field">
-
-        <label>Product Photo</label>
-
-        <input
-          id="productPhoto"
-          type="file"
-          accept="image/*"
-        >
-
-        <img
-          id="photoPreview"
-          class="photo-preview hidden"
-          alt="Preview"
-        >
-
-      </div>
-
-      <button class="primary-btn" type="submit">
-        Save Product
-      </button>
-
-    </form>
+    <div id="modalBody"></div>
 
   </div>
 
 </div>
 
-
 <script>
-
 /* =========================================================
    SUPABASE
 ========================================================= */
@@ -1234,7 +1127,14 @@ const SUPABASE_PUBLISHABLE_KEY =
 const supabaseClient =
   window.supabase.createClient(
     SUPABASE_URL,
-    SUPABASE_PUBLISHABLE_KEY
+    SUPABASE_PUBLISHABLE_KEY,
+    {
+      auth:{
+        persistSession:true,
+        autoRefreshToken:true,
+        detectSessionInUrl:true
+      }
+    }
   );
 
 
@@ -1242,11 +1142,17 @@ const supabaseClient =
    STATE
 ========================================================= */
 
-let currentUser = null;
-let currentBusiness = null;
-let currentProfile = null;
-let products = [];
-let editingProduct = null;
+const state = {
+  user:null,
+  business:null,
+  businessUser:null,
+  products:[],
+  categories:[],
+  subcategories:[],
+  units:[],
+  currentProductId:null,
+  selectedPhoto:null
+};
 
 
 /* =========================================================
@@ -1257,49 +1163,118 @@ function $(id){
   return document.getElementById(id);
 }
 
+function escapeHtml(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
 function money(value){
-  return Number(value || 0).toLocaleString("en-US") + " Ks";
+  return Number(value || 0).toLocaleString("en-US");
+}
+
+function showLoading(text="လုပ်ဆောင်နေသည်..."){
+  $("loadingText").textContent = text;
+  $("loading").classList.remove("hidden");
+}
+
+function hideLoading(){
+  $("loading").classList.add("hidden");
 }
 
 function showMessage(text,type="error"){
-  const box = $("authMessage");
-
-  box.textContent = text;
-  box.className = "message show " + type;
+  $("authMessage").innerHTML =
+    `<div class="message ${type}">${escapeHtml(text)}</div>`;
 }
 
 function clearMessage(){
-  $("authMessage").className = "message";
-  $("authMessage").textContent = "";
+  $("authMessage").innerHTML="";
 }
+
+function today(){
+  return new Date().toISOString().slice(0,10);
+}
+
+function openModal(title,html){
+  $("modalTitle").textContent=title;
+  $("modalBody").innerHTML=html;
+  $("simpleModal").classList.remove("hidden");
+}
+
+function closeModal(){
+  $("simpleModal").classList.add("hidden");
+}
+
+$("modalClose").addEventListener("click",closeModal);
+
+$("simpleModal").addEventListener("click",e=>{
+  if(e.target === $("simpleModal")){
+    closeModal();
+  }
+});
 
 
 /* =========================================================
-   AUTH TABS
+   AUTH VIEW
 ========================================================= */
 
-function showAuth(type){
+function showLogin(){
+  $("loginBox").classList.remove("hidden");
+  $("registerBox").classList.add("hidden");
+  clearMessage();
+}
+
+function showRegister(){
+  $("loginBox").classList.add("hidden");
+  $("registerBox").classList.remove("hidden");
+  clearMessage();
+}
+
+$("showRegisterBtn").addEventListener("click",showRegister);
+$("showLoginBtn").addEventListener("click",showLogin);
+
+
+/* =========================================================
+   LOGIN
+========================================================= */
+
+$("loginForm").addEventListener("submit",async e=>{
+
+  e.preventDefault();
 
   clearMessage();
+  showLoading("Login လုပ်နေသည်...");
 
-  if(type === "login"){
+  const email =
+    $("loginEmail").value.trim();
 
-    $("loginForm").classList.remove("hidden");
-    $("registerForm").classList.add("hidden");
+  const password =
+    $("loginPassword").value;
 
-    $("loginTab").classList.add("active");
-    $("registerTab").classList.remove("active");
+  const {
+    data,
+    error
+  } =
+  await supabaseClient.auth.signInWithPassword({
+    email,
+    password
+  });
 
-  }else{
+  hideLoading();
 
-    $("loginForm").classList.add("hidden");
-    $("registerForm").classList.remove("hidden");
-
-    $("loginTab").classList.remove("active");
-    $("registerTab").classList.add("active");
-
+  if(error){
+    showMessage(error.message);
+    return;
   }
-}
+
+  state.user=data.user;
+
+  await initializeApp();
+
+});
 
 
 /* =========================================================
@@ -1312,11 +1287,11 @@ $("registerForm").addEventListener("submit",async e=>{
 
   clearMessage();
 
-  const business =
-    $("regBusiness").value.trim();
+  const businessName =
+    $("regBusinessName").value.trim();
 
-  const admin =
-    $("regAdmin").value.trim();
+  const fullName =
+    $("regFullName").value.trim();
 
   const username =
     $("regUsername").value.trim();
@@ -1333,189 +1308,140 @@ $("registerForm").addEventListener("submit",async e=>{
   const password =
     $("regPassword").value;
 
-  const confirm =
-    $("regConfirm").value;
+  const password2 =
+    $("regPassword2").value;
 
-  if(password !== confirm){
-
-    showMessage(
-      "Password နှစ်ခု မတူပါ",
-      "error"
-    );
-
+  if(password !== password2){
+    showMessage("Password နှစ်ခုမတူပါ");
     return;
   }
 
-  try{
+  showLoading("Account ဖန်တီးနေသည်...");
 
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.auth.signUp({
-        email,
-        password
-      });
+  const {
+    data,
+    error
+  } =
+  await supabaseClient.auth.signUp({
+    email,
+    password
+  });
 
-    if(error) throw error;
+  if(error){
+    hideLoading();
+    showMessage(error.message);
+    return;
+  }
 
-    if(!data.user){
+  /*
+    Email confirmation OFF ဖြစ်ရင် session ရပါမယ်
+  */
 
-      throw new Error(
-        "Account creation failed"
-      );
+  if(data.session){
 
-    }
-
-    currentUser = data.user;
+    state.user=data.user;
 
     const {
       data:businessId,
       error:businessError
     } =
-      await supabaseClient.rpc(
-        "create_business",
-        {
-          p_name:business,
-          p_phone:phone || null,
-          p_address:address || null,
-          p_full_name:admin,
-          p_username:username
-        }
-      );
+    await supabaseClient.rpc(
+      "create_business",
+      {
+        p_name:businessName,
+        p_phone:phone || null,
+        p_address:address || null,
+        p_full_name:fullName,
+        p_username:username
+      }
+    );
 
     if(businessError){
 
-      console.error(businessError);
+      hideLoading();
 
       showMessage(
         "Account ရပြီး Business setup မပြီးသေးပါ — " +
-        businessError.message,
-        "error"
+        businessError.message
       );
 
       return;
     }
 
-    showMessage(
-      "Business Account ဖန်တီးပြီးပါပြီ",
-      "success"
-    );
+    await initializeApp();
 
-    setTimeout(
-      ()=>loadApp(),
-      800
-    );
+    hideLoading();
 
-  }catch(error){
-
-    console.error(error);
-
-    showMessage(
-      error.message || "Register failed",
-      "error"
-    );
-
+    return;
   }
+
+  hideLoading();
+
+  showMessage(
+    "Account ဖန်တီးပြီးပါပြီ။ Email confirmation လိုအပ်ပါက Email ကိုအတည်ပြုပြီး Login ဝင်ပါ",
+    "info"
+  );
 
 });
 
 
 /* =========================================================
-   LOGIN
+   INITIALIZE
 ========================================================= */
 
-$("loginForm").addEventListener("submit",async e=>{
+async function initializeApp(){
 
-  e.preventDefault();
-
-  clearMessage();
-
-  const email =
-    $("loginEmail").value.trim();
-
-  const password =
-    $("loginPassword").value;
-
-  try{
-
-    const {
-      data,
-      error
-    } =
-      await supabaseClient.auth.signInWithPassword({
-        email,
-        password
-      });
-
-    if(error) throw error;
-
-    currentUser = data.user;
-
-    await loadApp();
-
-  }catch(error){
-
-    console.error(error);
-
-    showMessage(
-      error.message || "Login failed",
-      "error"
-    );
-
-  }
-
-});
-
-
-/* =========================================================
-   LOAD APP
-========================================================= */
-
-async function loadApp(){
+  showLoading("Business data ဖတ်နေသည်...");
 
   const {
     data:{
       user
     }
   } =
-    await supabaseClient.auth.getUser();
+  await supabaseClient.auth.getUser();
 
   if(!user){
 
-    $("authPage").classList.remove("hidden");
+    hideLoading();
+
     $("app").classList.add("hidden");
+    $("authPage").classList.remove("hidden");
 
     return;
   }
 
-  currentUser = user;
+  state.user=user;
+
+  /*
+    Load business user
+  */
 
   const {
-    data:profile,
-    error
+    data:businessUser,
+    error:userError
   } =
-    await supabaseClient
-      .from("business_users")
-      .select("*")
-      .eq("auth_user_id",user.id)
-      .maybeSingle();
+  await supabaseClient
+    .from("business_users")
+    .select("*")
+    .eq("auth_user_id",user.id)
+    .limit(1)
+    .maybeSingle();
 
-  if(error){
+  if(userError){
 
-    console.error(error);
+    hideLoading();
 
-    showMessage(
-      error.message,
-      "error"
-    );
+    alert(userError.message);
 
     return;
   }
 
-  if(!profile){
+  if(!businessUser){
 
-    showAuth("register");
+    hideLoading();
+
+    $("app").classList.add("hidden");
+    $("authPage").classList.remove("hidden");
 
     showMessage(
       "Business profile မတွေ့ပါ",
@@ -1525,354 +1451,92 @@ async function loadApp(){
     return;
   }
 
-  currentProfile = profile;
+  state.businessUser=businessUser;
+
+  /*
+    Load business
+  */
 
   const {
     data:business,
     error:businessError
   } =
-    await supabaseClient
-      .from("businesses")
-      .select("*")
-      .eq("id",profile.business_id)
-      .single();
+  await supabaseClient
+    .from("businesses")
+    .select("*")
+    .eq("id",businessUser.business_id)
+    .maybeSingle();
 
   if(businessError){
 
-    console.error(businessError);
+    hideLoading();
 
-    showMessage(
-      businessError.message,
-      "error"
-    );
+    alert(businessError.message);
 
     return;
   }
 
-  currentBusiness = business;
+  state.business=business;
+
+  updateBusinessUI();
 
   $("authPage").classList.add("hidden");
   $("app").classList.remove("hidden");
 
-  $("userName").textContent =
-    profile.full_name || "Admin";
+  await loadProducts();
 
-  $("userRole").textContent =
-    profile.role || "Admin";
+  renderDashboard();
 
-  $("avatar").textContent =
-    (profile.full_name || "A")
-      .charAt(0)
-      .toUpperCase();
-
-  $("businessTitle").textContent =
-    business.name || "Business";
-
-  $("businessInfo").innerHTML = `
-    <div style="line-height:2;font-size:14px">
-      <strong>${escapeHtml(business.name || "")}</strong><br>
-      Phone: ${escapeHtml(business.phone || "-")}<br>
-      Address: ${escapeHtml(business.address || "-")}<br>
-      User: ${escapeHtml(profile.full_name || "-")}<br>
-      Role: ${escapeHtml(profile.role || "-")}
-    </div>
-  `;
-
-  $("settingBusiness").value =
-    business.name || "";
-
-  $("settingPhone").value =
-    business.phone || "";
-
-  $("settingAddress").value =
-    business.address || "";
-
-  await refreshProducts();
-
-  updateDashboard();
-
+  hideLoading();
 }
 
 
 /* =========================================================
-   PRODUCTS
+   BUSINESS UI
 ========================================================= */
 
-async function refreshProducts(){
+function updateBusinessUI(){
 
-  const {
-    data,
-    error
-  } =
-    await supabaseClient
-      .from("products")
-      .select("*")
-      .eq(
-        "business_id",
-        currentBusiness.id
-      )
-      .order(
-        "created_at",
-        {
-          ascending:false
-        }
-      );
+  const businessName =
+    state.business?.name || "AUNG POS";
 
-  if(error){
+  const fullName =
+    state.businessUser?.full_name || "Admin";
 
-    console.error(error);
+  const role =
+    state.businessUser?.role || "Admin";
 
-    $("productsGrid").innerHTML = `
-      <div class="empty">
-        Products load error<br>
-        ${escapeHtml(error.message)}
-      </div>
-    `;
+  $("topBusinessName").textContent =
+    businessName;
 
-    return;
-  }
+  $("sideBusinessName").textContent =
+    businessName;
 
-  products = data || [];
+  $("sideUserName").textContent =
+    fullName;
 
-  renderProducts();
-  renderInventory();
-
-  $("statProducts").textContent =
-    products.length;
-
-  $("statLowStock").textContent =
-    products.filter(
-      p =>
-        Number(p.stock || 0) <=
-        Number(p.min_stock || 0)
-    ).length;
-
+  $("topRole").textContent =
+    role;
 }
 
 
 /* =========================================================
-   RENDER PRODUCTS
+   SESSION
 ========================================================= */
 
-function renderProducts(){
+supabaseClient.auth.onAuthStateChange(
+  async (event,session)=>{
 
-  const grid = $("productsGrid");
+    if(event === "SIGNED_OUT"){
 
-  if(!products.length){
+      state.user=null;
+      state.business=null;
+      state.businessUser=null;
 
-    grid.innerHTML = `
-      <div class="empty">
-        Product မရှိသေးပါ<br>
-        ＋ Add Product နှိပ်ပြီး စတင်ပါ
-      </div>
-    `;
+      $("app").classList.add("hidden");
+      $("authPage").classList.remove("hidden");
 
-    return;
-  }
-
-  grid.innerHTML =
-    products.map(product=>{
-
-      const photo =
-        product.photo_path
-          ? supabaseClient
-              .storage
-              .from("product-images")
-              .getPublicUrl(product.photo_path)
-              .data
-              .publicUrl
-          : "";
-
-      return `
-        <div class="product-card">
-
-          ${
-            photo
-            ?
-            `<img class="product-photo"
-                  src="${photo}"
-                  alt="${escapeHtml(product.name)}">`
-            :
-            `<div class="product-photo"></div>`
-          }
-
-          <div class="product-info">
-
-            <h4>
-              ${escapeHtml(product.name)}
-            </h4>
-
-            <p>
-              ${escapeHtml(product.category || "")}
-              ${product.subcategory
-                ? " / " + escapeHtml(product.subcategory)
-                : ""}
-            </p>
-
-            <div class="price">
-              ${money(product.retail_price)}
-            </div>
-
-            <p>
-              Stock:
-              <strong>${Number(product.stock || 0)}</strong>
-              ${escapeHtml(product.unit || "")}
-            </p>
-
-            <div class="product-actions">
-
-              <button onclick="editProduct('${product.id}')">
-                Edit
-              </button>
-
-              <button
-                class="delete"
-                onclick="deleteProduct('${product.id}')">
-                Delete
-              </button>
-
-            </div>
-
-          </div>
-
-        </div>
-      `;
-
-    }).join("");
-
-}
-
-
-/* =========================================================
-   PRODUCT MODAL
-========================================================= */
-
-function openProductModal(product=null){
-
-  editingProduct = product;
-
-  $("productForm").reset();
-
-  $("productId").value =
-    product?.id || "";
-
-  $("productModalTitle").textContent =
-    product
-      ? "Edit Product"
-      : "Add Product";
-
-  $("photoPreview").classList.add("hidden");
-  $("photoPreview").src = "";
-
-  if(product){
-
-    $("productName").value =
-      product.name || "";
-
-    $("productBarcode").value =
-      product.barcode || "";
-
-    $("productCategory").value =
-      product.category || "";
-
-    $("productSubcategory").value =
-      product.subcategory || "";
-
-    $("productUnit").value =
-      product.unit || "";
-
-    $("productBuy").value =
-      product.buy_price || 0;
-
-    $("productRetail").value =
-      product.retail_price || 0;
-
-    $("productWholesale").value =
-      product.wholesale_price || 0;
-
-    $("productStock").value =
-      product.stock || 0;
-
-    $("productMinStock").value =
-      product.min_stock || 0;
-
-    $("productExpiry").value =
-      product.expiry || "";
-
-    $("productVariant").value =
-      product.variant || "";
-
-    if(product.photo_path){
-
-      const url =
-        supabaseClient
-          .storage
-          .from("product-images")
-          .getPublicUrl(product.photo_path)
-          .data
-          .publicUrl;
-
-      $("photoPreview").src = url;
-      $("photoPreview").classList.remove("hidden");
-
-    }
-
-  }
-
-  $("productModal").classList.add("show");
-
-}
-
-function closeProductModal(){
-
-  $("productModal").classList.remove("show");
-
-  editingProduct = null;
-
-}
-
-function editProduct(id){
-
-  const product =
-    products.find(p=>String(p.id)===String(id));
-
-  if(product){
-    openProductModal(product);
-  }
-
-}
-
-
-/* =========================================================
-   PHOTO PREVIEW
-========================================================= */
-
-$("productPhoto").addEventListener(
-  "change",
-  async e=>{
-
-    const file =
-      e.target.files?.[0];
-
-    if(!file) return;
-
-    try{
-
-      const compressed =
-        await compressImage(file);
-
-      const url =
-        URL.createObjectURL(compressed);
-
-      $("photoPreview").src = url;
-      $("photoPreview")
-        .classList
-        .remove("hidden");
-
-    }catch(error){
-
-      console.error(error);
-
+      showLogin();
     }
 
   }
@@ -1880,101 +1544,1063 @@ $("productPhoto").addEventListener(
 
 
 /* =========================================================
-   IMAGE COMPRESS
+   LOGOUT
 ========================================================= */
 
-function compressImage(file){
+$("logoutBtn").addEventListener("click",async()=>{
 
-  return new Promise(
-    (resolve,reject)=>{
+  showLoading("Logout လုပ်နေသည်...");
 
-      const img =
-        new Image();
+  await supabaseClient.auth.signOut();
 
-      const reader =
-        new FileReader();
+  hideLoading();
 
-      reader.onload =
-        e=>{
+});
 
-          img.onload =
-            ()=>{
 
-              const max =
-                1200;
+/* =========================================================
+   NAVIGATION
+========================================================= */
 
-              let width =
-                img.width;
+document.querySelectorAll(".nav-btn").forEach(btn=>{
 
-              let height =
-                img.height;
+  btn.addEventListener("click",()=>{
 
-              if(width > max || height > max){
+    document.querySelectorAll(".nav-btn")
+      .forEach(x=>x.classList.remove("active"));
 
-                if(width > height){
+    btn.classList.add("active");
 
-                  height =
-                    height * max / width;
+    const page=btn.dataset.page;
 
-                  width = max;
+    $("sidebar").classList.remove("open");
 
-                }else{
+    if(page==="dashboard"){
+      renderDashboard();
+    }
 
-                  width =
-                    width * max / height;
+    if(page==="products"){
+      renderProductsPage();
+    }
 
-                  height = max;
+    if(page==="sales"){
+      renderPlaceholder(
+        "Sales / POS",
+        "Sales POS Module ကို နောက်တစ်ဆင့်မှာ Cloud Database နဲ့ ဆက်တည်ဆောက်မယ်"
+      );
+    }
 
-                }
+    if(page==="purchases"){
+      renderPlaceholder(
+        "Purchases",
+        "Purchase Module ကို နောက်တစ်ဆင့်မှာ ဆက်တည်ဆောက်မယ်"
+      );
+    }
 
-              }
+    if(page==="inventory"){
+      renderInventory();
+    }
 
-              const canvas =
-                document.createElement("canvas");
+    if(page==="customers"){
+      renderPlaceholder(
+        "Customers",
+        "Customer Module ကို နောက်တစ်ဆင့်မှာ ဆက်တည်ဆောက်မယ်"
+      );
+    }
 
-              canvas.width =
-                Math.round(width);
+    if(page==="suppliers"){
+      renderPlaceholder(
+        "Suppliers",
+        "Supplier Module ကို နောက်တစ်ဆင့်မှာ ဆက်တည်ဆောက်မယ်"
+      );
+    }
 
-              canvas.height =
-                Math.round(height);
+    if(page==="reports"){
+      renderPlaceholder(
+        "Reports",
+        "Reports Module ကို Sales Database ပြီးမှ ဆက်တည်ဆောက်မယ်"
+      );
+    }
 
-              const ctx =
-                canvas.getContext("2d");
+    if(page==="subscription"){
+      renderSubscription();
+    }
 
-              ctx.drawImage(
-                img,
-                0,
-                0,
-                canvas.width,
-                canvas.height
-              );
+    if(page==="settings"){
+      renderSettings();
+    }
 
-              canvas.toBlob(
-                blob=>{
-                  if(blob) resolve(blob);
-                  else reject(
-                    new Error("Image compression failed")
-                  );
-                },
-                "image/jpeg",
-                .82
-              );
+  });
 
-            };
+});
 
-          img.onerror = reject;
 
-          img.src =
-            e.target.result;
+/* =========================================================
+   MOBILE MENU
+========================================================= */
 
-        };
+$("menuBtn").addEventListener("click",()=>{
+  $("sidebar").classList.toggle("open");
+});
 
-      reader.onerror = reject;
 
-      reader.readAsDataURL(file);
+/* =========================================================
+   PRODUCTS LOAD
+========================================================= */
+
+async function loadProducts(){
+
+  if(!state.business?.id){
+    return;
+  }
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .from("products")
+    .select("*")
+    .eq("business_id",state.business.id)
+    .order("created_at",{ascending:false});
+
+  if(error){
+    console.error(error);
+    return;
+  }
+
+  state.products=data || [];
+
+  buildMasters();
+}
+
+
+/* =========================================================
+   MASTERS
+========================================================= */
+
+function buildMasters(){
+
+  const categories =
+    new Set();
+
+  const subcategories =
+    new Set();
+
+  const units =
+    new Set();
+
+  state.products.forEach(p=>{
+
+    if(p.category)
+      categories.add(p.category);
+
+    if(p.subcategory)
+      subcategories.add(p.subcategory);
+
+    if(p.unit)
+      units.add(p.unit);
+
+  });
+
+  state.categories=[
+    ...categories
+  ].sort();
+
+  state.subcategories=[
+    ...subcategories
+  ].sort();
+
+  state.units=[
+    ...units
+  ].sort();
+}
+
+
+/* =========================================================
+   MASTER SELECT
+========================================================= */
+
+function masterOptions(items,selected){
+
+  let html=
+    `<option value="">ရွေးချယ်ပါ</option>`;
+
+  items.forEach(item=>{
+
+    html +=
+      `<option
+        value="${escapeHtml(item)}"
+        ${item===selected?"selected":""}>
+        ${escapeHtml(item)}
+      </option>`;
+
+  });
+
+  html +=
+    `<option value="__new__">
+      ＋ အသစ်ထည့်မည်
+    </option>`;
+
+  return html;
+}
+
+
+/* =========================================================
+   PRODUCT PAGE
+========================================================= */
+
+function renderProductsPage(){
+
+  $("pageContainer").innerHTML=`
+
+    <div class="page-head">
+
+      <div>
+        <h2>Products</h2>
+        <p>Cloud Product Management</p>
+      </div>
+
+      <button
+        class="primary-btn"
+        onclick="newProduct()">
+        ＋ Product အသစ်
+      </button>
+
+    </div>
+
+    <div class="product-layout">
+
+      <div class="card product-form">
+
+        <div class="section-title">
+          <h3 id="productFormTitle">
+            Product အသစ်ထည့်ရန်
+          </h3>
+        </div>
+
+        <form id="productForm">
+
+          <div class="photo-upload">
+
+            <img
+              id="photoPreview"
+              class="hidden"
+              alt="Product">
+
+            <div id="photoPlaceholder">
+              <strong>📷 Product Photo</strong>
+              <span>ပုံထည့်ရန် နှိပ်ပါ</span>
+            </div>
+
+            <div class="photo-actions">
+
+              <label class="secondary-btn" style="text-align:center">
+                📷 Choose
+                <input
+                  id="productPhoto"
+                  type="file"
+                  accept="image/*"
+                  capture="environment"
+                  hidden>
+              </label>
+
+              <button
+                id="removePhotoBtn"
+                class="danger-btn"
+                type="button">
+                Remove
+              </button>
+
+            </div>
+
+          </div>
+
+
+          <div class="form-grid">
+
+            <div class="field">
+
+              <label>Product Name</label>
+
+              <select id="productSelect">
+                <option value="">အသစ်ထည့်မည် / Product ရွေးမည်</option>
+                ${state.products.map(p=>`
+                  <option value="${p.id}">
+                    ${escapeHtml(p.name)}
+                  </option>
+                `).join("")}
+                <option value="__new__">
+                  ＋ Product အသစ်ထည့်မည်
+                </option>
+              </select>
+
+            </div>
+
+            <div id="newProductNameWrap" class="field">
+              <label>Product Name</label>
+              <input
+                id="productName"
+                required
+                placeholder="Product အမည်">
+            </div>
+
+
+            <div class="field">
+
+              <label>Category</label>
+
+              <select id="categorySelect">
+                ${masterOptions(state.categories,"")}
+              </select>
+
+            </div>
+
+            <div
+              id="newCategoryWrap"
+              class="field hidden">
+
+              <label>Category အသစ်</label>
+
+              <input
+                id="newCategory"
+                placeholder="Category အမည်">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>Subcategory</label>
+
+              <select id="subcategorySelect">
+                ${masterOptions(state.subcategories,"")}
+              </select>
+
+            </div>
+
+            <div
+              id="newSubcategoryWrap"
+              class="field hidden">
+
+              <label>Subcategory အသစ်</label>
+
+              <input
+                id="newSubcategory"
+                placeholder="Subcategory အမည်">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>Unit</label>
+
+              <select id="unitSelect">
+                ${masterOptions(state.units,"")}
+              </select>
+
+            </div>
+
+            <div
+              id="newUnitWrap"
+              class="field hidden">
+
+              <label>Unit အသစ်</label>
+
+              <input
+                id="newUnit"
+                placeholder="ဥပမာ - pcs, box, bottle">
+
+            </div>
+
+
+            <div class="field">
+
+              <label>Barcode</label>
+
+              <input
+                id="barcode"
+                placeholder="Barcode">
+
+            </div>
+
+
+            <div class="two-col">
+
+              <div class="field">
+
+                <label>Buy Price</label>
+
+                <input
+                  id="buyPrice"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value="0">
+
+              </div>
+
+              <div class="field">
+
+                <label>Retail Price</label>
+
+                <input
+                  id="retailPrice"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value="0">
+
+              </div>
+
+            </div>
+
+
+            <div class="two-col">
+
+              <div class="field">
+
+                <label>Wholesale Price</label>
+
+                <input
+                  id="wholesalePrice"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value="0">
+
+              </div>
+
+              <div class="field">
+
+                <label>Stock</label>
+
+                <input
+                  id="stock"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value="0">
+
+              </div>
+
+            </div>
+
+
+            <div class="two-col">
+
+              <div class="field">
+
+                <label>Minimum Stock</label>
+
+                <input
+                  id="minStock"
+                  type="number"
+                  min="0"
+                  step="0.01"
+                  value="0">
+
+              </div>
+
+              <div class="field">
+
+                <label>Expiry</label>
+
+                <input
+                  id="expiry"
+                  type="date">
+
+              </div>
+
+            </div>
+
+
+            <div class="field">
+
+              <label>Variant</label>
+
+              <input
+                id="variant"
+                placeholder="ဥပမာ - Red / 500ml / Large">
+
+            </div>
+
+
+            <div class="two-col">
+
+              <button
+                class="primary-btn"
+                type="submit">
+                💾 Save Product
+              </button>
+
+              <button
+                id="resetProductBtn"
+                class="secondary-btn"
+                type="button">
+                Reset
+              </button>
+
+            </div>
+
+          </div>
+
+        </form>
+
+      </div>
+
+
+      <div class="card product-list-card">
+
+        <div class="section-title">
+
+          <div>
+            <h3>Product List</h3>
+            <p style="color:#6b7280;font-size:12px">
+              ${state.products.length} Products
+            </p>
+          </div>
+
+        </div>
+
+        <div class="search-row">
+
+          <input
+            id="productSearch"
+            placeholder="🔎 Product / Barcode ရှာရန်">
+
+          <select id="productCategoryFilter">
+            <option value="">Category အားလုံး</option>
+            ${state.categories.map(c=>`
+              <option value="${escapeHtml(c)}">
+                ${escapeHtml(c)}
+              </option>
+            `).join("")}
+          </select>
+
+        </div>
+
+        <div id="productsGrid" class="products-grid"></div>
+
+      </div>
+
+    </div>
+  `;
+
+  bindProductForm();
+  renderProductCards();
+
+}
+
+
+/* =========================================================
+   PRODUCT FORM BIND
+========================================================= */
+
+function bindProductForm(){
+
+  $("productForm")
+    .addEventListener("submit",saveProduct);
+
+  $("productSelect")
+    .addEventListener("change",handleProductSelect);
+
+  $("categorySelect")
+    .addEventListener("change",()=>{
+    toggleMaster(
+      "categorySelect",
+      "newCategoryWrap"
+    );
+  });
+
+  $("subcategorySelect")
+    .addEventListener("change",()=>{
+    toggleMaster(
+      "subcategorySelect",
+      "newSubcategoryWrap"
+    );
+  });
+
+  $("unitSelect")
+    .addEventListener("change",()=>{
+    toggleMaster(
+      "unitSelect",
+      "newUnitWrap"
+    );
+  });
+
+  $("productPhoto")
+    .addEventListener("change",handlePhoto);
+
+  $("removePhotoBtn")
+    .addEventListener("click",removeSelectedPhoto);
+
+  $("resetProductBtn")
+    .addEventListener("click",newProduct);
+
+  $("productSearch")
+    .addEventListener("input",renderProductCards);
+
+  $("productCategoryFilter")
+    .addEventListener("change",renderProductCards);
+
+}
+
+
+/* =========================================================
+   MASTER TOGGLE
+========================================================= */
+
+function toggleMaster(selectId,wrapId){
+
+  const value=$(selectId).value;
+
+  if(value==="__new__"){
+    $(wrapId).classList.remove("hidden");
+  }else{
+    $(wrapId).classList.add("hidden");
+  }
+
+}
+
+
+/* =========================================================
+   NEW PRODUCT
+========================================================= */
+
+function newProduct(){
+
+  state.currentProductId=null;
+  state.selectedPhoto=null;
+
+  if(!$("productForm")){
+    renderProductsPage();
+    return;
+  }
+
+  $("productFormTitle").textContent =
+    "Product အသစ်ထည့်ရန်";
+
+  $("productForm").reset();
+
+  $("newCategoryWrap").classList.add("hidden");
+  $("newSubcategoryWrap").classList.add("hidden");
+  $("newUnitWrap").classList.add("hidden");
+
+  $("photoPreview").classList.add("hidden");
+  $("photoPreview").removeAttribute("src");
+
+  $("photoPlaceholder").classList.remove("hidden");
+
+  $("removePhotoBtn").disabled=true;
+
+}
+
+
+/* =========================================================
+   PRODUCT SELECT
+========================================================= */
+
+function handleProductSelect(){
+
+  const id=$("productSelect").value;
+
+  if(!id || id==="__new__"){
+
+    newProduct();
+
+    return;
+  }
+
+  const product =
+    state.products.find(
+      p=>p.id===id
+    );
+
+  if(!product){
+    return;
+  }
+
+  editProduct(id);
+
+}
+
+
+/* =========================================================
+   EDIT PRODUCT
+========================================================= */
+
+function editProduct(id){
+
+  const p =
+    state.products.find(
+      x=>x.id===id
+    );
+
+  if(!p){
+    return;
+  }
+
+  state.currentProductId=id;
+
+  $("productFormTitle").textContent =
+    "Product ပြင်ဆင်ရန်";
+
+  $("productName").value =
+    p.name || "";
+
+  $("barcode").value =
+    p.barcode || "";
+
+  $("buyPrice").value =
+    p.buy_price || 0;
+
+  $("retailPrice").value =
+    p.retail_price || 0;
+
+  $("wholesalePrice").value =
+    p.wholesale_price || 0;
+
+  $("stock").value =
+    p.stock || 0;
+
+  $("minStock").value =
+    p.min_stock || 0;
+
+  $("expiry").value =
+    p.expiry || "";
+
+  $("variant").value =
+    p.variant || "";
+
+  setSelectValue(
+    "categorySelect",
+    p.category,
+    "newCategoryWrap",
+    "newCategory"
+  );
+
+  setSelectValue(
+    "subcategorySelect",
+    p.subcategory,
+    "newSubcategoryWrap",
+    "newSubcategory"
+  );
+
+  setSelectValue(
+    "unitSelect",
+    p.unit,
+    "newUnitWrap",
+    "newUnit"
+  );
+
+  state.selectedPhoto=null;
+
+  if(p.photo_path){
+
+    const {
+      data
+    } =
+    supabaseClient
+      .storage
+      .from("product-images")
+      .getPublicUrl(p.photo_path);
+
+    if(data?.publicUrl){
+
+      $("photoPreview").src =
+        data.publicUrl;
+
+      $("photoPreview")
+        .classList.remove("hidden");
+
+      $("photoPlaceholder")
+        .classList.add("hidden");
+
+      $("removePhotoBtn").disabled=false;
 
     }
-  );
+
+  }else{
+
+    $("photoPreview")
+      .classList.add("hidden");
+
+    $("photoPlaceholder")
+      .classList.remove("hidden");
+
+    $("removePhotoBtn").disabled=true;
+
+  }
+
+  document
+    .querySelector(".product-form")
+    ?.scrollIntoView({
+      behavior:"smooth",
+      block:"start"
+    });
+
+}
+
+
+/* =========================================================
+   SET SELECT
+========================================================= */
+
+function setSelectValue(
+  selectId,
+  value,
+  wrapId,
+  inputId
+){
+
+  const select=$(selectId);
+
+  const exists =
+    [...select.options]
+      .some(
+        o=>o.value===value
+      );
+
+  if(value && exists){
+
+    select.value=value;
+
+    $(wrapId)
+      .classList
+      .add("hidden");
+
+  }else if(value){
+
+    select.value="__new__";
+
+    $(wrapId)
+      .classList
+      .remove("hidden");
+
+    $(inputId).value=value;
+
+  }else{
+
+    select.value="";
+
+    $(wrapId)
+      .classList
+      .add("hidden");
+
+  }
+
+}
+
+
+/* =========================================================
+   PHOTO
+========================================================= */
+
+async function handlePhoto(e){
+
+  const file=e.target.files?.[0];
+
+  if(!file){
+    return;
+  }
+
+  if(!file.type.startsWith("image/")){
+
+    alert("Image file ပဲရွေးပါ");
+
+    e.target.value="";
+
+    return;
+  }
+
+  state.selectedPhoto=file;
+
+  const previewUrl =
+    URL.createObjectURL(file);
+
+  $("photoPreview").src=
+    previewUrl;
+
+  $("photoPreview")
+    .classList
+    .remove("hidden");
+
+  $("photoPlaceholder")
+    .classList
+    .add("hidden");
+
+  $("removePhotoBtn").disabled=false;
+
+}
+
+
+function removeSelectedPhoto(){
+
+  state.selectedPhoto=null;
+
+  $("productPhoto").value="";
+
+  $("photoPreview")
+    .classList
+    .add("hidden");
+
+  $("photoPreview")
+    .removeAttribute("src");
+
+  $("photoPlaceholder")
+    .classList
+    .remove("hidden");
+
+  $("removePhotoBtn").disabled=true;
+
+}
+
+
+/* =========================================================
+   COMPRESS IMAGE
+========================================================= */
+
+async function compressImage(file){
+
+  return new Promise((resolve,reject)=>{
+
+    const img=new Image();
+
+    const url=
+      URL.createObjectURL(file);
+
+    img.onload=()=>{
+
+      let width=img.width;
+      let height=img.height;
+
+      const max=1200;
+
+      if(width>max || height>max){
+
+        if(width>height){
+
+          height =
+            Math.round(
+              height * max / width
+            );
+
+          width=max;
+
+        }else{
+
+          width =
+            Math.round(
+              width * max / height
+            );
+
+          height=max;
+
+        }
+
+      }
+
+      const canvas=
+        document.createElement("canvas");
+
+      canvas.width=width;
+      canvas.height=height;
+
+      const ctx=
+        canvas.getContext("2d");
+
+      ctx.drawImage(
+        img,
+        0,
+        0,
+        width,
+        height
+      );
+
+      canvas.toBlob(
+        blob=>{
+
+          URL.revokeObjectURL(url);
+
+          if(!blob){
+
+            reject(
+              new Error("Image compression failed")
+            );
+
+            return;
+          }
+
+          resolve(blob);
+
+        },
+        "image/jpeg",
+        .82
+      );
+
+    };
+
+    img.onerror=()=>{
+
+      URL.revokeObjectURL(url);
+
+      reject(
+        new Error("Image load failed")
+      );
+
+    };
+
+    img.src=url;
+
+  });
+
+}
+
+
+/* =========================================================
+   UPLOAD PHOTO
+========================================================= */
+
+async function uploadProductPhoto(
+  file,
+  businessId
+){
+
+  const blob =
+    await compressImage(file);
+
+  const filename =
+    `${Date.now()}-${Math.random()
+      .toString(36)
+      .slice(2)}.jpg`;
+
+  const path =
+    `${businessId}/${filename}`;
+
+  const {
+    data,
+    error
+  } =
+  await supabaseClient
+    .storage
+    .from("product-images")
+    .upload(
+      path,
+      blob,
+      {
+        contentType:"image/jpeg",
+        cacheControl:"3600",
+        upsert:false
+      }
+    );
+
+  if(error){
+    throw error;
+  }
+
+  return data.path;
 
 }
 
@@ -1983,158 +2609,426 @@ function compressImage(file){
    SAVE PRODUCT
 ========================================================= */
 
-$("productForm").addEventListener(
-  "submit",
-  async e=>{
+async function saveProduct(e){
 
-    e.preventDefault();
+  e.preventDefault();
 
-    if(!currentBusiness) return;
+  if(!state.business?.id){
 
-    const productId =
-      $("productId").value;
+    alert("Business account မတွေ့ပါ");
 
-    const name =
-      $("productName").value.trim();
+    return;
+  }
 
-    if(!name){
+  let name =
+    $("productName").value.trim();
 
-      alert("Product Name ဖြည့်ပါ");
+  let category =
+    $("categorySelect").value;
 
-      return;
+  let subcategory =
+    $("subcategorySelect").value;
+
+  let unit =
+    $("unitSelect").value;
+
+  if(category==="__new__"){
+    category =
+      $("newCategory").value.trim();
+  }
+
+  if(subcategory==="__new__"){
+    subcategory =
+      $("newSubcategory").value.trim();
+  }
+
+  if(unit==="__new__"){
+    unit =
+      $("newUnit").value.trim();
+  }
+
+  if(!name){
+
+    alert("Product Name ထည့်ပါ");
+
+    return;
+  }
+
+  if(!category){
+
+    alert("Category ရွေးပါ");
+
+    return;
+  }
+
+  if(!unit){
+
+    alert("Unit ရွေးပါ");
+
+    return;
+  }
+
+  showLoading(
+    state.currentProductId
+      ? "Product ပြင်နေသည်..."
+      : "Product သိမ်းနေသည်..."
+  );
+
+  try{
+
+    let photoPath=null;
+
+    /*
+      Existing photo
+    */
+
+    if(state.currentProductId){
+
+      const existing =
+        state.products.find(
+          p=>p.id===state.currentProductId
+        );
+
+      photoPath =
+        existing?.photo_path || null;
+
     }
 
-    try{
+    /*
+      New photo
+    */
 
-      let photoPath =
-        editingProduct?.photo_path || null;
+    if(state.selectedPhoto){
 
-      const file =
-        $("productPhoto").files?.[0];
+      photoPath =
+        await uploadProductPhoto(
+          state.selectedPhoto,
+          state.business.id
+        );
 
-      if(file){
+    }
 
-        const blob =
-          await compressImage(file);
+    const payload={
 
-        const filename =
-          currentBusiness.id +
-          "/" +
-          crypto.randomUUID() +
-          ".jpg";
+      business_id:
+        state.business.id,
 
-        const {
-          error:uploadError
-        } =
-          await supabaseClient
-            .storage
-            .from("product-images")
-            .upload(
-              filename,
-              blob,
-              {
-                contentType:"image/jpeg",
-                upsert:false
-              }
-            );
+      name,
 
-        if(uploadError)
-          throw uploadError;
+      barcode:
+        $("barcode").value.trim() || null,
 
-        photoPath = filename;
+      category:
+        category || null,
 
-      }
+      subcategory:
+        subcategory || null,
 
-      const payload = {
+      unit:
+        unit || null,
 
-        business_id:
-          currentBusiness.id,
+      buy_price:
+        Number($("buyPrice").value || 0),
 
-        name,
+      retail_price:
+        Number($("retailPrice").value || 0),
 
-        barcode:
-          $("productBarcode").value.trim() || null,
+      wholesale_price:
+        Number($("wholesalePrice").value || 0),
 
-        category:
-          $("productCategory").value.trim() || null,
+      stock:
+        Number($("stock").value || 0),
 
-        subcategory:
-          $("productSubcategory").value.trim() || null,
+      min_stock:
+        Number($("minStock").value || 0),
 
-        unit:
-          $("productUnit").value.trim() || null,
+      expiry:
+        $("expiry").value || null,
 
-        buy_price:
-          Number($("productBuy").value || 0),
+      variant:
+        $("variant").value.trim() || null,
 
-        retail_price:
-          Number($("productRetail").value || 0),
+      photo_path:
+        photoPath,
 
-        wholesale_price:
-          Number($("productWholesale").value || 0),
+      updated_at:
+        new Date().toISOString()
 
-        stock:
-          Number($("productStock").value || 0),
+    };
 
-        min_stock:
-          Number($("productMinStock").value || 0),
 
-        expiry:
-          $("productExpiry").value || null,
+    let result;
 
-        variant:
-          $("productVariant").value.trim() || null,
+    if(state.currentProductId){
 
-        photo_path:
-          photoPath
+      result =
+        await supabaseClient
+          .from("products")
+          .update(payload)
+          .eq(
+            "id",
+            state.currentProductId
+          )
+          .eq(
+            "business_id",
+            state.business.id
+          );
 
-      };
+    }else{
 
-      let result;
+      result =
+        await supabaseClient
+          .from("products")
+          .insert(payload);
 
-      if(productId){
+    }
 
-        result =
-          await supabaseClient
-            .from("products")
-            .update(payload)
-            .eq("id",productId)
-            .eq(
-              "business_id",
-              currentBusiness.id
-            );
+    if(result.error){
+      throw result.error;
+    }
 
-      }else{
+    await loadProducts();
 
-        result =
-          await supabaseClient
-            .from("products")
-            .insert(payload);
+    renderProductsPage();
 
-      }
+    hideLoading();
 
-      if(result.error)
-        throw result.error;
+    alert(
+      state.currentProductId
+        ? "Product ပြင်ဆင်ပြီးပါပြီ"
+        : "Product သိမ်းပြီးပါပြီ"
+    );
 
-      closeProductModal();
+  }catch(error){
 
-      await refreshProducts();
+    hideLoading();
 
-      updateDashboard();
+    console.error(error);
 
-    }catch(error){
+    alert(
+      "Product သိမ်းရာတွင် Error ဖြစ်ပါတယ်\n\n" +
+      error.message
+    );
 
-      console.error(error);
+  }
 
-      alert(
-        "Product Save Error\n" +
-        error.message
+}
+
+
+/* =========================================================
+   PRODUCT CARDS
+========================================================= */
+
+function renderProductCards(){
+
+  const grid=$("productsGrid");
+
+  if(!grid){
+    return;
+  }
+
+  const search =
+    ($("productSearch")?.value || "")
+      .trim()
+      .toLowerCase();
+
+  const category =
+    $("productCategoryFilter")?.value || "";
+
+  const filtered =
+    state.products.filter(p=>{
+
+      const matchesSearch =
+        !search ||
+        String(p.name||"")
+          .toLowerCase()
+          .includes(search) ||
+        String(p.barcode||"")
+          .toLowerCase()
+          .includes(search);
+
+      const matchesCategory =
+        !category ||
+        p.category===category;
+
+      return matchesSearch &&
+             matchesCategory;
+
+    });
+
+
+  if(!filtered.length){
+
+    grid.innerHTML=`
+
+      <div class="empty"
+           style="grid-column:1/-1">
+
+        <div class="empty-icon">📦</div>
+
+        <strong>
+          Product မရှိသေးပါ
+        </strong>
+
+        <p style="margin-top:6px">
+          Product အသစ်ထည့်ပါ
+        </p>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  grid.innerHTML =
+    filtered.map(productCard).join("");
+
+}
+
+
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
+
+function productCard(p){
+
+  let photoHtml =
+    `<div class="no-photo">📦</div>`;
+
+  if(p.photo_path){
+
+    const {
+      data
+    } =
+    supabaseClient
+      .storage
+      .from("product-images")
+      .getPublicUrl(
+        p.photo_path
       );
+
+    if(data?.publicUrl){
+
+      photoHtml =
+        `<img
+          src="${escapeHtml(data.publicUrl)}"
+          alt="${escapeHtml(p.name)}"
+          loading="lazy">`;
 
     }
 
   }
-);
+
+
+  const stock =
+    Number(p.stock || 0);
+
+  const min =
+    Number(p.min_stock || 0);
+
+  let badgeClass=
+    "stock-ok";
+
+  let badgeText=
+    `Stock ${money(stock)}`;
+
+  if(stock<=0){
+
+    badgeClass="stock-out";
+
+    badgeText="Out of Stock";
+
+  }else if(stock<=min){
+
+    badgeClass="stock-low";
+
+    badgeText=`Low Stock ${money(stock)}`;
+
+  }
+
+
+  return `
+
+    <div class="product-card">
+
+      <div class="product-photo">
+        ${photoHtml}
+      </div>
+
+      <div class="product-body">
+
+        <div class="product-name">
+          ${escapeHtml(p.name)}
+        </div>
+
+        <div class="product-meta">
+          ${escapeHtml(p.category || "No Category")}
+          ${p.subcategory
+            ? " • "+escapeHtml(p.subcategory)
+            : ""}
+        </div>
+
+        ${p.variant
+          ? `<div class="product-meta">
+              Variant: ${escapeHtml(p.variant)}
+            </div>`
+          : ""}
+
+        <div class="price-row">
+
+          <div class="price-box">
+            <span>Retail</span>
+            <strong>
+              ${money(p.retail_price)} Ks
+            </strong>
+          </div>
+
+          <div class="price-box">
+            <span>Wholesale</span>
+            <strong>
+              ${money(p.wholesale_price)} Ks
+            </strong>
+          </div>
+
+        </div>
+
+        <div class="stock-row">
+
+          <span class="stock-badge ${badgeClass}">
+            ${badgeText}
+          </span>
+
+          <span style="font-size:11px;color:#6b7280">
+            ${escapeHtml(p.unit || "")}
+          </span>
+
+        </div>
+
+        <div class="card-actions">
+
+          <button
+            class="secondary-btn"
+            onclick="editProduct('${p.id}')">
+            Edit
+          </button>
+
+          <button
+            class="danger-btn"
+            onclick="deleteProduct('${p.id}')">
+            Delete
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
 
 
 /* =========================================================
@@ -2143,56 +3037,265 @@ $("productForm").addEventListener(
 
 async function deleteProduct(id){
 
-  if(!confirm(
-    "ဒီ Product ကို ဖျက်မှာသေချာပါသလား"
-  )) return;
+  const p =
+    state.products.find(
+      x=>x.id===id
+    );
+
+  if(!p){
+    return;
+  }
+
+  const ok =
+    confirm(
+      `"${p.name}" ကို ဖျက်မှာသေချာပါသလား?`
+    );
+
+  if(!ok){
+    return;
+  }
+
+  showLoading("Product ဖျက်နေသည်...");
 
   try{
-
-    const product =
-      products.find(
-        p=>String(p.id)===String(id)
-      );
 
     const {
       error
     } =
-      await supabaseClient
-        .from("products")
-        .delete()
-        .eq("id",id)
-        .eq(
-          "business_id",
-          currentBusiness.id
-        );
+    await supabaseClient
+      .from("products")
+      .delete()
+      .eq("id",id)
+      .eq(
+        "business_id",
+        state.business.id
+      );
 
-    if(error) throw error;
+    if(error){
+      throw error;
+    }
 
-    if(product?.photo_path){
+    /*
+      Photo ကိုလည်း ဖျက်ရန်
+    */
+
+    if(p.photo_path){
 
       await supabaseClient
         .storage
         .from("product-images")
         .remove([
-          product.photo_path
+          p.photo_path
         ]);
 
     }
 
-    await refreshProducts();
+    await loadProducts();
 
-    updateDashboard();
+    renderProductsPage();
+
+    hideLoading();
 
   }catch(error){
 
-    console.error(error);
+    hideLoading();
 
     alert(
-      "Delete Error\n" +
+      "Delete Error\n\n"+
       error.message
     );
 
   }
+
+}
+
+
+/* =========================================================
+   DASHBOARD
+========================================================= */
+
+function renderDashboard(){
+
+  const totalProducts =
+    state.products.length;
+
+  const totalStock =
+    state.products.reduce(
+      (sum,p)=>
+        sum + Number(p.stock || 0),
+      0
+    );
+
+  const lowStock =
+    state.products.filter(
+      p=>
+        Number(p.stock||0) <=
+        Number(p.min_stock||0)
+    ).length;
+
+  const stockValue =
+    state.products.reduce(
+      (sum,p)=>
+        sum +
+        Number(p.stock||0) *
+        Number(p.buy_price||0),
+      0
+    );
+
+
+  $("pageContainer").innerHTML=`
+
+    <div class="page-head">
+
+      <div>
+        <h2>Dashboard</h2>
+
+        <p>
+          ${escapeHtml(
+            state.business?.name ||
+            "AUNG POS"
+          )}
+        </p>
+
+      </div>
+
+      <button
+        class="primary-btn"
+        onclick="goProducts()">
+        ＋ Product
+      </button>
+
+    </div>
+
+
+    <div class="stats">
+
+      <div class="card stat">
+
+        <div class="stat-label">
+          Products
+        </div>
+
+        <div class="stat-value">
+          ${totalProducts}
+        </div>
+
+        <div class="stat-small">
+          Cloud Products
+        </div>
+
+      </div>
+
+
+      <div class="card stat">
+
+        <div class="stat-label">
+          Total Stock
+        </div>
+
+        <div class="stat-value">
+          ${money(totalStock)}
+        </div>
+
+        <div class="stat-small">
+          Units
+        </div>
+
+      </div>
+
+
+      <div class="card stat">
+
+        <div class="stat-label">
+          Low Stock
+        </div>
+
+        <div class="stat-value">
+          ${lowStock}
+        </div>
+
+        <div class="stat-small">
+          Need attention
+        </div>
+
+      </div>
+
+
+      <div class="card stat">
+
+        <div class="stat-label">
+          Stock Value
+        </div>
+
+        <div class="stat-value">
+          ${money(stockValue)}
+        </div>
+
+        <div class="stat-small">
+          Buy Price Value
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <div class="section">
+
+      <div class="card section-card">
+
+        <div class="section-title">
+
+          <h3>
+            Recent Products
+          </h3>
+
+          <button
+            class="secondary-btn"
+            onclick="goProducts()">
+            View All
+          </button>
+
+        </div>
+
+        ${
+          state.products.length
+            ? `
+              <div class="products-grid">
+                ${
+                  state.products
+                    .slice(0,6)
+                    .map(productCard)
+                    .join("")
+                }
+              </div>
+            `
+            : `
+              <div class="empty">
+                <div class="empty-icon">
+                  📦
+                </div>
+                <strong>
+                  Product မရှိသေးပါ
+                </strong>
+              </div>
+            `
+        }
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+function goProducts(){
+
+  document
+    .querySelector('[data-page="products"]')
+    ?.click();
 
 }
 
@@ -2203,186 +3306,103 @@ async function deleteProduct(id){
 
 function renderInventory(){
 
-  const box =
-    $("inventoryList");
-
-  if(!products.length){
-
-    box.innerHTML =
-      `<div class="empty">Product မရှိသေးပါ</div>`;
-
-    return;
-  }
-
-  box.innerHTML =
-    products.map(p=>{
-
-      const low =
-        Number(p.stock || 0) <=
-        Number(p.min_stock || 0);
-
-      return `
-        <div style="
-          display:flex;
-          justify-content:space-between;
-          align-items:center;
-          padding:14px 0;
-          border-bottom:1px solid #e5e9f0;
-        ">
-
-          <div>
-            <strong>
-              ${escapeHtml(p.name)}
-            </strong>
-
-            <div style="
-              color:#718096;
-              font-size:12px;
-              margin-top:4px
-            ">
-              ${escapeHtml(p.category || "")}
-            </div>
-          </div>
-
-          <div style="
-            font-weight:800;
-            color:${low ? "#dc2626" : "#059669"}
-          ">
-            ${Number(p.stock || 0)}
-            ${escapeHtml(p.unit || "")}
-          </div>
-
-        </div>
-      `;
-
-    }).join("");
-
-}
-
-
-/* =========================================================
-   DASHBOARD
-========================================================= */
-
-async function updateDashboard(){
-
-  if(!currentBusiness) return;
-
-  const today =
-    new Date();
-
-  const start =
-    new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate()
-    ).toISOString();
-
-  const {
-    data:sales
-  } =
-    await supabaseClient
-      .from("sales")
-      .select("*")
-      .eq(
-        "business_id",
-        currentBusiness.id
-      )
-      .gte("created_at",start);
-
-  const todaySales =
-    (sales || [])
-      .reduce(
-        (sum,s)=>
-          sum + Number(s.total || 0),
-        0
-      );
-
-  $("statSales").textContent =
-    money(todaySales);
-
-  $("statOrders").textContent =
-    (sales || []).length;
-
-  $("statProducts").textContent =
-    products.length;
-
-  $("statLowStock").textContent =
-    products.filter(
-      p =>
-        Number(p.stock || 0) <=
-        Number(p.min_stock || 0)
-    ).length;
-
-}
-
-
-/* =========================================================
-   BUSINESS SETTINGS
-========================================================= */
-
-async function saveBusinessSettings(){
-
-  if(!currentBusiness) return;
-
-  try{
-
-    const {
-      error
-    } =
-      await supabaseClient
-        .from("businesses")
-        .update({
-          name:
-            $("settingBusiness").value.trim(),
-
-          phone:
-            $("settingPhone").value.trim(),
-
-          address:
-            $("settingAddress").value.trim()
-        })
-        .eq(
-          "id",
-          currentBusiness.id
-        );
-
-    if(error) throw error;
-
-    currentBusiness.name =
-      $("settingBusiness").value.trim();
-
-    currentBusiness.phone =
-      $("settingPhone").value.trim();
-
-    currentBusiness.address =
-      $("settingAddress").value.trim();
-
-    $("businessTitle").textContent =
-      currentBusiness.name;
-
-    $("businessInfo").innerHTML = `
-      <div style="line-height:2;font-size:14px">
-        <strong>
-          ${escapeHtml(currentBusiness.name)}
-        </strong><br>
-        Phone:
-        ${escapeHtml(currentBusiness.phone || "-")}<br>
-        Address:
-        ${escapeHtml(currentBusiness.address || "-")}
-      </div>
-    `;
-
-    alert("Settings သိမ်းပြီးပါပြီ");
-
-  }catch(error){
-
-    alert(
-      "Settings Save Error\n" +
-      error.message
+  const low =
+    state.products.filter(
+      p=>
+        Number(p.stock||0)
+        <=
+        Number(p.min_stock||0)
     );
 
-  }
+  $("pageContainer").innerHTML=`
+
+    <div class="page-head">
+
+      <div>
+        <h2>Inventory</h2>
+        <p>Stock Overview</p>
+      </div>
+
+    </div>
+
+
+    <div class="card section-card">
+
+      <div class="section-title">
+
+        <h3>
+          Low Stock Products
+        </h3>
+
+        <span>
+          ${low.length}
+        </span>
+
+      </div>
+
+      ${
+        low.length
+          ? `
+            <div class="products-grid">
+              ${low.map(productCard).join("")}
+            </div>
+          `
+          : `
+            <div class="empty">
+
+              <div class="empty-icon">
+                ✅
+              </div>
+
+              <strong>
+                Low Stock Product မရှိပါ
+              </strong>
+
+            </div>
+          `
+      }
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   PLACEHOLDER
+========================================================= */
+
+function renderPlaceholder(title,text){
+
+  $("pageContainer").innerHTML=`
+
+    <div class="page-head">
+
+      <div>
+        <h2>${escapeHtml(title)}</h2>
+        <p>Cloud Module</p>
+      </div>
+
+    </div>
+
+    <div class="card section-card">
+
+      <div class="empty">
+
+        <div class="empty-icon">
+          🚀
+        </div>
+
+        <strong>
+          ${escapeHtml(text)}
+        </strong>
+
+      </div>
+
+    </div>
+
+  `;
 
 }
 
@@ -2391,235 +3411,307 @@ async function saveBusinessSettings(){
    SUBSCRIPTION
 ========================================================= */
 
-async function requestPlan(
-  planId,
-  amount
-){
+function renderSubscription(){
 
-  const method =
-    prompt(
-      "Payment Method ရွေးပါ\n\n1 = KPay\n2 = WavePay"
+  $("pageContainer").innerHTML=`
+
+    <div class="page-head">
+
+      <div>
+        <h2>Subscription</h2>
+        <p>AUNG POS Commercial Plans</p>
+      </div>
+
+    </div>
+
+    <div class="stats">
+
+      <div class="card section-card">
+
+        <h3>1 Month</h3>
+
+        <div class="stat-value">
+          100,000 Ks
+        </div>
+
+        <button
+          class="primary-btn full"
+          style="margin-top:15px"
+          onclick="selectPlan('1 Month','100000')">
+          Select
+        </button>
+
+      </div>
+
+      <div class="card section-card">
+
+        <h3>3 Months</h3>
+
+        <div class="stat-value">
+          270,000 Ks
+        </div>
+
+        <button
+          class="primary-btn full"
+          style="margin-top:15px"
+          onclick="selectPlan('3 Months','270000')">
+          Select
+        </button>
+
+      </div>
+
+      <div class="card section-card">
+
+        <h3>6 Months</h3>
+
+        <div class="stat-value">
+          480,000 Ks
+        </div>
+
+        <button
+          class="primary-btn full"
+          style="margin-top:15px"
+          onclick="selectPlan('6 Months','480000')">
+          Select
+        </button>
+
+      </div>
+
+    </div>
+
+  `;
+
+}
+
+
+function selectPlan(plan,amount){
+
+  openModal(
+    "Payment Request",
+    `
+
+      <div class="form-grid">
+
+        <div class="message info">
+          ${escapeHtml(plan)}
+          — ${money(amount)} Ks
+        </div>
+
+        <div class="field">
+          <label>Payment Method</label>
+
+          <select id="paymentMethod">
+            <option value="KPay">
+              KPay
+            </option>
+            <option value="WavePay">
+              WavePay
+            </option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Transaction ID</label>
+
+          <input
+            id="transactionId"
+            placeholder="Transaction ID">
+        </div>
+
+        <button
+          class="primary-btn"
+          onclick="submitPaymentRequest('${escapeHtml(plan)}','${amount}')">
+          Submit Request
+        </button>
+
+      </div>
+
+    `
+  );
+
+}
+
+
+async function submitPaymentRequest(plan,amount){
+
+  /*
+    payment_requests table မရှိသေးတဲ့အတွက်
+    UI အဆင့်မှာပဲထားထားပါတယ်
+  */
+
+  alert(
+    "Payment Request UI ကို ပြင်ဆင်ပြီးပါပြီ။ Payment Database Module ကို နောက်တစ်ဆင့်မှာ ချိတ်မယ်"
+  );
+
+  closeModal();
+
+}
+
+
+/* =========================================================
+   SETTINGS
+========================================================= */
+
+function renderSettings(){
+
+  $("pageContainer").innerHTML=`
+
+    <div class="page-head">
+
+      <div>
+        <h2>Settings</h2>
+        <p>Business Profile</p>
+      </div>
+
+    </div>
+
+    <div class="card section-card">
+
+      <form
+        id="businessSettingsForm"
+        class="form-grid">
+
+        <div class="field">
+
+          <label>Business Name</label>
+
+          <input
+            id="settingBusinessName"
+            value="${escapeHtml(
+              state.business?.name || ""
+            )}"
+            required>
+
+        </div>
+
+        <div class="field">
+
+          <label>Phone</label>
+
+          <input
+            id="settingPhone"
+            value="${escapeHtml(
+              state.business?.phone || ""
+            )}">
+
+        </div>
+
+        <div class="field">
+
+          <label>Address</label>
+
+          <textarea id="settingAddress">${escapeHtml(
+            state.business?.address || ""
+          )}</textarea>
+
+        </div>
+
+        <button
+          class="primary-btn"
+          type="submit">
+          Save Business Profile
+        </button>
+
+      </form>
+
+    </div>
+
+  `;
+
+
+  $("businessSettingsForm")
+    .addEventListener(
+      "submit",
+      saveBusinessSettings
     );
 
-  if(!method) return;
+}
 
-  const paymentMethod =
-    method === "1"
-      ? "KPay"
-      : method === "2"
-        ? "WavePay"
-        : method;
 
-  const transactionId =
-    prompt(
-      "Transaction ID ထည့်ပါ"
+async function saveBusinessSettings(e){
+
+  e.preventDefault();
+
+  showLoading(
+    "Business Profile သိမ်းနေသည်..."
+  );
+
+  const {
+    error
+  } =
+  await supabaseClient
+    .from("businesses")
+    .update({
+      name:
+        $("settingBusinessName")
+          .value.trim(),
+
+      phone:
+        $("settingPhone")
+          .value.trim(),
+
+      address:
+        $("settingAddress")
+          .value.trim()
+    })
+    .eq(
+      "id",
+      state.business.id
     );
 
-  if(!transactionId) return;
+  hideLoading();
 
-  try{
+  if(error){
 
-    const {
-      error
-    } =
-      await supabaseClient
-        .from("payment_requests")
-        .insert({
+    alert(error.message);
 
-          business_id:
-            currentBusiness.id,
-
-          plan_id:
-            planId,
-
-          amount:
-            Number(amount),
-
-          payment_method:
-            paymentMethod,
-
-          transaction_id:
-            transactionId,
-
-          status:
-            "pending"
-
-        });
-
-    if(error) throw error;
-
-    alert(
-      "Payment Request ပို့ပြီးပါပြီ\nAdmin Activation စောင့်ပါ"
-    );
-
-  }catch(error){
-
-    alert(
-      "Payment Request Error\n" +
-      error.message
-    );
-
+    return;
   }
 
-}
+  state.business.name =
+    $("settingBusinessName").value.trim();
 
+  state.business.phone =
+    $("settingPhone").value.trim();
 
-/* =========================================================
-   NAVIGATION
-========================================================= */
+  state.business.address =
+    $("settingAddress").value.trim();
 
-function openSection(name){
+  updateBusinessUI();
 
-  document
-    .querySelectorAll(".section")
-    .forEach(
-      section =>
-        section.classList.remove("active")
-    );
-
-  const target =
-    $("section-" + name);
-
-  if(target)
-    target.classList.add("active");
-
-  document
-    .querySelectorAll(".nav button")
-    .forEach(button=>{
-      button.classList.toggle(
-        "active",
-        button.dataset.section === name
-      );
-    });
-
-  const names = {
-    dashboard:"Dashboard",
-    products:"Products",
-    sales:"Sales / POS",
-    inventory:"Inventory",
-    customers:"Customers",
-    suppliers:"Suppliers",
-    reports:"Reports",
-    subscription:"Subscription",
-    settings:"Settings"
-  };
-
-  $("pageName").textContent =
-    names[name] || name;
-
-  $("sidebar").classList.remove("open");
-
-  if(name === "dashboard")
-    updateDashboard();
-
-  if(name === "products")
-    refreshProducts();
-
-  if(name === "inventory")
-    renderInventory();
+  alert(
+    "Business Profile သိမ်းပြီးပါပြီ"
+  );
 
 }
 
 
 /* =========================================================
-   SIDEBAR
-========================================================= */
-
-function toggleSidebar(){
-
-  $("sidebar")
-    .classList
-    .toggle("open");
-
-}
-
-
-/* =========================================================
-   LOGOUT
-========================================================= */
-
-async function logout(){
-
-  await supabaseClient.auth.signOut();
-
-  currentUser = null;
-  currentBusiness = null;
-  currentProfile = null;
-  products = [];
-
-  $("app").classList.add("hidden");
-  $("authPage").classList.remove("hidden");
-
-  showAuth("login");
-
-}
-
-
-/* =========================================================
-   ESCAPE HTML
-========================================================= */
-
-function escapeHtml(value){
-
-  return String(value ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
-
-}
-
-
-/* =========================================================
-   AUTH SESSION
-========================================================= */
-
-supabaseClient.auth.onAuthStateChange(
-  async (event,session)=>{
-
-    if(session){
-
-      setTimeout(
-        ()=>loadApp(),
-        0
-      );
-
-    }
-
-  }
-);
-
-
-/* =========================================================
-   START
+   INITIAL SESSION CHECK
 ========================================================= */
 
 (async function(){
 
-  try{
-
-    const {
-      data:{
-        session
-      }
-    } =
-      await supabaseClient.auth.getSession();
-
-    if(session){
-
-      await loadApp();
-
-    }else{
-
-      $("authPage").classList.remove("hidden");
-      $("app").classList.add("hidden");
-
+  const {
+    data:{
+      session
     }
+  } =
+  await supabaseClient.auth.getSession();
 
-  }catch(error){
+  if(session){
 
-    console.error(error);
+    await initializeApp();
+
+  }else{
+
+    $("authPage")
+      .classList
+      .remove("hidden");
+
+    $("app")
+      .classList
+      .add("hidden");
 
   }
 
